@@ -77,7 +77,7 @@ Orchestrator ── Main reasoning loop: Plan → Act → Observe → Evaluate
   ↓
 Tool Registry:  [Read]  [Write]  [Edit]  [Bash]  [WebFetch]  [WebSearch]
   ↓
-LLM (Claude Sonnet / Opus) ── Anthropic API ── your API key
+LLM (any model — Claude / GPT-4 / Gemini) ── API ── your API key
   ↓
 Response + tool_use call → harness executes → tool_result returned to LLM
   ↑________________________________ loop until task complete ______________|</div>
@@ -106,7 +106,7 @@ open-claw
   <h2>Token Efficiency — Your Settings</h2>
   <table>
     <tr><th>Mechanism</th><th>How to Enable</th><th>Benefit</th></tr>
-    <tr><td><strong>Prompt Caching</strong></td><td>Automatic if using Claude models — ensure your AGENTS.md is stable (don't change it every session)</td><td>~80% cost reduction on repeated tasks</td></tr>
+    <tr><td><strong>Prompt Caching</strong></td><td>Automatic if using supported models — ensure your AGENTS.md is stable (don't change it every session)</td><td>~80% cost reduction on repeated tasks</td></tr>
     <tr><td><strong>Compaction</strong></td><td>Type <code>/compact</code> when context is getting full, or enable auto-compact in settings</td><td>Unlimited task length without context errors</td></tr>
     <tr><td><strong>Targeted Reads</strong></td><td>Ask for specific line ranges: "read lines 40-80 of auth.py" — never "read all files"</td><td>90% fewer tokens on large codebases</td></tr>
   </table>
