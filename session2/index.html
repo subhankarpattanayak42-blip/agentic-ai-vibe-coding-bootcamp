@@ -138,7 +138,7 @@
       &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
       Tool Registry: [ Read | Write | Edit | Bash | WebFetch | ... ]<br>
       &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
-      LLM (Claude Sonnet / Opus via API)<br>
+      LLM (any model — Claude Sonnet / Opus, GPT-4, Gemini via API)<br>
       &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
       Response + Action → Observe → Next loop iteration
     </div>
@@ -174,8 +174,8 @@
     <h3>1. Prompt Caching</h3>
     <p>Anthropic's API supports cache breakpoints. If your system prompt (e.g., AGENTS.md instructions) doesn't change, it can be cached — serving it costs ~10% of the original token price. For a 50-session workday, this can cut costs by 80%+.</p>
     <h3>2. Context Compaction</h3>
-    <p>When the context window fills up, Open Claw/Claude Code can summarise older turns and replace them with a compact summary. The agent continues working without losing the thread, but older verbatim content is discarded.</p>
-    <pre># Compaction trigger in Claude Code:
+    <p>When the context window fills up, Open Claw can summarise older turns and replace them with a compact summary. The agent continues working without losing the thread, but older verbatim content is discarded.</p>
+    <pre># Compaction trigger in Open Claw:
 # When context reaches ~80% capacity:
 # Older messages → summarised → summary replaces raw messages
 # Recent messages + summary = new effective context</pre>
@@ -238,7 +238,7 @@
     </div>
     <h3>Setup (Pre-work required)</h3>
     <pre># Install Node.js (if not installed)
-# Then install Claude Code (Open Claw equivalent):
+# Then install Open Claw:
 npm install -g open-claw
 
 # Set your API key
