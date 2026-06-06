@@ -187,7 +187,7 @@
         </div>
         <div style="padding-left:1.5em;color:var(--s2);font-size:0.8em">↓</div>
         <div style="display:flex;align-items:center;gap:0.4em">
-          <div class="flow-box" style="min-width:12em;text-align:left;padding:0.4em 0.8em">📄 Harness Layer (CLAUDE.md / settings / hooks)</div>
+          <div class="flow-box" style="min-width:12em;text-align:left;padding:0.4em 0.8em">📄 Harness Layer (AGENTS.md / settings / hooks)</div>
         </div>
         <div style="padding-left:1.5em;color:var(--s2);font-size:0.8em">↓</div>
         <div style="display:flex;align-items:center;gap:0.4em">
@@ -223,7 +223,7 @@
         <div>
           <h3 class="sh3">Context is consumed by:</h3>
           <ul class="sul">
-            <li>System prompt / CLAUDE.md (big!)</li>
+            <li>System prompt / AGENTS.md (big!)</li>
             <li>Conversation history (grows every turn)</li>
             <li>Tool results (file reads, bash output)</li>
             <li>Model's reasoning + responses</li>
@@ -293,7 +293,7 @@
         <div class="do-box">
           <h4>✅ DO</h4>
           <ul class="sul" style="padding-left:0.8em">
-            <li>Write a clear, specific CLAUDE.md</li>
+            <li>Write a clear, specific AGENTS.md</li>
             <li>Give specific tasks: "fix auth.py:45"</li>
             <li>Enable prompt caching for long sessions</li>
             <li>Use /compact before context fills</li>
@@ -312,7 +312,7 @@
             <li>Let agent run unattended on production</li>
             <li>Read entire codebase into context at once</li>
             <li>Ignore tool call permission prompts</li>
-            <li>Put API keys in CLAUDE.md or prompts</li>
+            <li>Put API keys in AGENTS.md or prompts</li>
             <li>Trust first output without reviewing</li>
             <li>Run destructive bash commands unsandboxed</li>
             <li>Forget to set a context/cost limit</li>
@@ -333,12 +333,12 @@
       <div class="two-col">
         <div>
           <h3 class="sh3">Step 1 — Setup (pre-work)</h3>
-          <pre class="code">npm install -g @anthropic-ai/claude-code
+          <pre class="code">npm install -g open-claw
 export ANTHROPIC_API_KEY="sk-ant-..."
-claude --version  # confirm it works</pre>
+open-claw --version  # confirm it works</pre>
           <h3 class="sh3">Step 2 — Launch</h3>
           <pre class="code">cd ~/my-project
-claude</pre>
+open-claw</pre>
         </div>
         <div>
           <h3 class="sh3">5 Exercises (live)</h3>

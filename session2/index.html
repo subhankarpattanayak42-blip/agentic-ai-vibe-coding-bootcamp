@@ -132,7 +132,7 @@
       <strong style="color:#C4B5FD">Open Claw Architecture:</strong><br><br>
       User Input (natural language task)<br>
       &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
-      Harness Layer (CLAUDE.md / settings / hooks)<br>
+      Harness Layer (AGENTS.md / settings / hooks)<br>
       &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
       Orchestrator (main loop: plan → act → observe)<br>
       &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
@@ -172,7 +172,7 @@
       <div class="block-title">Token Efficiency Mechanisms</div>
     </div>
     <h3>1. Prompt Caching</h3>
-    <p>Anthropic's API supports cache breakpoints. If your system prompt (e.g., CLAUDE.md instructions) doesn't change, it can be cached — serving it costs ~10% of the original token price. For a 50-session workday, this can cut costs by 80%+.</p>
+    <p>Anthropic's API supports cache breakpoints. If your system prompt (e.g., AGENTS.md instructions) doesn't change, it can be cached — serving it costs ~10% of the original token price. For a 50-session workday, this can cut costs by 80%+.</p>
     <h3>2. Context Compaction</h3>
     <p>When the context window fills up, Open Claw/Claude Code can summarise older turns and replace them with a compact summary. The agent continues working without losing the thread, but older verbatim content is discarded.</p>
     <pre># Compaction trigger in Claude Code:
@@ -200,14 +200,14 @@
       <div class="do-box">
         <h4>✅ DO</h4>
         <ul>
-          <li>Write a clear, specific CLAUDE.md with context about your project</li>
+          <li>Write a clear, specific AGENTS.md with context about your project</li>
           <li>Use targeted prompts — "fix the login bug in auth.py:45" not "fix bugs"</li>
           <li>Enable prompt caching for long sessions</li>
           <li>Use <code>/compact</code> proactively before hitting context limits</li>
           <li>Review each tool call before it executes in sensitive environments</li>
           <li>Use <code>--dangerously-skip-permissions</code> only in sandboxes</li>
           <li>Store secrets in environment variables, never in prompts</li>
-          <li>Test your CLAUDE.md with a simple task first</li>
+          <li>Test your AGENTS.md with a simple task first</li>
           <li>Use skills (slash commands) for repetitive multi-step tasks</li>
           <li>Commit frequently — the agent may make unexpected changes</li>
         </ul>
@@ -219,7 +219,7 @@
           <li>Let the agent run unattended on production systems</li>
           <li>Feed the entire codebase into context at once</li>
           <li>Ignore tool call permissions — they protect you</li>
-          <li>Store API keys in CLAUDE.md or prompt text</li>
+          <li>Store API keys in AGENTS.md or prompt text</li>
           <li>Trust the agent's first output without reviewing it</li>
           <li>Use agentic tools for tasks requiring human judgement (legal, medical)</li>
           <li>Run destructive bash commands without sandbox</li>
@@ -239,13 +239,13 @@
     <h3>Setup (Pre-work required)</h3>
     <pre># Install Node.js (if not installed)
 # Then install Claude Code (Open Claw equivalent):
-npm install -g @anthropic-ai/claude-code
+npm install -g open-claw
 
 # Set your API key
 export ANTHROPIC_API_KEY="your-key-here"
 
 # Navigate to any project folder and launch
-claude</pre>
+open-claw</pre>
     <h3>Starter Exercises (Live during session)</h3>
     <ol>
       <li><strong>Exercise 1 — Hello Agent:</strong> Ask it to "list all files in the current directory and summarise what this project does"</li>
@@ -286,8 +286,8 @@ claude</pre>
     <ul style="margin-top:0.8rem">
       <li>Install Node.js (v18+) on your laptop: <code>node.js.org</code></li>
       <li>Create a free Anthropic account and get an API key: <code>console.anthropic.com</code></li>
-      <li>Install Claude Code: <code>npm install -g @anthropic-ai/claude-code</code></li>
-      <li>Run <code>claude --version</code> to confirm it works</li>
+      <li>Install Open Claw: <code>npm install -g open-claw</code></li>
+      <li>Run <code>open-claw --version</code> to confirm it works</li>
       <li>Optional: bring a small project folder to experiment with during session</li>
     </ul>
   </div>
@@ -302,7 +302,7 @@ claude</pre>
       <li>Token efficiency settings configured for your use case</li>
       <li>5 starter prompts specific to your work</li>
       <li>Your personal Do's &amp; Don'ts list (10 rules)</li>
-      <li>A working Open Claw installation with CLAUDE.md configured</li>
+      <li>A working Open Claw installation with AGENTS.md configured</li>
     </ul>
     <p style="margin-top:1rem;color:var(--accent);font-weight:700">After Session 2 you are: 🔧 Open Claw Expert</p>
   </div>

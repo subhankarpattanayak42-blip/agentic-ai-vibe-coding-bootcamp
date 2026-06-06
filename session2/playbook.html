@@ -71,7 +71,7 @@
   <div class="arch-diagram">
 User Input (natural language)
   ↓
-Harness Layer ── CLAUDE.md (your instructions) ── settings.json ── hooks
+Harness Layer ── AGENTS.md (your instructions) ── settings.json ── hooks
   ↓
 Orchestrator ── Main reasoning loop: Plan → Act → Observe → Evaluate
   ↓
@@ -86,27 +86,27 @@ Response + tool_use call → harness executes → tool_result returned to LLM
   <h2>Setup Guide</h2>
   <pre># 1. Install Node.js (v18+) from nodejs.org
 
-# 2. Install Claude Code (Open Claw equivalent)
-npm install -g @anthropic-ai/claude-code
+# 2. Install Open Claw
+npm install -g open-claw
 
 # 3. Set your API key (get from console.anthropic.com)
 export ANTHROPIC_API_KEY="sk-ant-your-key-here"
 # Add to ~/.zshrc or ~/.bash_profile to persist
 
 # 4. Verify installation
-claude --version
+open-claw --version
 
 # 5. Navigate to any project folder and launch
 cd ~/my-project
-claude
+open-claw
 
-# 6. (Optional) Create a CLAUDE.md in your project root
+# 6. (Optional) Create an AGENTS.md in your project root
 # This is your project-specific instruction file for the agent</pre>
 
   <h2>Token Efficiency — Your Settings</h2>
   <table>
     <tr><th>Mechanism</th><th>How to Enable</th><th>Benefit</th></tr>
-    <tr><td><strong>Prompt Caching</strong></td><td>Automatic if using Claude models — ensure your CLAUDE.md is stable (don't change it every session)</td><td>~80% cost reduction on repeated tasks</td></tr>
+    <tr><td><strong>Prompt Caching</strong></td><td>Automatic if using Claude models — ensure your AGENTS.md is stable (don't change it every session)</td><td>~80% cost reduction on repeated tasks</td></tr>
     <tr><td><strong>Compaction</strong></td><td>Type <code>/compact</code> when context is getting full, or enable auto-compact in settings</td><td>Unlimited task length without context errors</td></tr>
     <tr><td><strong>Targeted Reads</strong></td><td>Ask for specific line ranges: "read lines 40-80 of auth.py" — never "read all files"</td><td>90% fewer tokens on large codebases</td></tr>
   </table>
@@ -138,7 +138,7 @@ claude
     <div class="do-box">
       <h3>✅ DO</h3>
       <ul class="rules">
-        <li><span>✓</span> Write a clear, specific CLAUDE.md</li>
+        <li><span>✓</span> Write a clear, specific AGENTS.md</li>
         <li><span>✓</span> Give specific tasks with file paths</li>
         <li><span>✓</span> Enable prompt caching</li>
         <li><span>✓</span> Use /compact proactively</li>
@@ -169,7 +169,7 @@ claude
 
   <h2>My Notes</h2>
   <div class="notes-box">
-    <div class="notes-label">My CLAUDE.md project context (key points to include):</div>
+    <div class="notes-label">My AGENTS.md project context (key points to include):</div>
     <div class="notes-line"></div><div class="notes-line"></div>
     <div class="notes-label" style="margin-top:1rem">My custom Prompt 5 (most common task):</div>
     <div class="notes-line"></div><div class="notes-line"></div><div class="notes-line"></div>
