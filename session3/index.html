@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 3: Vibe Coding — Build PM Apps</title>
+<style>
+  :root {
+    --bg: #0D1B2A; --card: #1A2B3C; --accent: #F0C040; --text: #E8EDF2;
+    --muted: #8AABB8; --border: #2A4055; --s3: #10B981;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; line-height:1.7; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  nav {
+    position:sticky; top:0; z-index:100;
+    background:rgba(13,27,42,0.95); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px;
+  }
+  .nav-logo { color:var(--s3); font-weight:700; }
+  .nav-links { display:flex; gap:1.5rem; font-size:0.9rem; }
+  .nav-links a { color:var(--muted); }
+  .nav-links a:hover { color:var(--accent); text-decoration:none; }
+  .hero {
+    background: linear-gradient(135deg, rgba(16,185,129,0.12) 0%, transparent 60%);
+    padding:4rem 2rem 3rem; border-bottom:1px solid var(--border);
+    max-width:900px; margin:0 auto;
+  }
+  .session-badge {
+    display:inline-block; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4);
+    color:var(--s3); font-size:0.8rem; font-weight:600; padding:0.3rem 1rem;
+    border-radius:20px; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px;
+  }
+  h1 { font-size:2.2rem; font-weight:800; margin-bottom:0.8rem; }
+  .meta { color:var(--muted); margin-bottom:1.5rem; font-size:0.95rem; }
+  .outcome-hero {
+    display:inline-flex; align-items:center; gap:0.5rem;
+    background:rgba(240,192,64,0.1); border:1px solid rgba(240,192,64,0.3);
+    color:var(--accent); font-weight:700; padding:0.6rem 1.2rem; border-radius:8px;
+  }
+  .content { max-width:900px; margin:0 auto; padding:3rem 2rem; }
+  .block { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:2rem; margin-bottom:2rem; }
+  .block-header { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+  .block-time { background:rgba(16,185,129,0.15); color:var(--s3); font-size:0.8rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:6px; white-space:nowrap; }
+  .block-title { font-size:1.2rem; font-weight:700; }
+  h3 { font-size:1rem; font-weight:700; color:var(--accent); margin:1.2rem 0 0.6rem; }
+  p { color:#CBD5E1; margin-bottom:0.8rem; font-size:0.95rem; }
+  ul, ol { padding-left:1.5rem; margin-bottom:0.8rem; }
+  li { color:#CBD5E1; font-size:0.95rem; padding:0.2rem 0; }
+  table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.9rem; }
+  th { background:rgba(16,185,129,0.15); color:var(--s3); padding:0.7rem 1rem; text-align:left; border:1px solid var(--border); }
+  td { padding:0.7rem 1rem; border:1px solid var(--border); color:#CBD5E1; vertical-align:top; }
+  tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
+  code, pre { background:rgba(255,255,255,0.06); border:1px solid var(--border); border-radius:6px; font-family:monospace; font-size:0.85rem; color:#6EE7B7; }
+  code { padding:0.1rem 0.4rem; }
+  pre { padding:1rem 1.2rem; overflow-x:auto; margin:0.8rem 0; line-height:1.6; white-space:pre-wrap; }
+  .app-cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1rem; margin:1rem 0; }
+  .app-card { background:#0F2234; border:1px solid var(--border); border-radius:10px; padding:1.2rem; }
+  .app-card h4 { color:var(--s3); margin-bottom:0.5rem; }
+  .app-card p { font-size:0.85rem; }
+  .prompt-box { background:#0A1520; border:1px solid rgba(16,185,129,0.3); border-radius:8px; padding:1.2rem; margin:0.8rem 0; }
+  .prompt-label { color:var(--s3); font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.5rem; }
+  .prompt-text { font-family:monospace; font-size:0.88rem; color:#E8EDF2; line-height:1.6; }
+  .deliverable-box {
+    background:linear-gradient(135deg, rgba(240,192,64,0.1), rgba(240,192,64,0.05));
+    border:2px solid rgba(240,192,64,0.4); border-radius:12px; padding:1.5rem; margin-top:2rem;
+  }
+  .deliverable-box h2 { color:var(--accent); margin-bottom:1rem; }
+  .preread-box { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); border-radius:8px; padding:1.5rem; margin-top:2rem; }
+  .preread-box h3 { color:var(--s3); margin-top:0; }
+  .nav-bottom { display:flex; justify-content:space-between; padding:2rem; border-top:1px solid var(--border); margin-top:2rem; }
+  .cert-box {
+    background:linear-gradient(135deg, rgba(16,185,129,0.1), rgba(240,192,64,0.08));
+    border:2px solid rgba(16,185,129,0.4); border-radius:12px; padding:2rem;
+    text-align:center; margin-top:2rem;
+  }
+  .cert-box h2 { font-size:1.5rem; margin-bottom:0.5rem; }
+  .cert-box p { color:var(--muted); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Session 3 · Vibe Coding: Build PM Apps</div>
+  <div class="nav-links">
+    <a href="../index.html">← Home</a>
+    <a href="../session2/index.html">Session 2</a>
+    <a href="../brochure.html">Brochure</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="session-badge">Session 3 of 3 · June 27, 2026</div>
+  <h1>Vibe Coding: Build PM Apps</h1>
+  <div class="meta">Sunday · 4:00–5:00 PM &nbsp;·&nbsp; 60 minutes &nbsp;·&nbsp; Instructor: Subhankar Pattanayak</div>
+  <div class="outcome-hero">🏆 Outcome: Vibe Coding Expert</div>
+</div>
+
+<div class="content">
+
+  <!-- AGENDA -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">Full Agenda</div>
+      <div class="block-title">60-Minute Session Plan</div>
+    </div>
+    <table>
+      <tr><th>Time</th><th>Block</th><th>Format</th></tr>
+      <tr><td>4:00–4:05</td><td>Recap Sessions 1 &amp; 2 + today's goal</td><td>Slides</td></tr>
+      <tr><td>4:05–4:10</td><td>What is Vibe Coding — natural language → working app</td><td>Live demo</td></tr>
+      <tr><td>4:10–4:20</td><td>PM App ideas — brainstorm + pick your project</td><td>Collaborative</td></tr>
+      <tr><td>4:20–4:45</td><td>Live build: PM Status Dashboard — guided hands-on</td><td>Hands-on coding</td></tr>
+      <tr><td>4:45–4:55</td><td>Participant showcase — demo your app to the group</td><td>Showcase</td></tr>
+      <tr><td>4:55–5:00</td><td>Wrap-up, certificate, next steps</td><td>Closing</td></tr>
+    </table>
+  </div>
+
+  <!-- WHAT IS VIBE CODING -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">4:05–4:10</div>
+      <div class="block-title">What is Vibe Coding?</div>
+    </div>
+    <p>Vibe coding is the practice of building fully functional software using natural language instructions — describing what you want and letting an agentic AI build it. No syntax memorisation. No boilerplate. Just describe your vision and the agent writes, runs, and refines the code.</p>
+    <h3>The Shift</h3>
+    <table>
+      <tr><th>Traditional Coding</th><th>Vibe Coding</th></tr>
+      <tr><td>Write every line manually</td><td>Describe the outcome, agent writes</td></tr>
+      <tr><td>Requires syntax expertise</td><td>Requires clarity of thought</td></tr>
+      <tr><td>Debug line by line</td><td>Agent self-corrects with your feedback</td></tr>
+      <tr><td>Weeks to a working prototype</td><td>Hours or less to a working app</td></tr>
+      <tr><td>Barriers: learning curve</td><td>Barrier: knowing what you want</td></tr>
+    </table>
+    <h3>Live Demo — 30 Seconds to "Hello World"</h3>
+    <div class="prompt-box">
+      <div class="prompt-label">Vibe Prompt</div>
+      <div class="prompt-text">"Build me a simple HTML webpage that shows today's date, a motivational quote, and a button that changes the background colour when clicked."</div>
+    </div>
+    <p>Result: a working, styled page in under 30 seconds. No code written by the instructor.</p>
+  </div>
+
+  <!-- PM APP IDEAS -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">4:10–4:20</div>
+      <div class="block-title">PM App Ideas — Pick Your Build</div>
+    </div>
+    <p>Each participant picks one app to build. All can be completed in ~20 minutes with vibe coding.</p>
+    <div class="app-cards">
+      <div class="app-card">
+        <h4>📊 Project Status Dashboard</h4>
+        <p>Visual tracker: projects, status (RAG), owner, due date. Filter and sort. Export to CSV.</p>
+      </div>
+      <div class="app-card">
+        <h4>✅ Task &amp; Action Register</h4>
+        <p>Capture actions with owner, priority, deadline. Mark complete, overdue highlighting.</p>
+      </div>
+      <div class="app-card">
+        <h4>⚠️ Risk Register</h4>
+        <p>Log risks with probability × impact matrix. Auto-calculate risk score. Colour-coded severity.</p>
+      </div>
+      <div class="app-card">
+        <h4>📅 Meeting Agenda Builder</h4>
+        <p>Create meeting agendas with time slots, owners, topics. Export as PDF or email-ready HTML.</p>
+      </div>
+      <div class="app-card">
+        <h4>💰 Budget Tracker</h4>
+        <p>Track spend vs budget per workstream. Visual charts. Running total and variance alerts.</p>
+      </div>
+      <div class="app-card">
+        <h4>🗺️ Roadmap Visualiser</h4>
+        <p>Gantt-style timeline of milestones. Drag to adjust. Milestone status indicators.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE BUILD -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">4:20–4:45</div>
+      <div class="block-title">Live Build: PM Status Dashboard</div>
+    </div>
+    <p>The instructor builds a PM Status Dashboard live. Participants follow along and adapt for their chosen app.</p>
+
+    <h3>Step 1 — Initial Prompt (4:20)</h3>
+    <div class="prompt-box">
+      <div class="prompt-label">Prompt 1</div>
+      <div class="prompt-text">"Create a single-file HTML project status dashboard. It should have a header with the title 'Project Status Dashboard', a table showing: Project Name, Status (with RAG colour: Red/Amber/Green), Owner, Due Date, and % Complete. Add 5 sample projects. Make it look professional with a dark navy background and gold accents. Include a filter dropdown to filter by status."</div>
+    </div>
+
+    <h3>Step 2 — Refinement (4:30)</h3>
+    <div class="prompt-box">
+      <div class="prompt-label">Prompt 2</div>
+      <div class="prompt-text">"Now add: (1) A summary bar at the top showing total projects, how many are Green/Amber/Red. (2) An 'Add Project' button that opens a form to add new rows. (3) Click any row to edit it inline. (4) A 'Export CSV' button."</div>
+    </div>
+
+    <h3>Step 3 — Polish (4:38)</h3>
+    <div class="prompt-box">
+      <div class="prompt-label">Prompt 3</div>
+      <div class="prompt-text">"Make it mobile-responsive, add a footer with today's date and 'Built with AI', and add smooth animations when rows are added or status changes."</div>
+    </div>
+
+    <h3>Participant Guidance During Build</h3>
+    <ul>
+      <li>Adapt each prompt for your chosen app type</li>
+      <li>Use follow-up prompts to fix anything that doesn't look right</li>
+      <li>Don't worry about understanding every line of code — focus on outcomes</li>
+      <li>Save your HTML file to Desktop as <code>my_pm_app.html</code></li>
+    </ul>
+  </div>
+
+  <!-- STARTER PROMPTS LIBRARY -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">Starter Prompts Library</div>
+      <div class="block-title">Ready-to-Use Vibe Coding Prompts</div>
+    </div>
+    <p>Use these as starting points for any PM app:</p>
+    <div class="prompt-box">
+      <div class="prompt-label">Prompt A — Generic PM App Starter</div>
+      <div class="prompt-text">"Build a single-file HTML [APP TYPE] tool. Include: [FEATURE 1], [FEATURE 2], [FEATURE 3]. Style: dark navy background (#0D1B2A), gold accents (#F0C040), clean modern typography. Make it fully functional with no backend required — use localStorage to persist data."</div>
+    </div>
+    <div class="prompt-box">
+      <div class="prompt-label">Prompt B — Add Persistence</div>
+      <div class="prompt-text">"Update the app to save all data to localStorage so it persists when the page is refreshed. Show a 'Saved ✓' indicator when data is auto-saved."</div>
+    </div>
+    <div class="prompt-box">
+      <div class="prompt-label">Prompt C — Add Export</div>
+      <div class="prompt-text">"Add a button to export all data as a CSV file. Name the download file '[APPNAME]_export_[today's date].csv'."</div>
+    </div>
+    <div class="prompt-box">
+      <div class="prompt-label">Prompt D — Polish and Responsive</div>
+      <div class="prompt-text">"Make the layout fully responsive for mobile. Add smooth CSS transitions. Add a professional header with the app name and today's date. Add a footer crediting 'Built with AI by [Your Name]'."</div>
+    </div>
+    <div class="prompt-box">
+      <div class="prompt-label">Prompt E — Debug and Fix</div>
+      <div class="prompt-text">"The [FEATURE] is not working correctly — when I [ACTION], it should [EXPECTED RESULT] but instead [ACTUAL RESULT]. Please fix this."</div>
+    </div>
+  </div>
+
+  <!-- TEACHING AIDS -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">Teaching Aids</div>
+      <div class="block-title">Materials for This Session</div>
+    </div>
+    <ul>
+      <li>🎯 <strong>Starter Prompts Library</strong> — 5 ready-to-use vibe coding prompts (this page)</li>
+      <li>📱 <strong>Sample App Specs</strong> — 6 pre-defined PM app specs to pick from</li>
+      <li>🚀 <strong>Deployment Guide</strong> — how to share your app (GitHub Pages, Vercel, direct file)</li>
+      <li>💻 <strong>Completed Example</strong> — instructor's finished dashboard for reference</li>
+      <li>🏅 <strong>Digital Certificate Template</strong> — personalised PDF certificate</li>
+    </ul>
+  </div>
+
+  <!-- PRE-WORK -->
+  <div class="preread-box">
+    <h3>Pre-Work for Session 3</h3>
+    <ul style="margin-top:0.8rem">
+      <li>Ensure Claude Code / Open Claw is installed from Session 2</li>
+      <li>Think about one repetitive PM task you'd love an app for</li>
+      <li>Bring 3 column headers you'd want in your tracker (e.g., Project, Owner, Status)</li>
+      <li>Optional: try building a simple HTML page using a vibe coding prompt before the session</li>
+    </ul>
+  </div>
+
+  <!-- DELIVERABLE -->
+  <div class="deliverable-box">
+    <h2>🏆 Your Session 3 Deliverable</h2>
+    <h3 style="color:var(--text);margin-bottom:0.8rem">Working PM App + Source Code</h3>
+    <p>You will walk away with:</p>
+    <ul>
+      <li>A fully working, styled PM app of your choice — ready to use Monday morning</li>
+      <li>The complete source code (single HTML file) — no setup, no deployment needed</li>
+      <li>Your personal starter prompts library adapted to your work style</li>
+      <li>Knowledge to build your next app independently using vibe coding</li>
+    </ul>
+    <p style="margin-top:1rem;color:var(--accent);font-weight:700">After Session 3 you are: 🚀 Vibe Coding Expert</p>
+  </div>
+
+  <!-- CERTIFICATE -->
+  <div class="cert-box">
+    <h2>🏅 Completion Certificate</h2>
+    <p>Participants who complete all 3 sessions receive a digital certificate recognising their expertise in Agentic AI, Open Claw, and Vibe Coding — by Subhankar Pattanayak, AI Practitioner.</p>
+  </div>
+
+  <div class="nav-bottom">
+    <a href="../session2/index.html">← Session 2: Open Claw Deep Dive</a>
+    <a href="../index.html">Back to Course Home →</a>
+  </div>
+
+</div>
+</body>
+</html>

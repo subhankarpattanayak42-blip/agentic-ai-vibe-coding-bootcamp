@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 2: Open Claw Deep Dive</title>
+<style>
+  :root {
+    --bg: #0D1B2A; --card: #1A2B3C; --accent: #F0C040; --text: #E8EDF2;
+    --muted: #8AABB8; --border: #2A4055; --s2: #8B5CF6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; line-height:1.7; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  nav {
+    position:sticky; top:0; z-index:100;
+    background:rgba(13,27,42,0.95); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px;
+  }
+  .nav-logo { color:var(--s2); font-weight:700; }
+  .nav-links { display:flex; gap:1.5rem; font-size:0.9rem; }
+  .nav-links a { color:var(--muted); }
+  .nav-links a:hover { color:var(--accent); text-decoration:none; }
+  .hero {
+    background: linear-gradient(135deg, rgba(139,92,246,0.12) 0%, transparent 60%);
+    padding:4rem 2rem 3rem; border-bottom:1px solid var(--border);
+    max-width:900px; margin:0 auto;
+  }
+  .session-badge {
+    display:inline-block; background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.4);
+    color:var(--s2); font-size:0.8rem; font-weight:600; padding:0.3rem 1rem;
+    border-radius:20px; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px;
+  }
+  h1 { font-size:2.2rem; font-weight:800; margin-bottom:0.8rem; }
+  .meta { color:var(--muted); margin-bottom:1.5rem; font-size:0.95rem; }
+  .outcome-hero {
+    display:inline-flex; align-items:center; gap:0.5rem;
+    background:rgba(240,192,64,0.1); border:1px solid rgba(240,192,64,0.3);
+    color:var(--accent); font-weight:700; padding:0.6rem 1.2rem; border-radius:8px;
+  }
+  .content { max-width:900px; margin:0 auto; padding:3rem 2rem; }
+  .block { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:2rem; margin-bottom:2rem; }
+  .block-header { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+  .block-time { background:rgba(139,92,246,0.15); color:var(--s2); font-size:0.8rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:6px; white-space:nowrap; }
+  .block-title { font-size:1.2rem; font-weight:700; }
+  h3 { font-size:1rem; font-weight:700; color:var(--accent); margin:1.2rem 0 0.6rem; }
+  p { color:#CBD5E1; margin-bottom:0.8rem; font-size:0.95rem; }
+  ul, ol { padding-left:1.5rem; margin-bottom:0.8rem; }
+  li { color:#CBD5E1; font-size:0.95rem; padding:0.2rem 0; }
+  table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.9rem; }
+  th { background:rgba(139,92,246,0.15); color:var(--s2); padding:0.7rem 1rem; text-align:left; border:1px solid var(--border); }
+  td { padding:0.7rem 1rem; border:1px solid var(--border); color:#CBD5E1; vertical-align:top; }
+  tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
+  code, pre { background:rgba(255,255,255,0.06); border:1px solid var(--border); border-radius:6px; font-family:monospace; font-size:0.85rem; color:#C4B5FD; }
+  code { padding:0.1rem 0.4rem; }
+  pre { padding:1rem 1.2rem; overflow-x:auto; margin:0.8rem 0; line-height:1.6; white-space:pre-wrap; }
+  .dos-donts { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .do-box { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); border-radius:8px; padding:1.2rem; }
+  .dont-box { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.3); border-radius:8px; padding:1.2rem; }
+  .do-box h4 { color:#10B981; margin-bottom:0.8rem; }
+  .dont-box h4 { color:#EF4444; margin-bottom:0.8rem; }
+  .do-box li, .dont-box li { font-size:0.9rem; }
+  .diagram-box { background:#0A1520; border:1px solid var(--border); border-radius:8px; padding:1.5rem; margin:1rem 0; font-family:monospace; font-size:0.85rem; color:#93C5FD; line-height:2; }
+  .deliverable-box {
+    background:linear-gradient(135deg, rgba(240,192,64,0.1), rgba(240,192,64,0.05));
+    border:2px solid rgba(240,192,64,0.4); border-radius:12px; padding:1.5rem; margin-top:2rem;
+  }
+  .deliverable-box h2 { color:var(--accent); margin-bottom:1rem; }
+  .preread-box { background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.3); border-radius:8px; padding:1.5rem; margin-top:2rem; }
+  .preread-box h3 { color:var(--s2); margin-top:0; }
+  .nav-bottom { display:flex; justify-content:space-between; padding:2rem; border-top:1px solid var(--border); margin-top:2rem; }
+  @media (max-width:600px) { .dos-donts { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Session 2 · Open Claw Deep Dive</div>
+  <div class="nav-links">
+    <a href="../index.html">← Home</a>
+    <a href="../session1/index.html">Session 1</a>
+    <a href="../session3/index.html">Session 3 →</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="session-badge">Session 2 of 3 · June 20, 2026</div>
+  <h1>Open Claw Deep Dive</h1>
+  <div class="meta">Sunday · 4:00–5:00 PM &nbsp;·&nbsp; 60 minutes &nbsp;·&nbsp; Instructor: Subhankar Pattanayak</div>
+  <div class="outcome-hero">🏆 Outcome: Open Claw Expert</div>
+</div>
+
+<div class="content">
+
+  <!-- AGENDA -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">Full Agenda</div>
+      <div class="block-title">60-Minute Session Plan</div>
+    </div>
+    <table>
+      <tr><th>Time</th><th>Block</th><th>Format</th></tr>
+      <tr><td>4:00–4:05</td><td>Recap Session 1 key concepts + today's agenda</td><td>Slides</td></tr>
+      <tr><td>4:05–4:15</td><td>What is Open Claw — architecture &amp; positioning</td><td>Diagram + slides</td></tr>
+      <tr><td>4:15–4:25</td><td>Under the hood — token flow, context window, tool calling</td><td>Live demo</td></tr>
+      <tr><td>4:25–4:35</td><td>Token efficiency mechanisms — caching, compaction, summarisation</td><td>Demo with metrics</td></tr>
+      <tr><td>4:35–4:45</td><td>Do's &amp; Don'ts — patterns and anti-patterns</td><td>Card deck exercise</td></tr>
+      <tr><td>4:45–4:55</td><td>Hands-on: run your first Open Claw command</td><td>Guided exercise</td></tr>
+      <tr><td>4:55–5:00</td><td>Q&amp;A + preview Session 3</td><td>Interactive</td></tr>
+    </table>
+  </div>
+
+  <!-- WHAT IS OPEN CLAW -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">4:05–4:15</div>
+      <div class="block-title">What is Open Claw?</div>
+    </div>
+    <p>Open Claw is an open-source agentic CLI tool that provides an autonomous coding assistant running directly in your terminal. It connects to AI models (primarily Claude) and executes multi-step development tasks by calling tools, reading files, writing code, and running commands.</p>
+    <h3>How It Positions vs Claude Code</h3>
+    <table>
+      <tr><th>Dimension</th><th>Claude Code (Anthropic)</th><th>Open Claw</th></tr>
+      <tr><td>Source</td><td>Closed, proprietary</td><td>Open-source</td></tr>
+      <tr><td>Customisation</td><td>Via settings &amp; skills</td><td>Full source access, forkable</td></tr>
+      <tr><td>Hosting</td><td>Cloud (Anthropic API)</td><td>Bring your own model / API key</td></tr>
+      <tr><td>Community</td><td>Anthropic-led</td><td>Community-maintained</td></tr>
+      <tr><td>Learning value</td><td>Best for production use</td><td>Best for understanding internals</td></tr>
+    </table>
+    <div class="diagram-box">
+      <strong style="color:#C4B5FD">Open Claw Architecture:</strong><br><br>
+      User Input (natural language task)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      Harness Layer (CLAUDE.md / settings / hooks)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      Orchestrator (main loop: plan → act → observe)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      Tool Registry: [ Read | Write | Edit | Bash | WebFetch | ... ]<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      LLM (Claude Sonnet / Opus via API)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      Response + Action → Observe → Next loop iteration
+    </div>
+  </div>
+
+  <!-- UNDER THE HOOD -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">4:15–4:25</div>
+      <div class="block-title">Under the Hood — Token Flow &amp; Tool Calling</div>
+    </div>
+    <h3>The Context Window</h3>
+    <p>Every LLM has a finite context window (token limit). Open Claw manages this by deciding what to include: system prompt, conversation history, tool results, and file contents. As context grows, older content gets compressed or discarded.</p>
+    <h3>Tool Calling Flow</h3>
+    <pre>1. User gives task: "Read all .py files and find TODOs"
+2. Model reasons: "I need to list files first"
+3. Model emits: tool_use { name: "Bash", input: { command: "find . -name '*.py'" } }
+4. Harness executes the command
+5. Result returned to model as tool_result
+6. Model reasons over result: "Now read each file..."
+7. Model emits next tool_use
+8. Loop continues until task complete or context exceeded</pre>
+    <h3>Key Insight: The Model Sees Everything</h3>
+    <p>Every tool result is added to the conversation. If you run many large file reads, the context fills up rapidly — this is why token efficiency matters so much in agentic systems.</p>
+  </div>
+
+  <!-- TOKEN EFFICIENCY -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">4:25–4:35</div>
+      <div class="block-title">Token Efficiency Mechanisms</div>
+    </div>
+    <h3>1. Prompt Caching</h3>
+    <p>Anthropic's API supports cache breakpoints. If your system prompt (e.g., CLAUDE.md instructions) doesn't change, it can be cached — serving it costs ~10% of the original token price. For a 50-session workday, this can cut costs by 80%+.</p>
+    <h3>2. Context Compaction</h3>
+    <p>When the context window fills up, Open Claw/Claude Code can summarise older turns and replace them with a compact summary. The agent continues working without losing the thread, but older verbatim content is discarded.</p>
+    <pre># Compaction trigger in Claude Code:
+# When context reaches ~80% capacity:
+# Older messages → summarised → summary replaces raw messages
+# Recent messages + summary = new effective context</pre>
+    <h3>3. Strategic File Reading</h3>
+    <p>Rather than reading entire codebases, efficient agents use targeted reads (line ranges, grep results) and only pull full files when necessary. Every unnecessary token is wasted money.</p>
+    <h3>Token Cost Comparison</h3>
+    <table>
+      <tr><th>Scenario</th><th>Without Optimisation</th><th>With Caching + Compaction</th></tr>
+      <tr><td>10 tasks, same system prompt</td><td>10 × full prompt cost</td><td>1 × full + 9 × 10% = ~1.9× cost</td></tr>
+      <tr><td>Long multi-step task</td><td>Context fills, fails</td><td>Compaction extends capacity</td></tr>
+      <tr><td>Large codebase read</td><td>Reads all files = expensive</td><td>Grep + targeted reads = 90% less</td></tr>
+    </table>
+  </div>
+
+  <!-- DO'S AND DON'TS -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">4:35–4:45</div>
+      <div class="block-title">Do's &amp; Don'ts</div>
+    </div>
+    <div class="dos-donts">
+      <div class="do-box">
+        <h4>✅ DO</h4>
+        <ul>
+          <li>Write a clear, specific CLAUDE.md with context about your project</li>
+          <li>Use targeted prompts — "fix the login bug in auth.py:45" not "fix bugs"</li>
+          <li>Enable prompt caching for long sessions</li>
+          <li>Use <code>/compact</code> proactively before hitting context limits</li>
+          <li>Review each tool call before it executes in sensitive environments</li>
+          <li>Use <code>--dangerously-skip-permissions</code> only in sandboxes</li>
+          <li>Store secrets in environment variables, never in prompts</li>
+          <li>Test your CLAUDE.md with a simple task first</li>
+          <li>Use skills (slash commands) for repetitive multi-step tasks</li>
+          <li>Commit frequently — the agent may make unexpected changes</li>
+        </ul>
+      </div>
+      <div class="dont-box">
+        <h4>❌ DON'T</h4>
+        <ul>
+          <li>Give vague tasks like "improve the code" — you'll get random refactoring</li>
+          <li>Let the agent run unattended on production systems</li>
+          <li>Feed the entire codebase into context at once</li>
+          <li>Ignore tool call permissions — they protect you</li>
+          <li>Store API keys in CLAUDE.md or prompt text</li>
+          <li>Trust the agent's first output without reviewing it</li>
+          <li>Use agentic tools for tasks requiring human judgement (legal, medical)</li>
+          <li>Run destructive bash commands without sandbox</li>
+          <li>Forget to set a context limit — runaway agents cost money</li>
+          <li>Mix instructions and data in the same prompt block</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- HANDS-ON -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">4:45–4:55</div>
+      <div class="block-title">Hands-On: Your First Open Claw Command</div>
+    </div>
+    <h3>Setup (Pre-work required)</h3>
+    <pre># Install Node.js (if not installed)
+# Then install Claude Code (Open Claw equivalent):
+npm install -g @anthropic-ai/claude-code
+
+# Set your API key
+export ANTHROPIC_API_KEY="your-key-here"
+
+# Navigate to any project folder and launch
+claude</pre>
+    <h3>Starter Exercises (Live during session)</h3>
+    <ol>
+      <li><strong>Exercise 1 — Hello Agent:</strong> Ask it to "list all files in the current directory and summarise what this project does"</li>
+      <li><strong>Exercise 2 — File Awareness:</strong> Ask it to "read the README and tell me what problems this project solves"</li>
+      <li><strong>Exercise 3 — Tool Watching:</strong> Watch the tool calls in the output — identify Read, Bash, and Write calls</li>
+      <li><strong>Exercise 4 — Context Test:</strong> Ask two follow-up questions and observe how it remembers context</li>
+      <li><strong>Exercise 5 — Mini Task:</strong> Ask it to "create a file called test.txt with today's date and a motivational quote"</li>
+    </ol>
+    <h3>What to Observe</h3>
+    <ul>
+      <li>How many tool calls does it make per task?</li>
+      <li>Does it ask for permission before writing files?</li>
+      <li>How does it handle uncertainty? (Does it ask or assume?)</li>
+    </ul>
+  </div>
+
+  <!-- TEACHING AIDS -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">Teaching Aids</div>
+      <div class="block-title">Materials for This Session</div>
+    </div>
+    <ul>
+      <li>📊 <strong>Architecture Diagram</strong> — Open Claw system flow (printable)</li>
+      <li>📋 <strong>Token Efficiency Cheat Sheet</strong> — caching, compaction, targeted reads at a glance</li>
+      <li>🃏 <strong>Do's &amp; Don'ts Card Deck</strong> — 20 cards for a quick card exercise</li>
+      <li>💻 <strong>Setup Guide</strong> — step-by-step installation and first-run guide</li>
+      <li>🎯 <strong>5 Starter Prompts</strong> — ready-to-run prompts for immediate productivity</li>
+    </ul>
+  </div>
+
+  <!-- PRE-WORK -->
+  <div class="preread-box">
+    <h3>Pre-Work for Session 2</h3>
+    <ul style="margin-top:0.8rem">
+      <li>Install Node.js (v18+) on your laptop: <code>node.js.org</code></li>
+      <li>Create a free Anthropic account and get an API key: <code>console.anthropic.com</code></li>
+      <li>Install Claude Code: <code>npm install -g @anthropic-ai/claude-code</code></li>
+      <li>Run <code>claude --version</code> to confirm it works</li>
+      <li>Optional: bring a small project folder to experiment with during session</li>
+    </ul>
+  </div>
+
+  <!-- DELIVERABLE -->
+  <div class="deliverable-box">
+    <h2>🏆 Your Session 2 Deliverable</h2>
+    <h3 style="color:var(--text);margin-bottom:0.8rem">Open Claw Playbook</h3>
+    <p>You will complete a personalised playbook containing:</p>
+    <ul>
+      <li>Your own annotated architecture diagram</li>
+      <li>Token efficiency settings configured for your use case</li>
+      <li>5 starter prompts specific to your work</li>
+      <li>Your personal Do's &amp; Don'ts list (10 rules)</li>
+      <li>A working Open Claw installation with CLAUDE.md configured</li>
+    </ul>
+    <p style="margin-top:1rem;color:var(--accent);font-weight:700">After Session 2 you are: 🔧 Open Claw Expert</p>
+  </div>
+
+  <div class="nav-bottom">
+    <a href="../session1/index.html">← Session 1: Foundations of Agentic AI</a>
+    <a href="../session3/index.html">Session 3: Vibe Coding →</a>
+  </div>
+
+</div>
+</body>
+</html>

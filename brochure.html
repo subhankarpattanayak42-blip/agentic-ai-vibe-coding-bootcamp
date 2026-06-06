@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brochure — Agentic AI & Vibe Coding Bootcamp</title>
+<style>
+  :root {
+    --bg: #0D1B2A; --card: #1A2B3C; --accent: #F0C040; --accent2: #E8A020;
+    --text: #E8EDF2; --muted: #8AABB8; --border: #2A4055;
+    --s1: #3B82F6; --s2: #8B5CF6; --s3: #10B981;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; line-height:1.6; }
+  a { color:var(--accent); text-decoration:none; }
+
+  /* Print nav (hidden on print) */
+  .screen-nav {
+    background:rgba(13,27,42,0.95); border-bottom:1px solid var(--border);
+    padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:56px;
+    font-size:0.9rem;
+  }
+  .screen-nav a { color:var(--muted); }
+  .screen-nav a:hover { color:var(--accent); }
+
+  .brochure {
+    max-width:820px; margin:2rem auto; background:var(--card);
+    border:1px solid var(--border); border-radius:16px; overflow:hidden;
+  }
+
+  /* HERO BAND */
+  .brochure-hero {
+    background: linear-gradient(135deg, #0D1B2A 0%, #12293D 100%);
+    border-bottom: 4px solid var(--accent);
+    padding: 3rem 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .brochure-hero::after {
+    content: '';
+    position:absolute; top:0; right:0; width:300px; height:300px;
+    background: radial-gradient(circle, rgba(240,192,64,0.1) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .bh-badge {
+    display:inline-block; background:rgba(240,192,64,0.15); border:1px solid rgba(240,192,64,0.4);
+    color:var(--accent); font-size:0.75rem; font-weight:700; letter-spacing:2px;
+    text-transform:uppercase; padding:0.3rem 1rem; border-radius:20px; margin-bottom:1.5rem;
+  }
+  .bh-title { font-size:2.6rem; font-weight:900; line-height:1.1; margin-bottom:0.5rem; }
+  .bh-title span { color:var(--accent); display:block; }
+  .bh-sub { color:var(--muted); font-size:1rem; margin-bottom:2rem; max-width:500px; }
+  .bh-meta { display:flex; gap:2rem; flex-wrap:wrap; }
+  .bh-meta-item { display:flex; align-items:center; gap:0.5rem; font-size:0.9rem; color:var(--muted); }
+  .bh-meta-item strong { color:var(--text); }
+
+  /* OUTCOMES BAND */
+  .outcomes-band {
+    display:grid; grid-template-columns:repeat(3, 1fr);
+    border-bottom:1px solid var(--border);
+  }
+  .ob-item { padding:1.5rem 2rem; text-align:center; border-right:1px solid var(--border); }
+  .ob-item:last-child { border-right:none; }
+  .ob-session { font-size:0.7rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:0.3rem; }
+  .ob-outcome { font-size:0.95rem; font-weight:700; }
+  .ob-item:nth-child(1) .ob-outcome { color:var(--s1); }
+  .ob-item:nth-child(2) .ob-outcome { color:var(--s2); }
+  .ob-item:nth-child(3) .ob-outcome { color:var(--s3); }
+
+  /* BODY */
+  .brochure-body { padding:3rem; }
+
+  h2 { font-size:1.4rem; font-weight:800; margin-bottom:1.5rem; color:var(--text); }
+  h2 span { color:var(--accent); }
+
+  /* SESSION BLOCKS */
+  .session-block {
+    border:1px solid var(--border); border-radius:10px; margin-bottom:1.5rem; overflow:hidden;
+  }
+  .sb-header { display:flex; align-items:center; gap:1rem; padding:1rem 1.5rem; border-bottom:1px solid var(--border); }
+  .sb-num { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1rem; flex-shrink:0; }
+  .sb-1 .sb-num { background:rgba(59,130,246,0.2); color:var(--s1); }
+  .sb-2 .sb-num { background:rgba(139,92,246,0.2); color:var(--s2); }
+  .sb-3 .sb-num { background:rgba(16,185,129,0.2); color:var(--s3); }
+  .sb-info { flex:1; }
+  .sb-title { font-weight:700; font-size:1.05rem; }
+  .sb-date { font-size:0.8rem; color:var(--muted); }
+  .sb-badge { font-size:0.75rem; font-weight:700; padding:0.25rem 0.7rem; border-radius:6px; }
+  .sb-1 .sb-badge { background:rgba(59,130,246,0.1); color:var(--s1); border:1px solid rgba(59,130,246,0.3); }
+  .sb-2 .sb-badge { background:rgba(139,92,246,0.1); color:var(--s2); border:1px solid rgba(139,92,246,0.3); }
+  .sb-3 .sb-badge { background:rgba(16,185,129,0.1); color:var(--s3); border:1px solid rgba(16,185,129,0.3); }
+  .sb-body { padding:1.2rem 1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .sb-section h4 { font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:0.6rem; }
+  .sb-section ul { list-style:none; padding:0; }
+  .sb-section li { font-size:0.85rem; color:#CBD5E1; padding:0.2rem 0; display:flex; gap:0.5rem; }
+  .sb-section li::before { content:'→'; color:var(--accent); flex-shrink:0; }
+  .sb-outcome { grid-column:1/-1; background:rgba(240,192,64,0.06); border:1px solid rgba(240,192,64,0.2); border-radius:6px; padding:0.7rem 1rem; font-size:0.85rem; }
+  .sb-outcome strong { color:var(--accent); }
+
+  /* DELIVERABLES GRID */
+  .del-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:2rem; }
+  .del-item { background:rgba(0,0,0,0.2); border:1px solid var(--border); border-radius:8px; padding:1rem; text-align:center; }
+  .del-icon { font-size:1.8rem; margin-bottom:0.5rem; }
+  .del-item h4 { font-size:0.85rem; font-weight:700; margin-bottom:0.3rem; }
+  .del-item p { font-size:0.75rem; color:var(--muted); }
+
+  /* INSTRUCTOR */
+  .instructor-row { display:flex; gap:1.5rem; align-items:center; background:rgba(0,0,0,0.2); border:1px solid var(--border); border-radius:10px; padding:1.5rem; margin-bottom:2rem; }
+  .inst-av { width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent2)); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2rem; color:#0D1B2A; flex-shrink:0; }
+  .inst-name { font-weight:700; font-size:1.1rem; margin-bottom:0.2rem; }
+  .inst-title { color:var(--accent); font-size:0.85rem; margin-bottom:0.5rem; }
+  .inst-bio { font-size:0.85rem; color:var(--muted); }
+
+  /* PRICING BAND */
+  .pricing-band {
+    background:linear-gradient(135deg, #0A1520, #12293D);
+    border-top:3px solid var(--accent);
+    padding:2.5rem 3rem; text-align:center;
+  }
+  .price-main { font-size:3rem; font-weight:900; color:var(--accent); margin:0.8rem 0; }
+  .price-desc { color:var(--muted); margin-bottom:2rem; }
+  .enroll-btn {
+    display:inline-block; background:var(--accent); color:#0D1B2A;
+    font-weight:800; font-size:1.1rem; padding:1rem 3rem; border-radius:10px;
+    transition:background 0.2s;
+  }
+  .enroll-btn:hover { background:var(--accent2); }
+  .stripe-note { font-size:0.8rem; color:var(--muted); margin-top:1rem; }
+
+  /* WATERMARK */
+  .watermark { text-align:center; padding:1.5rem; border-top:1px solid var(--border); color:var(--muted); font-size:0.8rem; }
+
+  /* PRINT STYLES */
+  @media print {
+    body { background:#fff; color:#000; }
+    .screen-nav { display:none; }
+    .brochure { max-width:100%; margin:0; border:none; border-radius:0; background:#fff; box-shadow:none; }
+    .brochure-hero { background:#0D1B2A !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .outcomes-band, .sb-header, .sb-body, .pricing-band { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .bh-title, .bh-sub, .bh-meta-item { color:#fff !important; }
+    a[href]:after { content: " (" attr(href) ")"; font-size:0.7rem; color:#666; }
+    .enroll-btn:after { display:none; }
+  }
+
+  @media (max-width:600px) {
+    .outcomes-band { grid-template-columns:1fr; }
+    .ob-item { border-right:none; border-bottom:1px solid var(--border); }
+    .sb-body { grid-template-columns:1fr; }
+    .del-grid { grid-template-columns:1fr 1fr; }
+    .brochure-body { padding:1.5rem; }
+    .instructor-row { flex-direction:column; text-align:center; }
+    .bh-title { font-size:1.8rem; }
+    .pricing-band { padding:2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="screen-nav">
+  <a href="index.html">← Course Home</a>
+  <span style="color:var(--muted)">Agentic AI &amp; Vibe Coding Bootcamp — Brochure</span>
+  <button onclick="window.print()" style="background:var(--accent);color:#0D1B2A;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;font-weight:700;font-size:0.85rem">Print / Save PDF</button>
+</div>
+
+<div class="brochure">
+
+  <!-- HERO -->
+  <div class="brochure-hero">
+    <div class="bh-badge">3-Session Live Bootcamp · June 2026</div>
+    <div class="bh-title">Agentic AI &amp;<br><span>Vibe Coding Bootcamp</span></div>
+    <div class="bh-sub">Go from AI-curious to AI-fluent in 3 focused Sunday sessions. Build real apps. Talk to executives. Master the tools shaping the future of work.</div>
+    <div class="bh-meta">
+      <div class="bh-meta-item">📅 <span><strong>June 13, 20 &amp; 27, 2026</strong></span></div>
+      <div class="bh-meta-item">🕓 <span><strong>Sundays, 4:00–5:00 PM</strong></span></div>
+      <div class="bh-meta-item">💻 <span><strong>Online / Live</strong></span></div>
+      <div class="bh-meta-item">👥 <span><strong>26 Participants</strong></span></div>
+    </div>
+  </div>
+
+  <!-- OUTCOMES BAND -->
+  <div class="outcomes-band">
+    <div class="ob-item">
+      <div class="ob-session">After Session 1</div>
+      <div class="ob-outcome">🧠 AI Expert in Communication</div>
+    </div>
+    <div class="ob-item">
+      <div class="ob-session">After Session 2</div>
+      <div class="ob-outcome">🔧 Open Claw Expert</div>
+    </div>
+    <div class="ob-item">
+      <div class="ob-session">After Session 3</div>
+      <div class="ob-outcome">🚀 Vibe Coding Expert</div>
+    </div>
+  </div>
+
+  <div class="brochure-body">
+
+    <!-- CURRICULUM -->
+    <h2><span>Course</span> Curriculum</h2>
+
+    <!-- S1 -->
+    <div class="session-block sb-1">
+      <div class="sb-header">
+        <div class="sb-num">1</div>
+        <div class="sb-info">
+          <div class="sb-title">Foundations of Agentic AI</div>
+          <div class="sb-date">Sunday, June 13, 2026 · 4:00–5:00 PM</div>
+        </div>
+        <div class="sb-badge">AI Communication</div>
+      </div>
+      <div class="sb-body">
+        <div class="sb-section">
+          <h4>What You'll Learn</h4>
+          <ul>
+            <li>Agentic AI vs Traditional chatbots — the key differences</li>
+            <li>Core concepts: Agents, Tools, Memory, Reasoning Loops</li>
+            <li>Tool ecosystem: Claude Code, Open Claw, Hermes, Codex</li>
+            <li>How to talk to senior executives about AI with confidence</li>
+          </ul>
+        </div>
+        <div class="sb-section">
+          <h4>Teaching Aids</h4>
+          <ul>
+            <li>Comparison matrix: AI types side-by-side</li>
+            <li>Tool ecosystem overview slide</li>
+            <li>Executive talking points 1-pager</li>
+            <li>Spot-the-Agent interactive exercise</li>
+          </ul>
+        </div>
+        <div class="sb-outcome">
+          <strong>🏆 Deliverable:</strong> "My AI Vocabulary" cheat sheet — 10 terms + 3-layer executive talking points personalised to your industry
+        </div>
+      </div>
+    </div>
+
+    <!-- S2 -->
+    <div class="session-block sb-2">
+      <div class="sb-header">
+        <div class="sb-num">2</div>
+        <div class="sb-info">
+          <div class="sb-title">Open Claw Deep Dive</div>
+          <div class="sb-date">Sunday, June 20, 2026 · 4:00–5:00 PM</div>
+        </div>
+        <div class="sb-badge">Open Claw Expert</div>
+      </div>
+      <div class="sb-body">
+        <div class="sb-section">
+          <h4>What You'll Learn</h4>
+          <ul>
+            <li>Open Claw architecture — how it works under the hood</li>
+            <li>Token flow, context window management, tool calling</li>
+            <li>Token efficiency: caching, compaction, targeted reads</li>
+            <li>Do's &amp; Don'ts — 20 rules for safe, effective usage</li>
+            <li>Hands-on: first Open Claw session from scratch</li>
+          </ul>
+        </div>
+        <div class="sb-section">
+          <h4>Teaching Aids</h4>
+          <ul>
+            <li>Architecture diagram (printable)</li>
+            <li>Token efficiency cheat sheet</li>
+            <li>Do's &amp; Don'ts card deck (20 cards)</li>
+            <li>Step-by-step setup guide</li>
+          </ul>
+        </div>
+        <div class="sb-outcome">
+          <strong>🏆 Deliverable:</strong> Open Claw Playbook — configured installation + 5 starter prompts tailored to your work + Do's &amp; Don'ts reference card
+        </div>
+      </div>
+    </div>
+
+    <!-- S3 -->
+    <div class="session-block sb-3">
+      <div class="sb-header">
+        <div class="sb-num">3</div>
+        <div class="sb-info">
+          <div class="sb-title">Vibe Coding: Build PM Apps</div>
+          <div class="sb-date">Sunday, June 27, 2026 · 4:00–5:00 PM</div>
+        </div>
+        <div class="sb-badge">Vibe Coding Expert</div>
+      </div>
+      <div class="sb-body">
+        <div class="sb-section">
+          <h4>What You'll Learn</h4>
+          <ul>
+            <li>What vibe coding is — natural language → working app</li>
+            <li>6 PM app ideas: choose and build yours live</li>
+            <li>Guided live build: PM Status Dashboard</li>
+            <li>Iterative refinement: prompting to perfection</li>
+            <li>How to deploy and share your app</li>
+          </ul>
+        </div>
+        <div class="sb-section">
+          <h4>Teaching Aids</h4>
+          <ul>
+            <li>6 PM app specs to choose from</li>
+            <li>5 reusable starter prompts library</li>
+            <li>Deployment guide (GitHub Pages, Vercel)</li>
+            <li>Completed example dashboard for reference</li>
+          </ul>
+        </div>
+        <div class="sb-outcome">
+          <strong>🏆 Deliverable:</strong> Working PM app (your choice) + complete source code + digital completion certificate
+        </div>
+      </div>
+    </div>
+
+    <!-- DELIVERABLES -->
+    <h2 style="margin-top:0.5rem"><span>What You'll</span> Walk Away With</h2>
+    <div class="del-grid">
+      <div class="del-item"><div class="del-icon">📋</div><h4>AI Vocabulary Cheat Sheet</h4><p>10 essential terms with executive definitions</p></div>
+      <div class="del-item"><div class="del-icon">🗣️</div><h4>Executive Talking Points</h4><p>1-page brief for senior leader conversations</p></div>
+      <div class="del-item"><div class="del-icon">📖</div><h4>Open Claw Playbook</h4><p>Setup guide + 5 personalised starter prompts</p></div>
+      <div class="del-item"><div class="del-icon">🃏</div><h4>Do's &amp; Don'ts Deck</h4><p>20 patterns &amp; anti-patterns for safe AI use</p></div>
+      <div class="del-item"><div class="del-icon">💻</div><h4>Working PM App</h4><p>Built live — yours to use from Day 1</p></div>
+      <div class="del-item"><div class="del-icon">🏅</div><h4>Completion Certificate</h4><p>Digital certificate recognising your expertise</p></div>
+    </div>
+
+    <!-- INSTRUCTOR -->
+    <h2><span>Your</span> Instructor</h2>
+    <div class="instructor-row">
+      <div class="inst-av">SP</div>
+      <div>
+        <div class="inst-name">Subhankar Pattanayak</div>
+        <div class="inst-title">AI Practitioner</div>
+        <div class="inst-bio">Built 19+ AI-powered tools for enterprise workflows using Agentic AI and harness engineering. A practitioner who teaches from live production experience — not theory.</div>
+      </div>
+    </div>
+
+  </div><!-- /brochure-body -->
+
+  <!-- PRICING -->
+  <div class="pricing-band">
+    <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted)">Enrolment</div>
+    <div class="price-main">₹2,000</div>
+    <div class="price-desc">Complete 3-Session Bootcamp &nbsp;·&nbsp; June 13, 20 &amp; 27, 2026 &nbsp;·&nbsp; One-time payment</div>
+    <a href="https://buy.stripe.com/9B68wH9f5gB52yZ1P1ejK0b" target="_blank" class="enroll-btn">Enroll Now →</a>
+    <div class="stripe-note">🔒 Secure payment via Stripe &nbsp;·&nbsp; Instant confirmation after payment</div>
+  </div>
+
+  <!-- WATERMARK -->
+  <div class="watermark">
+    Agentic AI &amp; Vibe Coding Bootcamp &nbsp;·&nbsp; by Subhankar Pattanayak &nbsp;·&nbsp; June 2026
+  </div>
+
+</div><!-- /brochure -->
+
+</body>
+</html>
