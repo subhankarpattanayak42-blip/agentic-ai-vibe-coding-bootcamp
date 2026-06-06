@@ -140,6 +140,27 @@
       <tr><td>Community</td><td>Anthropic-led</td><td>Community-maintained</td></tr>
       <tr><td>Learning value</td><td>Best for production use</td><td>Best for understanding internals</td></tr>
     </table>
+
+    <h3>Configuration File Comparison</h3>
+    <table>
+      <tr><th>Feature</th><th>Claude Code</th><th>Open Claw</th><th>OpenAI Codex</th></tr>
+      <tr><td><strong>Instruction file</strong></td><td><code>CLAUDE.md</code></td><td><code>AGENTS.md</code></td><td><code>codex.md</code></td></tr>
+      <tr><td><strong>Settings file</strong></td><td><code>.claude/settings.json</code></td><td><code>.open-claw/settings.json</code></td><td><code>.codex/config.json</code></td></tr>
+      <tr><td><strong>Hooks / automation</strong></td><td>Pre/post tool hooks in settings</td><td>Pre/post tool hooks in settings</td><td>Not supported natively</td></tr>
+      <tr><td><strong>Scheduled tasks (Cron)</strong></td><td>Built-in <code>CronCreate</code> tool</td><td>Use system <code>crontab -e</code></td><td>Not supported</td></tr>
+      <tr><td><strong>Slash commands / skills</strong></td><td><code>/command</code> via <code>.claude/commands/</code></td><td>Custom scripts in config dir</td><td>Not supported</td></tr>
+      <tr><td><strong>Memory persistence</strong></td><td>CLAUDE.md + memory files</td><td>AGENTS.md + session context</td><td>Conversation history only</td></tr>
+    </table>
+    <h3>Cron Jobs — Scheduling Agent Tasks</h3>
+    <p>Claude Code supports scheduled tasks natively via its built-in <code>CronCreate</code> tool — no external tooling needed. You describe a recurring task in natural language and set a cron expression; the agent fires on schedule.</p>
+    <table>
+      <tr><th>Use Case</th><th>Cron Expression</th><th>What it does</th></tr>
+      <tr><td>Daily standup report</td><td><code>0 9 * * 1-5</code></td><td>Runs every weekday at 9 AM</td></tr>
+      <tr><td>Weekly project summary</td><td><code>0 8 * * 1</code></td><td>Runs every Monday at 8 AM</td></tr>
+      <tr><td>Status check every 30 min</td><td><code>*/30 * * * *</code></td><td>Polls a task or dashboard every 30 min</td></tr>
+      <tr><td>End-of-day wrap-up</td><td><code>0 17 * * 1-5</code></td><td>Runs weekdays at 5 PM</td></tr>
+    </table>
+    <p>Open Claw uses system cron (<code>crontab -e</code>) to schedule <code>open-claw --prompt "your task"</code>. Codex has no scheduling support. Claude Code's native cron is the most powerful option for PM automation workflows.</p>
     <div class="diagram-box">
       <strong style="color:#C4B5FD">Open Claw Architecture:</strong><br><br>
       User Input (natural language task)<br>
