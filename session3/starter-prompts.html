@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starter Prompts Library — Session 3</title>
+<style>
+  :root { --bg:#0D1B2A; --card:#1A2B3C; --accent:#F0C040; --text:#E8EDF2; --muted:#8AABB8; --border:#2A4055; --s3:#10B981; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; line-height:1.6; }
+  .screen-nav { background:rgba(13,27,42,0.95); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:52px; font-size:0.9rem; }
+  .screen-nav a { color:var(--muted); text-decoration:none; }
+  .screen-nav a:hover { color:var(--accent); }
+  .print-btn { background:var(--accent); color:#0D1B2A; border:none; padding:0.4rem 1rem; border-radius:6px; cursor:pointer; font-weight:700; font-size:0.85rem; }
+  .sheet { max-width:860px; margin:2rem auto; padding:0 1rem; }
+  .sheet-header { background:var(--card); border:2px solid var(--s3); border-radius:12px; padding:1.5rem 2rem; margin-bottom:1.5rem; }
+  .sheet-header h1 { font-size:1.4rem; font-weight:900; }
+  .sheet-header h1 span { color:var(--s3); }
+  .sheet-header .meta { font-size:0.8rem; color:var(--muted); margin-top:0.3rem; }
+  h2 { font-size:1.05rem; font-weight:800; color:var(--s3); margin:1.8rem 0 0.8rem; border-bottom:1px solid var(--border); padding-bottom:0.4rem; }
+  p { color:#CBD5E1; font-size:0.9rem; margin-bottom:0.7rem; }
+  .prompt-card { background:var(--card); border:1px solid var(--border); border-radius:10px; margin-bottom:1rem; overflow:hidden; }
+  .prompt-card-header { padding:0.9rem 1.2rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .prompt-num { background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:var(--s3); font-size:0.72rem; font-weight:700; padding:0.2rem 0.7rem; border-radius:6px; }
+  .prompt-title { font-weight:700; font-size:0.95rem; }
+  .prompt-when { font-size:0.78rem; color:var(--muted); }
+  .prompt-body { padding:1rem 1.2rem; }
+  .prompt-text { background:#0A1520; border:1px solid rgba(16,185,129,0.2); border-radius:7px; padding:0.9rem 1rem; font-family:monospace; font-size:0.85rem; color:var(--text); line-height:1.6; margin-bottom:0.7rem; white-space:pre-wrap; }
+  .placeholder { color:#F0C040; font-style:italic; }
+  .tips { list-style:none; padding:0; }
+  .tips li { font-size:0.82rem; color:var(--muted); padding:0.2rem 0; display:flex; gap:0.5rem; }
+  .tips li::before { content:'💡'; flex-shrink:0; }
+  .app-specs { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; margin-bottom:1rem; }
+  .app-spec { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.1rem; }
+  .app-spec-header { display:flex; align-items:center; gap:0.7rem; margin-bottom:0.8rem; }
+  .app-spec-icon { font-size:1.5rem; }
+  .app-spec-title { font-weight:700; font-size:0.95rem; }
+  .spec-tag { font-size:0.7rem; color:var(--s3); background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2); padding:0.15rem 0.5rem; border-radius:4px; }
+  .spec-cols { font-size:0.8rem; color:var(--muted); margin-bottom:0.5rem; }
+  .spec-cols strong { color:var(--text); }
+  .spec-features { list-style:none; padding:0; }
+  .spec-features li { font-size:0.8rem; color:#CBD5E1; padding:0.15rem 0; display:flex; gap:0.4rem; }
+  .spec-features li::before { content:'→'; color:var(--s3); flex-shrink:0; }
+  .cert-box { background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(240,192,64,0.08)); border:2px solid rgba(16,185,129,0.4); border-radius:12px; padding:1.5rem 2rem; text-align:center; margin-top:2rem; }
+  .cert-box h2 { border:none; margin-top:0; font-size:1.1rem; }
+  .footer { text-align:center; padding:1.5rem; border-top:1px solid var(--border); margin-top:2rem; color:var(--muted); font-size:0.8rem; }
+  @media print {
+    body { background:#fff; color:#000; }
+    .screen-nav { display:none; }
+    .sheet { margin:0; padding:0; }
+    .prompt-card,.app-spec,.cert-box,.sheet-header { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+</style>
+</head>
+<body>
+<div class="screen-nav">
+  <a href="index.html">← Session 3</a>
+  <span style="color:var(--muted)">Starter Prompts Library</span>
+  <button class="print-btn" onclick="window.print()">🖨 Print / Save PDF</button>
+</div>
+<div class="sheet">
+
+  <div class="sheet-header">
+    <h1>Starter Prompts <span>Library</span></h1>
+    <div class="meta">Session 3 · Agentic AI & Vibe Coding Bootcamp · June 27, 2026 · Subhankar Pattanayak</div>
+  </div>
+
+  <h2>How to Use These Prompts</h2>
+  <p>Each prompt is a template. Replace <span style="color:var(--accent);font-family:monospace">[BRACKETED WORDS]</span> with your specific details. Start with Prompt A for any new app, then layer in B, C, D to enhance it. Use Prompt E whenever something doesn't work as expected.</p>
+
+  <!-- PROMPT A -->
+  <div class="prompt-card">
+    <div class="prompt-card-header">
+      <div>
+        <div class="prompt-num">Prompt A</div>
+        <div class="prompt-title">Generic PM App Starter</div>
+        <div class="prompt-when">Use this FIRST for any new app</div>
+      </div>
+    </div>
+    <div class="prompt-body">
+      <div class="prompt-text">"Build a single-file HTML <span class="placeholder">[APP TYPE]</span> tool. Include:
+- <span class="placeholder">[MAIN TABLE/VIEW]</span> with columns: <span class="placeholder">[COL1, COL2, COL3, COL4]</span>
+- <span class="placeholder">[KEY FEATURE 1]</span>
+- <span class="placeholder">[KEY FEATURE 2]</span>
+- Add <span class="placeholder">[NUMBER]</span> sample rows of realistic data
+
+Style: dark navy background (#0D1B2A), gold accents (#F0C040), clean modern typography.
+Make it fully functional with no backend — use localStorage to persist data."</div>
+      <ul class="tips">
+        <li>Name every column you want — vague prompts produce vague apps</li>
+        <li>Ask for sample data — it makes the app immediately usable and easier to review</li>
+        <li>Specify colours — otherwise you get default browser styling</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PROMPT B -->
+  <div class="prompt-card">
+    <div class="prompt-card-header">
+      <div>
+        <div class="prompt-num">Prompt B</div>
+        <div class="prompt-title">Add Persistence + Summary</div>
+        <div class="prompt-when">Use after Prompt A — adds data saving and summary stats</div>
+      </div>
+    </div>
+    <div class="prompt-body">
+      <div class="prompt-text">"Update the app to:
+1. Save all data to localStorage so it persists when the page is refreshed. Show a 'Saved ✓' indicator that appears briefly after any change.
+2. Add a summary bar at the top showing: total items, count by <span class="placeholder">[STATUS FIELD]</span> (e.g., how many Red/Amber/Green).
+3. Add an 'Add New <span class="placeholder">[ITEM]</span>' button that opens a clean form — save on submit, cancel on close."</div>
+      <ul class="tips">
+        <li>Always add localStorage in step 2 — losing data on refresh kills adoption</li>
+        <li>Summary stats make dashboards feel real and useful immediately</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PROMPT C -->
+  <div class="prompt-card">
+    <div class="prompt-card-header">
+      <div>
+        <div class="prompt-num">Prompt C</div>
+        <div class="prompt-title">Add Export + Filtering</div>
+        <div class="prompt-when">Use to make the app shareable and navigable</div>
+      </div>
+    </div>
+    <div class="prompt-body">
+      <div class="prompt-text">"Add to the existing app:
+1. An 'Export CSV' button that downloads all data as a CSV file named '<span class="placeholder">[APPNAME]</span>_export_[today's date].csv'.
+2. A filter/search bar at the top that filters rows in real time as you type.
+3. A dropdown filter for <span class="placeholder">[STATUS/CATEGORY FIELD]</span> showing all unique values.
+4. A 'Clear Filters' button to reset to full view."</div>
+      <ul class="tips">
+        <li>Export makes the app useful beyond a browser — share in email or open in Excel</li>
+        <li>Real-time filter is the #1 requested feature in PM tools</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PROMPT D -->
+  <div class="prompt-card">
+    <div class="prompt-card-header">
+      <div>
+        <div class="prompt-num">Prompt D</div>
+        <div class="prompt-title">Polish, Responsive + Footer</div>
+        <div class="prompt-when">Use as the final polish pass before sharing</div>
+      </div>
+    </div>
+    <div class="prompt-body">
+      <div class="prompt-text">"Final polish pass on the app:
+1. Make the layout fully responsive for mobile screens (cards stack on small screens, table scrolls horizontally).
+2. Add smooth CSS transitions: rows slide in when added, status badges animate on change.
+3. Add a professional header with the app name and today's date auto-updating.
+4. Add a footer: 'Built with AI by <span class="placeholder">[Your Name]</span> · <span class="placeholder">[Date]</span>'.
+5. Ensure the colour scheme is consistent throughout — use CSS variables."</div>
+      <ul class="tips">
+        <li>CSS variables make future colour changes a one-line edit</li>
+        <li>Mobile responsiveness is a must — participants often check apps on phones</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PROMPT E -->
+  <div class="prompt-card">
+    <div class="prompt-card-header">
+      <div>
+        <div class="prompt-num">Prompt E</div>
+        <div class="prompt-title">Debug &amp; Fix Formula</div>
+        <div class="prompt-when">Use whenever something doesn't work as expected</div>
+      </div>
+    </div>
+    <div class="prompt-body">
+      <div class="prompt-text">"The <span class="placeholder">[FEATURE]</span> is not working correctly.
+
+When I <span class="placeholder">[DESCRIBE THE ACTION YOU TAKE]</span>, it should <span class="placeholder">[DESCRIBE THE EXPECTED RESULT]</span> but instead <span class="placeholder">[DESCRIBE WHAT ACTUALLY HAPPENS]</span>.
+
+Please fix this. Do not change any other features."</div>
+      <ul class="tips">
+        <li>The last sentence ("do not change other features") prevents unwanted side effects</li>
+        <li>Be specific about the action — vague bug reports produce vague fixes</li>
+        <li>If it still doesn't work, paste the exact error message or describe the visual glitch</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>6 PM App Specs — Full Column Lists</h2>
+  <div class="app-specs">
+    <div class="app-spec">
+      <div class="app-spec-header"><div class="app-spec-icon">📊</div><div><div class="app-spec-title">Status Dashboard</div><div class="spec-tag">Most Popular</div></div></div>
+      <div class="spec-cols"><strong>Columns:</strong> Project Name, Status (RAG), Owner, Due Date, % Complete, Notes</div>
+      <ul class="spec-features">
+        <li>RAG colour coding (Red/Amber/Green)</li>
+        <li>Filter by status dropdown</li>
+        <li>Summary bar: total + RAG counts</li>
+        <li>Inline edit on row click</li>
+        <li>Export to CSV</li>
+      </ul>
+    </div>
+    <div class="app-spec">
+      <div class="app-spec-header"><div class="app-spec-icon">✅</div><div><div class="app-spec-title">Task Register</div></div></div>
+      <div class="spec-cols"><strong>Columns:</strong> Task, Owner, Priority (High/Med/Low), Due Date, Status, Notes</div>
+      <ul class="spec-features">
+        <li>Overdue rows highlighted red</li>
+        <li>Priority badge colours</li>
+        <li>Filter by owner and priority</li>
+        <li>Mark complete button per row</li>
+        <li>Completed items strike-through</li>
+      </ul>
+    </div>
+    <div class="app-spec">
+      <div class="app-spec-header"><div class="app-spec-icon">⚠️</div><div><div class="app-spec-title">Risk Register</div></div></div>
+      <div class="spec-cols"><strong>Columns:</strong> Risk Description, Category, Probability (1-5), Impact (1-5), Risk Score, Owner, Mitigation</div>
+      <ul class="spec-features">
+        <li>Auto-calculate: Score = P × I</li>
+        <li>Colour by score: &gt;15 Red, 8-15 Amber, &lt;8 Green</li>
+        <li>Sort by risk score descending</li>
+        <li>Category filter dropdown</li>
+        <li>Risk matrix 5×5 visual</li>
+      </ul>
+    </div>
+    <div class="app-spec">
+      <div class="app-spec-header"><div class="app-spec-icon">📅</div><div><div class="app-spec-title">Agenda Builder</div></div></div>
+      <div class="spec-cols"><strong>Fields:</strong> Meeting Title, Date, Attendees, Agenda Items (topic, owner, time, type)</div>
+      <ul class="spec-features">
+        <li>Time slot auto-calculation</li>
+        <li>Drag to reorder agenda items</li>
+        <li>Running total time display</li>
+        <li>Print-optimised layout</li>
+        <li>Copy as plain text button</li>
+      </ul>
+    </div>
+    <div class="app-spec">
+      <div class="app-spec-header"><div class="app-spec-icon">💰</div><div><div class="app-spec-title">Budget Tracker</div></div></div>
+      <div class="spec-cols"><strong>Columns:</strong> Workstream, Budget (₹), Spent (₹), Committed (₹), Variance, Status</div>
+      <ul class="spec-features">
+        <li>Auto-calculate variance</li>
+        <li>Chart: budget vs spent bar chart</li>
+        <li>Over-budget rows highlighted red</li>
+        <li>Total row at bottom</li>
+        <li>Currency formatting (₹ or $)</li>
+      </ul>
+    </div>
+    <div class="app-spec">
+      <div class="app-spec-header"><div class="app-spec-icon">🗺️</div><div><div class="app-spec-title">Roadmap View</div></div></div>
+      <div class="spec-cols"><strong>Fields:</strong> Milestone, Owner, Start Date, End Date, Status, Track/Workstream</div>
+      <ul class="spec-features">
+        <li>Gantt-style horizontal bars</li>
+        <li>Colour by status (RAG)</li>
+        <li>Today line marker</li>
+        <li>Group by workstream/track</li>
+        <li>Milestone dependency arrows</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cert-box">
+    <h2>🏅 Completion Certificate</h2>
+    <p style="color:var(--muted);font-size:0.9rem;margin-top:0.5rem">Upon completing all 3 sessions, you'll receive a digital certificate recognising your expertise in Agentic AI Communication, Open Claw, and Vibe Coding — by Subhankar Pattanayak, AI Practitioner.</p>
+  </div>
+
+  <div class="footer">
+    Agentic AI &amp; Vibe Coding Bootcamp &nbsp;·&nbsp; Session 3 &nbsp;·&nbsp; by Subhankar Pattanayak &nbsp;·&nbsp; June 27, 2026
+  </div>
+</div>
+</body>
+</html>

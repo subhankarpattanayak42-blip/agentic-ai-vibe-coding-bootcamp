@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Vocabulary Cheat Sheet — Session 1</title>
+<style>
+  :root {
+    --bg:#0D1B2A; --card:#1A2B3C; --accent:#F0C040; --text:#E8EDF2;
+    --muted:#8AABB8; --border:#2A4055; --s1:#3B82F6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; line-height:1.6; }
+  .screen-nav { background:rgba(13,27,42,0.95); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:52px; font-size:0.9rem; }
+  .screen-nav a { color:var(--muted); text-decoration:none; }
+  .screen-nav a:hover { color:var(--accent); }
+  .print-btn { background:var(--accent); color:#0D1B2A; border:none; padding:0.4rem 1rem; border-radius:6px; cursor:pointer; font-weight:700; font-size:0.85rem; }
+
+  .sheet { max-width:820px; margin:2rem auto; padding:0 1rem; }
+
+  .sheet-header { background:var(--card); border:2px solid var(--accent); border-radius:12px; padding:1.5rem 2rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; }
+  .sheet-header h1 { font-size:1.4rem; font-weight:900; }
+  .sheet-header h1 span { color:var(--accent); }
+  .sheet-header .meta { font-size:0.8rem; color:var(--muted); margin-top:0.3rem; }
+  .session-badge { background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.4); color:var(--s1); font-size:0.75rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:6px; }
+
+  h2 { font-size:1.1rem; font-weight:800; color:var(--accent); margin:1.5rem 0 0.8rem; border-bottom:1px solid var(--border); padding-bottom:0.4rem; }
+
+  /* TERMS GRID */
+  .terms-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-bottom:1rem; }
+  .term { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:0.9rem 1rem; }
+  .term-word { font-size:0.9rem; font-weight:800; color:var(--s1); margin-bottom:0.3rem; }
+  .term-def { font-size:0.82rem; color:#CBD5E1; line-height:1.5; }
+  .term-example { font-size:0.75rem; color:var(--muted); margin-top:0.3rem; font-style:italic; }
+
+  /* EXEC LAYERS */
+  .layer { background:var(--card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:8px; padding:1rem 1.2rem; margin-bottom:0.7rem; }
+  .layer-num { font-size:0.7rem; font-weight:800; color:var(--accent); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.3rem; }
+  .layer-title { font-size:0.9rem; font-weight:700; margin-bottom:0.4rem; }
+  .layer-points { list-style:none; padding:0; }
+  .layer-points li { font-size:0.82rem; color:#CBD5E1; padding:0.15rem 0; display:flex; gap:0.5rem; }
+  .layer-points li::before { content:'•'; color:var(--accent); flex-shrink:0; }
+
+  /* PHRASES */
+  .phrases { display:flex; flex-direction:column; gap:0.5rem; }
+  .phrase { background:rgba(240,192,64,0.08); border:1px solid rgba(240,192,64,0.2); border-radius:7px; padding:0.8rem 1rem; font-size:0.85rem; color:var(--text); font-style:italic; }
+  .phrase::before { content:'" '; color:var(--accent); font-style:normal; font-weight:700; }
+  .phrase::after { content:' "'; color:var(--accent); font-style:normal; font-weight:700; }
+
+  /* MY NOTES */
+  .notes-box { background:rgba(255,255,255,0.03); border:1px dashed var(--border); border-radius:8px; padding:1rem; min-height:80px; }
+  .notes-label { font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.5rem; }
+  .notes-lines { border-bottom:1px solid var(--border); margin-bottom:0.6rem; height:1px; }
+
+  .footer { text-align:center; padding:1.5rem; border-top:1px solid var(--border); margin-top:2rem; color:var(--muted); font-size:0.8rem; }
+
+  @media print {
+    body { background:#fff; color:#000; }
+    .screen-nav { display:none; }
+    .sheet { margin:0; padding:0; max-width:100%; }
+    .term, .layer, .phrase, .notes-box, .sheet-header { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .term-def, .layer-points li, .phrase { color:#333 !important; }
+    .term-word, .layer-title, .layer-num { color:#1D4ED8 !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="screen-nav">
+  <a href="index.html">← Session 1</a>
+  <span style="color:var(--muted)">AI Vocabulary Cheat Sheet</span>
+  <button class="print-btn" onclick="window.print()">🖨 Print / Save PDF</button>
+</div>
+
+<div class="sheet">
+
+  <div class="sheet-header">
+    <div>
+      <h1>My <span>AI Vocabulary</span> Cheat Sheet</h1>
+      <div class="meta">Session 1 · Agentic AI & Vibe Coding Bootcamp · June 13, 2026 · Subhankar Pattanayak</div>
+    </div>
+    <div class="session-badge">Session 1</div>
+  </div>
+
+  <h2>10 Essential Terms</h2>
+  <div class="terms-grid">
+    <div class="term">
+      <div class="term-word">🤖 Agent</div>
+      <div class="term-def">An autonomous system that perceives its environment, makes decisions, and takes actions — without step-by-step human instruction.</div>
+      <div class="term-example">Example: An AI that books a meeting by checking calendars, finding a slot, and sending invites.</div>
+    </div>
+    <div class="term">
+      <div class="term-word">🎛️ Orchestrator</div>
+      <div class="term-def">The control layer that manages an agent's workflow — deciding which tools to use, in what order, with what context.</div>
+      <div class="term-example">Example: The part of Claude Code that decides "first read the file, then edit, then run tests."</div>
+    </div>
+    <div class="term">
+      <div class="term-word">🔧 Tool</div>
+      <div class="term-def">A function or API an agent can call to interact with the outside world — file system, database, web search, code execution.</div>
+      <div class="term-example">Example: Bash tool lets an agent run terminal commands; Read tool reads files.</div>
+    </div>
+    <div class="term">
+      <div class="term-word">🧠 Context Window</div>
+      <div class="term-def">The maximum amount of text (tokens) an LLM can "see" at once. Everything — instructions, history, tool results — must fit inside it.</div>
+      <div class="term-example">Claude Sonnet has ~200K token context. 1 page ≈ 300–400 tokens.</div>
+    </div>
+    <div class="term">
+      <div class="term-word">🔄 Reasoning Loop</div>
+      <div class="term-def">The iterative cycle agents run: Think → Plan → Execute Tool → Observe Result → Decide next step. Repeats until task is done.</div>
+      <div class="term-example">Each loop costs tokens and API calls — efficiency matters.</div>
+    </div>
+    <div class="term">
+      <div class="term-word">💾 Prompt Caching</div>
+      <div class="term-def">Technique to reuse expensive system prompts across calls — cached prompts cost ~10% of the original price.</div>
+      <div class="term-example">Your CLAUDE.md instructions can be cached, saving 80%+ on long sessions.</div>
+    </div>
+    <div class="term">
+      <div class="term-word">📦 Compaction</div>
+      <div class="term-def">When context gets full, older messages are summarised into a compact form — allowing the agent to continue without hitting the limit.</div>
+      <div class="term-example">/compact command in Claude Code triggers this manually.</div>
+    </div>
+    <div class="term">
+      <div class="term-word">🏗️ Harness Engineering</div>
+      <div class="term-def">The discipline of building the scaffolding around an LLM — tools, memory, orchestration, CLAUDE.md — to create reliable agentic systems.</div>
+      <div class="term-example">Claude Code, Open Claw, and Hermes are all harness engineering tools.</div>
+    </div>
+    <div class="term">
+      <div class="term-word">🎵 Vibe Coding</div>
+      <div class="term-def">Building functional software using natural language descriptions — you describe the outcome, the agent writes the code.</div>
+      <div class="term-example">"Build me a PM dashboard with RAG status, filters, and CSV export" → working app.</div>
+    </div>
+    <div class="term">
+      <div class="term-word">📚 RAG</div>
+      <div class="term-def">Retrieval-Augmented Generation — a pattern where an agent retrieves relevant documents before generating a response, grounding answers in real data.</div>
+      <div class="term-example">Searching a knowledge base before answering a question.</div>
+    </div>
+  </div>
+
+  <h2>Executive Communication: 3 Layers</h2>
+  <div class="layer">
+    <div class="layer-num">Layer 1 — The Problem</div>
+    <div class="layer-title">What senior leaders actually care about</div>
+    <ul class="layer-points">
+      <li>"We're paying highly skilled people to do work AI can automate"</li>
+      <li>"Our competitors using AI are shipping features in days, not weeks"</li>
+      <li>"Manual processes create compliance gaps and audit risk"</li>
+    </ul>
+  </div>
+  <div class="layer">
+    <div class="layer-num">Layer 2 — The Solution</div>
+    <div class="layer-title">What agentic AI actually provides</div>
+    <ul class="layer-points">
+      <li>Autonomous execution — AI completes multi-step tasks without hand-holding</li>
+      <li>Self-correcting reasoning — fewer escalations, fewer bugs, fewer re-works</li>
+      <li>End-to-end workflow automation, not just individual task automation</li>
+    </ul>
+  </div>
+  <div class="layer">
+    <div class="layer-num">Layer 3 — Business Impact</div>
+    <div class="layer-title">The numbers that justify investment</div>
+    <ul class="layer-points">
+      <li>Capacity recapture: "If agents do 30% of your team's work, that's 30% more capacity at zero extra headcount"</li>
+      <li>Speed: "3-week feature delivery → 3 days with agentic tooling"</li>
+      <li>Quality: "Automated checks mean consistent, auditable outputs every time"</li>
+    </ul>
+  </div>
+
+  <h2>Power Phrases — Use These in Any Meeting</h2>
+  <div class="phrases">
+    <div class="phrase">Agentic AI doesn't replace people — it removes the drudgery so people focus on judgment.</div>
+    <div class="phrase">The question isn't whether to adopt agentic AI — it's whether we adopt it before our competitors do.</div>
+    <div class="phrase">We're not talking about automation. We're talking about a force multiplier for every professional.</div>
+    <div class="phrase">These tools don't need perfect prompts — they need clear goals. That's a human skill.</div>
+  </div>
+
+  <h2>My Notes — Personalise This</h2>
+  <div class="notes-box">
+    <div class="notes-label">My industry-specific AI use case:</div>
+    <div class="notes-lines"></div><div class="notes-lines" style="margin-top:1.2rem"></div>
+    <div class="notes-label" style="margin-top:1.2rem">My 30-second elevator pitch on Agentic AI:</div>
+    <div class="notes-lines" style="margin-top:0.8rem"></div><div class="notes-lines" style="margin-top:1.2rem"></div><div class="notes-lines" style="margin-top:1.2rem"></div>
+  </div>
+
+  <div class="footer">
+    Agentic AI &amp; Vibe Coding Bootcamp &nbsp;·&nbsp; Session 1 &nbsp;·&nbsp; by Subhankar Pattanayak &nbsp;·&nbsp; June 13, 2026
+  </div>
+
+</div>
+</body>
+</html>

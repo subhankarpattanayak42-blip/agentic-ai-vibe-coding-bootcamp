@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 1 Slides — Foundations of Agentic AI</title>
+<style>
+  :root {
+    --bg: #0D1B2A; --card: #1A2B3C; --accent: #F0C040; --accent2: #E8A020;
+    --text: #E8EDF2; --muted: #8AABB8; --border: #2A4055; --s1: #3B82F6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#111; font-family:'Inter',system-ui,sans-serif; overflow:hidden; }
+
+  /* CONTROLS */
+  .controls {
+    position:fixed; bottom:0; left:0; right:0; z-index:100;
+    background:rgba(0,0,0,0.85); backdrop-filter:blur(8px);
+    border-top:1px solid #333;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.7rem 2rem; gap:1rem;
+  }
+  .ctrl-btn {
+    background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+    color:#fff; padding:0.5rem 1.4rem; border-radius:6px; cursor:pointer;
+    font-size:0.9rem; transition:background 0.2s;
+  }
+  .ctrl-btn:hover { background:rgba(255,255,255,0.2); }
+  .ctrl-btn:disabled { opacity:0.3; cursor:not-allowed; }
+  .slide-counter { color:#aaa; font-size:0.9rem; min-width:80px; text-align:center; }
+  .progress-bar { flex:1; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden; }
+  .progress-fill { height:100%; background:var(--accent); transition:width 0.3s; }
+  .ctrl-nav-group { display:flex; gap:0.5rem; align-items:center; }
+  .nav-dots { display:flex; gap:6px; }
+  .dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.2); cursor:pointer; transition:background 0.2s; }
+  .dot.active { background:var(--accent); }
+  .print-btn { background:rgba(240,192,64,0.15); border:1px solid rgba(240,192,64,0.4); color:var(--accent); padding:0.5rem 1.2rem; border-radius:6px; cursor:pointer; font-size:0.85rem; }
+  .home-link { color:#aaa; font-size:0.85rem; text-decoration:none; }
+  .home-link:hover { color:#fff; }
+
+  /* SLIDE VIEWPORT */
+  .slide-viewport {
+    width:100vw; height:calc(100vh - 56px);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .slide-wrap {
+    width:min(95vw, calc((100vh - 80px) * 16/9));
+    height:min(calc(95vw * 9/16), calc(100vh - 80px));
+    position:relative;
+  }
+  .slide {
+    position:absolute; inset:0;
+    background:var(--bg);
+    border-radius:8px; overflow:hidden;
+    display:none; flex-direction:column;
+    box-shadow:0 20px 60px rgba(0,0,0,0.6);
+    font-size:clamp(10px, 1.5vw, 16px);
+  }
+  .slide.active { display:flex; }
+
+  /* COMMON SLIDE ELEMENTS */
+  .slide-header { padding:0.8em 1.5em 0.5em; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .slide-num { font-size:0.65em; color:var(--muted); letter-spacing:1px; }
+  .slide-tag { font-size:0.65em; color:var(--s1); font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+  .slide-body { flex:1; padding:1.2em 1.8em; display:flex; flex-direction:column; justify-content:center; }
+  .slide-footer { padding:0.5em 1.5em; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .footer-text { font-size:0.6em; color:var(--muted); }
+  .footer-logo { font-size:0.6em; color:var(--accent); font-weight:700; }
+
+  h1.slide-title { font-size:2.4em; font-weight:900; line-height:1.1; margin-bottom:0.3em; }
+  h1.slide-title span { color:var(--accent); }
+  h2.stitle { font-size:1.6em; font-weight:800; margin-bottom:0.6em; }
+  h2.stitle span { color:var(--accent); }
+  h3.sh3 { font-size:0.95em; font-weight:700; color:var(--accent); margin-bottom:0.4em; margin-top:0.8em; }
+  p.sp { font-size:0.88em; color:#CBD5E1; line-height:1.5; margin-bottom:0.4em; }
+  ul.sul { padding-left:1.2em; }
+  ul.sul li { font-size:0.85em; color:#CBD5E1; padding:0.15em 0; line-height:1.4; }
+
+  /* TABLE */
+  table.stbl { width:100%; border-collapse:collapse; font-size:0.82em; }
+  table.stbl th { background:rgba(59,130,246,0.15); color:var(--s1); padding:0.5em 0.8em; text-align:left; border:1px solid var(--border); }
+  table.stbl td { padding:0.45em 0.8em; border:1px solid var(--border); color:#CBD5E1; vertical-align:top; }
+  table.stbl tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
+
+  /* SPECIAL LAYOUTS */
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.8em; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:0.9em 1em; }
+  .card .card-icon { font-size:1.6em; margin-bottom:0.3em; }
+  .card .card-title { font-size:0.85em; font-weight:700; color:var(--accent); margin-bottom:0.3em; }
+  .card .card-body { font-size:0.78em; color:#CBD5E1; line-height:1.4; }
+
+  /* SLIDE 1 — COVER */
+  .slide-cover {
+    background:radial-gradient(ellipse at 30% 40%, rgba(240,192,64,0.1) 0%, transparent 60%),
+               radial-gradient(ellipse at 80% 80%, rgba(59,130,246,0.08) 0%, transparent 60%),
+               var(--bg);
+    align-items:center; justify-content:center;
+  }
+  .cover-inner { text-align:center; }
+  .cover-badge {
+    display:inline-block; background:rgba(240,192,64,0.15); border:1px solid rgba(240,192,64,0.4);
+    color:var(--accent); font-size:0.7em; font-weight:700; letter-spacing:2px;
+    text-transform:uppercase; padding:0.3em 1em; border-radius:20px; margin-bottom:1em;
+  }
+  .cover-title { font-size:3em; font-weight:900; line-height:1.1; margin-bottom:0.4em; }
+  .cover-title span { color:var(--accent); display:block; }
+  .cover-sub { font-size:0.9em; color:var(--muted); margin-bottom:1.5em; }
+  .cover-meta { display:flex; justify-content:center; gap:2em; flex-wrap:wrap; }
+  .cover-meta-item { font-size:0.78em; color:var(--muted); display:flex; align-items:center; gap:0.4em; }
+
+  /* DIAGRAM */
+  .flow-diagram { display:flex; align-items:center; justify-content:center; gap:0.3em; margin:0.8em 0; flex-wrap:wrap; }
+  .flow-box { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:0.4em 0.8em; font-size:0.78em; color:var(--text); text-align:center; white-space:nowrap; }
+  .flow-box.highlight { border-color:var(--accent); color:var(--accent); }
+  .flow-arrow { color:var(--accent); font-size:1em; }
+
+  /* HIGHLIGHT BOX */
+  .hl-box { background:rgba(240,192,64,0.08); border:1px solid rgba(240,192,64,0.25); border-radius:8px; padding:0.8em 1em; margin-top:0.8em; }
+  .hl-box .hl-label { font-size:0.7em; color:var(--accent); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.3em; }
+  .hl-box p { font-size:0.82em; color:#CBD5E1; }
+
+  /* QUOTE */
+  .big-quote { font-size:1.3em; font-style:italic; color:var(--text); line-height:1.5; text-align:center; border-left:3px solid var(--accent); padding-left:1em; margin:0.5em 0; }
+
+  /* EXEC LAYERS */
+  .exec-layer { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:0.8em 1em; margin-bottom:0.5em; display:flex; gap:0.8em; align-items:flex-start; }
+  .layer-num { background:var(--accent); color:#0D1B2A; font-weight:800; font-size:0.8em; width:1.6em; height:1.6em; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:0.1em; }
+  .layer-content .layer-title { font-size:0.82em; font-weight:700; color:var(--accent); margin-bottom:0.2em; }
+  .layer-content .layer-text { font-size:0.78em; color:#CBD5E1; }
+
+  /* TOOL COMPARISON */
+  .tool-row { display:flex; align-items:center; gap:0.8em; background:var(--card); border:1px solid var(--border); border-radius:7px; padding:0.6em 0.9em; margin-bottom:0.4em; }
+  .tool-name { font-weight:700; font-size:0.85em; color:var(--accent); min-width:5em; }
+  .tool-type { font-size:0.72em; color:var(--muted); background:rgba(255,255,255,0.06); padding:0.15em 0.5em; border-radius:4px; }
+  .tool-desc { font-size:0.78em; color:#CBD5E1; flex:1; }
+  .tool-oss-yes { font-size:0.7em; color:#10B981; background:rgba(16,185,129,0.1); padding:0.15em 0.5em; border-radius:4px; }
+  .tool-oss-no { font-size:0.7em; color:#F87171; background:rgba(248,113,113,0.1); padding:0.15em 0.5em; border-radius:4px; }
+
+  /* KEY TERMS GRID */
+  .terms-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.5em; }
+  .term-item { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:0.6em 0.8em; }
+  .term-word { font-size:0.82em; font-weight:700; color:var(--s1); margin-bottom:0.2em; }
+  .term-def { font-size:0.75em; color:#CBD5E1; line-height:1.4; }
+
+  @media print {
+    body { overflow:visible; background:#fff; }
+    .controls { display:none; }
+    .slide-viewport { width:100%; height:auto; display:block; }
+    .slide-wrap { width:100%; height:auto; position:relative; }
+    .slide { position:relative; display:flex !important; height:calc(100vw * 9/16); margin-bottom:1rem; page-break-after:always; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="slide-viewport">
+<div class="slide-wrap" id="wrap">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide slide-cover active" id="s1">
+    <div class="cover-inner">
+      <div class="cover-badge">Session 1 of 3 · June 13, 2026</div>
+      <div class="cover-title">Foundations of<br><span>Agentic AI</span></div>
+      <div class="cover-sub">From reactive chatbots to autonomous agents — the shift that changes everything</div>
+      <div class="cover-meta">
+        <div class="cover-meta-item">📅 June 13, 2026</div>
+        <div class="cover-meta-item">🕓 4:00–5:00 PM</div>
+        <div class="cover-meta-item">👤 Subhankar Pattanayak</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: AGENDA -->
+  <div class="slide" id="s2">
+    <div class="slide-header"><span class="slide-tag">Agenda</span><span class="slide-num">02 / 08</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">What We'll Cover <span>Today</span></h2>
+      <div style="display:flex;flex-direction:column;gap:0.5em;margin-top:0.3em">
+        <div class="exec-layer">
+          <div class="layer-num">1</div>
+          <div class="layer-content">
+            <div class="layer-title">4:05 — Why Agentic AI Matters Now</div>
+            <div class="layer-text">The bottleneck AI is solving — cost, speed, risk</div>
+          </div>
+        </div>
+        <div class="exec-layer">
+          <div class="layer-num">2</div>
+          <div class="layer-content">
+            <div class="layer-title">4:10 — Agentic AI vs Traditional AI</div>
+            <div class="layer-text">Comparison matrix + the reasoning loop diagram</div>
+          </div>
+        </div>
+        <div class="exec-layer">
+          <div class="layer-num">3</div>
+          <div class="layer-content">
+            <div class="layer-title">4:20 — Core Concepts</div>
+            <div class="layer-text">Agents · Orchestrators · Tools · Memory · Reasoning Loops</div>
+          </div>
+        </div>
+        <div class="exec-layer">
+          <div class="layer-num">4</div>
+          <div class="layer-content">
+            <div class="layer-title">4:30 — Tool Ecosystem</div>
+            <div class="layer-text">Claude Code · Open Claw · Hermes · Codex</div>
+          </div>
+        </div>
+        <div class="exec-layer">
+          <div class="layer-num">5</div>
+          <div class="layer-content">
+            <div class="layer-title">4:40 — Executive Communication</div>
+            <div class="layer-text">3 translation layers — talk to any senior leader confidently</div>
+          </div>
+        </div>
+      </div>
+      <div class="hl-box" style="margin-top:0.8em">
+        <div class="hl-label">🏆 Your Takeaway</div>
+        <p>"My AI Vocabulary" cheat sheet — 10 terms + executive talking points</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">⚡ Session 1</span></div>
+  </div>
+
+  <!-- SLIDE 3: WHY NOW -->
+  <div class="slide" id="s3">
+    <div class="slide-header"><span class="slide-tag">Context</span><span class="slide-num">03 / 08</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">Why <span>Agentic AI</span> Matters Now</h2>
+      <div class="big-quote">"You've used ChatGPT — you ask, it answers. But what if you could tell it to <em>build</em> a feature, run it, fix bugs, and deploy it — without touching a line of code?"</div>
+      <div class="three-col" style="margin-top:0.9em">
+        <div class="card">
+          <div class="card-icon">💸</div>
+          <div class="card-title">Cost</div>
+          <div class="card-body">Repetitive high-skill work done by expensive resources — AI can absorb it</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <div class="card-title">Speed</div>
+          <div class="card-body">Features take weeks — competitors using AI move in hours</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚠️</div>
+          <div class="card-title">Risk</div>
+          <div class="card-body">Manual processes = human errors, compliance gaps, audit failures</div>
+        </div>
+      </div>
+      <div class="hl-box">
+        <div class="hl-label">📊 Signal from the Market</div>
+        <p>McKinsey 2025: 70% of knowledge work is automatable with agentic AI &nbsp;·&nbsp; GitHub Copilot users: 55% faster &nbsp;·&nbsp; Enterprise agent market: +40% YoY</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">⚡ Session 1</span></div>
+  </div>
+
+  <!-- SLIDE 4: AGENTIC vs TRADITIONAL -->
+  <div class="slide" id="s4">
+    <div class="slide-header"><span class="slide-tag">Core Concept</span><span class="slide-num">04 / 08</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">Agentic AI vs <span>Traditional AI</span></h2>
+      <table class="stbl">
+        <tr><th>Feature</th><th>Traditional Chatbot</th><th>Agentic AI</th></tr>
+        <tr><td><strong>Interaction</strong></td><td>Query → Response</td><td>Task → Autonomous execution</td></tr>
+        <tr><td><strong>Tool Access</strong></td><td>Text generation only</td><td>APIs, files, databases, code execution</td></tr>
+        <tr><td><strong>Decision Flow</strong></td><td>Single pass</td><td>Plan → Act → Observe → Reason → Repeat</td></tr>
+        <tr><td><strong>Memory</strong></td><td>Session context only</td><td>Persistent + learned patterns</td></tr>
+        <tr><td><strong>Error Handling</strong></td><td>Reports back to human</td><td>Self-corrects, retries, escalates</td></tr>
+      </table>
+      <div style="margin-top:0.8em">
+        <div style="font-size:0.72em;color:var(--muted);margin-bottom:0.3em;font-weight:700;text-transform:uppercase;letter-spacing:1px">The Reasoning Loop</div>
+        <div class="flow-diagram">
+          <div class="flow-box">User Task</div><div class="flow-arrow">→</div>
+          <div class="flow-box highlight">Plan</div><div class="flow-arrow">→</div>
+          <div class="flow-box highlight">Execute Tool</div><div class="flow-arrow">→</div>
+          <div class="flow-box highlight">Observe</div><div class="flow-arrow">→</div>
+          <div class="flow-box highlight">Evaluate</div><div class="flow-arrow">↺ loop</div>
+          <div class="flow-box">Result</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">⚡ Session 1</span></div>
+  </div>
+
+  <!-- SLIDE 5: CORE CONCEPTS -->
+  <div class="slide" id="s5">
+    <div class="slide-header"><span class="slide-tag">Building Blocks</span><span class="slide-num">05 / 08</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">The <span>5 Building Blocks</span></h2>
+      <div class="terms-grid">
+        <div class="term-item">
+          <div class="term-word">🤖 Agents</div>
+          <div class="term-def">Autonomous systems that perceive environment, make decisions, and take actions. The LLM is the brain; the agent is the whole system.</div>
+        </div>
+        <div class="term-item">
+          <div class="term-word">🎛️ Orchestrators</div>
+          <div class="term-def">Control systems managing agent workflows — decide which tools to use, in what order. Like a project manager directing specialists.</div>
+        </div>
+        <div class="term-item">
+          <div class="term-word">🔧 Tools</div>
+          <div class="term-def">Functions/APIs the agent can invoke: file ops, database queries, web search, code execution. Each tool has a schema the agent uses.</div>
+        </div>
+        <div class="term-item">
+          <div class="term-word">🧠 Memory</div>
+          <div class="term-def"><strong>Short-term:</strong> current context window. <strong>Long-term:</strong> persistent storage. Challenge: memory costs tokens.</div>
+        </div>
+        <div class="term-item" style="grid-column:1/-1">
+          <div class="term-word">🔄 Reasoning Loops</div>
+          <div class="term-def">Think → Plan → Execute → Evaluate → Decide next step. Enables self-correction. Trade-off: more loops = better reasoning but higher cost &amp; latency.</div>
+        </div>
+      </div>
+      <div class="hl-box" style="margin-top:0.6em">
+        <div class="hl-label">🎯 Interactive Exercise</div>
+        <p>Spot-the-Agent: presented with 3 scenarios — identify which requires an agent and what tools it would use</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">⚡ Session 1</span></div>
+  </div>
+
+  <!-- SLIDE 6: TOOL ECOSYSTEM -->
+  <div class="slide" id="s6">
+    <div class="slide-header"><span class="slide-tag">Tool Landscape</span><span class="slide-num">06 / 08</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">The <span>Tool Ecosystem</span></h2>
+      <div style="margin-bottom:0.4em">
+        <div class="tool-row">
+          <div class="tool-name">Claude Code</div>
+          <div class="tool-type">Agentic CLI</div>
+          <div class="tool-desc">Enterprise-grade agentic coding assistant from Anthropic. Best out-of-the-box experience for complex, multi-file tasks.</div>
+          <div class="tool-oss-no">Proprietary</div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-name">Open Claw</div>
+          <div class="tool-type">OSS CLI</div>
+          <div class="tool-desc">Community-driven open-source agentic assistant. Fully transparent, forkable, bring-your-own-model. Best for learning internals.</div>
+          <div class="tool-oss-yes">Open Source</div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-name">Hermes</div>
+          <div class="tool-type">Framework</div>
+          <div class="tool-desc">Lightweight agentic pipeline framework. Great for building custom automation workflows and chaining multi-agent tasks.</div>
+          <div class="tool-oss-yes">Open Source</div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-name">Codex</div>
+          <div class="tool-type">Code Gen</div>
+          <div class="tool-desc">OpenAI's code generation model. Classic assistant for code completion, bug fixes. Lower autonomy than agentic tools.</div>
+          <div class="tool-oss-no">Proprietary</div>
+        </div>
+      </div>
+      <div class="hl-box">
+        <div class="hl-label">Key Insight</div>
+        <p>These aren't competitors — they serve different needs. Session 2 deep-dives Open Claw. Session 3 uses these to build real apps.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">⚡ Session 1</span></div>
+  </div>
+
+  <!-- SLIDE 7: EXEC COMMUNICATION -->
+  <div class="slide" id="s7">
+    <div class="slide-header"><span class="slide-tag">Executive Communication</span><span class="slide-num">07 / 08</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">Talking to <span>Executives</span>: 3 Layers</h2>
+      <div class="exec-layer">
+        <div class="layer-num">1</div>
+        <div class="layer-content">
+          <div class="layer-title">THE PROBLEM — What Execs Care About</div>
+          <div class="layer-text">"We're paying contractors to do repetitive work AI can handle." &nbsp;·&nbsp; "Features take weeks; competitors move in days." &nbsp;·&nbsp; "Manual handoffs = errors and compliance gaps."</div>
+        </div>
+      </div>
+      <div class="exec-layer">
+        <div class="layer-num">2</div>
+        <div class="layer-content">
+          <div class="layer-title">THE SOLUTION — What Agentic AI Provides</div>
+          <div class="layer-text">Autonomous execution reduces manual work by up to 70% &nbsp;·&nbsp; Reasoning capability means fewer escalations &nbsp;·&nbsp; End-to-end workflow automation, not just individual steps</div>
+        </div>
+      </div>
+      <div class="exec-layer">
+        <div class="layer-num">3</div>
+        <div class="layer-content">
+          <div class="layer-title">BUSINESS IMPACT — The Number That Matters</div>
+          <div class="layer-text">ROI: "If agents do 30% of your team's work, that's 30% of salary cost recaptured as capacity." &nbsp;·&nbsp; Speed: "3-week features → 3 days." &nbsp;·&nbsp; "80% of support tickets auto-resolved."</div>
+        </div>
+      </div>
+      <div class="hl-box" style="margin-top:0.6em">
+        <div class="hl-label">💬 Power Phrase</div>
+        <p>"The question isn't <em>whether</em> to adopt agentic AI — it's whether we adopt it <em>before</em> our competitors do."</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">⚡ Session 1</span></div>
+  </div>
+
+  <!-- SLIDE 8: TAKEAWAY -->
+  <div class="slide" id="s8">
+    <div class="slide-header"><span class="slide-tag">Your Deliverable</span><span class="slide-num">08 / 08</span></div>
+    <div class="slide-body" style="align-items:center;text-align:center">
+      <div style="font-size:3em;margin-bottom:0.3em">🧠</div>
+      <h2 class="stitle" style="text-align:center">You Are Now an <span>AI Expert</span><br>in Communication</h2>
+      <p class="sp" style="max-width:70%;margin:0.5em auto;text-align:center">Walk away with your personalised "My AI Vocabulary" cheat sheet</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7em;max-width:75%;margin:0.8em auto">
+        <div class="card" style="text-align:left">
+          <div class="card-title">📋 10 Essential Terms</div>
+          <div class="card-body">Agent, Orchestrator, Tool, Reasoning Loop, Context Window, Prompt Caching, Compaction, Harness, Vibe Coding, RAG</div>
+        </div>
+        <div class="card" style="text-align:left">
+          <div class="card-title">🗣️ Executive Talking Points</div>
+          <div class="card-body">3-layer framework: Problem → Solution → Business Impact, personalised to your industry</div>
+        </div>
+        <div class="card" style="text-align:left">
+          <div class="card-title">⚡ 30-Second Elevator Pitch</div>
+          <div class="card-body">Your own crisp AI pitch ready for any hallway conversation with a senior leader</div>
+        </div>
+        <div class="card" style="text-align:left">
+          <div class="card-title">📅 Next Session</div>
+          <div class="card-body">June 20 · Open Claw Deep Dive · Install Node.js + get your Anthropic API key before then</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">⚡ Session 1</span></div>
+  </div>
+
+</div><!-- /slide-wrap -->
+</div><!-- /slide-viewport -->
+
+<!-- CONTROLS -->
+<div class="controls">
+  <a class="home-link" href="index.html">← Session 1</a>
+  <div class="ctrl-nav-group">
+    <button class="ctrl-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>◀ Prev</button>
+    <div class="nav-dots" id="dots"></div>
+    <button class="ctrl-btn" id="nextBtn" onclick="changeSlide(1)">Next ▶</button>
+  </div>
+  <span class="slide-counter" id="counter">1 / 8</span>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  <button class="print-btn" onclick="window.print()">🖨 Print / PDF</button>
+</div>
+
+<script>
+  const TOTAL = 8;
+  let cur = 1;
+  const dots = document.getElementById('dots');
+  for(let i=1;i<=TOTAL;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i===1?' active':'');
+    d.onclick=()=>goTo(i);
+    dots.appendChild(d);
+  }
+  function goTo(n){
+    document.getElementById('s'+cur).classList.remove('active');
+    document.querySelectorAll('.dot')[cur-1].classList.remove('active');
+    cur=n;
+    document.getElementById('s'+cur).classList.add('active');
+    document.querySelectorAll('.dot')[cur-1].classList.add('active');
+    document.getElementById('counter').textContent=cur+' / '+TOTAL;
+    document.getElementById('progress').style.width=(cur/TOTAL*100)+'%';
+    document.getElementById('prevBtn').disabled=cur===1;
+    document.getElementById('nextBtn').disabled=cur===TOTAL;
+  }
+  function changeSlide(d){goTo(Math.min(Math.max(cur+d,1),TOTAL));}
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' ') changeSlide(1);
+    if(e.key==='ArrowLeft') changeSlide(-1);
+  });
+  document.getElementById('progress').style.width=(1/TOTAL*100)+'%';
+</script>
+</body>
+</html>

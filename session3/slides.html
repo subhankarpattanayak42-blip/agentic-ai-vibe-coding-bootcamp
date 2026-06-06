@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 3 Slides — Vibe Coding: Build PM Apps</title>
+<style>
+  :root { --bg:#0D1B2A; --card:#1A2B3C; --accent:#F0C040; --text:#E8EDF2; --muted:#8AABB8; --border:#2A4055; --s3:#10B981; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#111; font-family:'Inter',system-ui,sans-serif; overflow:hidden; }
+  .controls { position:fixed; bottom:0; left:0; right:0; z-index:100; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); border-top:1px solid #333; display:flex; align-items:center; justify-content:space-between; padding:0.7rem 2rem; gap:1rem; }
+  .ctrl-btn { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:0.5rem 1.4rem; border-radius:6px; cursor:pointer; font-size:0.9rem; transition:background 0.2s; }
+  .ctrl-btn:hover { background:rgba(255,255,255,0.2); }
+  .ctrl-btn:disabled { opacity:0.3; cursor:not-allowed; }
+  .slide-counter { color:#aaa; font-size:0.9rem; min-width:80px; text-align:center; }
+  .progress-bar { flex:1; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden; }
+  .progress-fill { height:100%; background:var(--s3); transition:width 0.3s; }
+  .nav-dots { display:flex; gap:6px; }
+  .dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.2); cursor:pointer; }
+  .dot.active { background:var(--s3); }
+  .print-btn { background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:var(--s3); padding:0.5rem 1.2rem; border-radius:6px; cursor:pointer; font-size:0.85rem; }
+  .home-link { color:#aaa; font-size:0.85rem; text-decoration:none; }
+  .ctrl-nav-group { display:flex; gap:0.5rem; align-items:center; }
+  .slide-viewport { width:100vw; height:calc(100vh - 56px); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .slide-wrap { width:min(95vw,calc((100vh - 80px)*16/9)); height:min(calc(95vw*9/16),calc(100vh - 80px)); position:relative; }
+  .slide { position:absolute; inset:0; background:var(--bg); border-radius:8px; overflow:hidden; display:none; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.6); font-size:clamp(10px,1.5vw,16px); }
+  .slide.active { display:flex; }
+  .slide-header { padding:0.8em 1.5em 0.5em; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .slide-tag { font-size:0.65em; color:var(--s3); font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+  .slide-num { font-size:0.65em; color:var(--muted); }
+  .slide-body { flex:1; padding:1.2em 1.8em; display:flex; flex-direction:column; justify-content:center; }
+  .slide-footer { padding:0.5em 1.5em; border-top:1px solid var(--border); display:flex; justify-content:space-between; }
+  .footer-text { font-size:0.6em; color:var(--muted); }
+  .footer-logo { font-size:0.6em; color:var(--s3); font-weight:700; }
+  .cover-bg { background:radial-gradient(ellipse at 30% 40%,rgba(16,185,129,0.15) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(240,192,64,0.07) 0%,transparent 60%),var(--bg); align-items:center; justify-content:center; }
+  .cover-inner { text-align:center; }
+  .cover-badge { display:inline-block; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:var(--s3); font-size:0.7em; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:0.3em 1em; border-radius:20px; margin-bottom:1em; }
+  .cover-title { font-size:3em; font-weight:900; line-height:1.1; margin-bottom:0.4em; }
+  .cover-title span { color:var(--s3); display:block; }
+  .cover-sub { font-size:0.9em; color:var(--muted); margin-bottom:1.5em; }
+  .cover-meta { display:flex; justify-content:center; gap:2em; }
+  .cover-meta-item { font-size:0.78em; color:var(--muted); }
+  h2.stitle { font-size:1.6em; font-weight:800; margin-bottom:0.6em; }
+  h2.stitle span { color:var(--s3); }
+  h3.sh3 { font-size:0.92em; font-weight:700; color:var(--accent); margin:0.8em 0 0.35em; }
+  p.sp { font-size:0.85em; color:#CBD5E1; line-height:1.5; margin-bottom:0.4em; }
+  ul.sul { padding-left:1.2em; }
+  ul.sul li { font-size:0.83em; color:#CBD5E1; padding:0.15em 0; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:0.9em 1em; }
+  .card .card-icon { font-size:1.4em; margin-bottom:0.3em; }
+  .card .card-title { font-size:0.82em; font-weight:700; color:var(--s3); margin-bottom:0.3em; }
+  .card .card-body { font-size:0.75em; color:#CBD5E1; line-height:1.4; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:0.8em; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.7em; }
+  pre.code { background:#0A1520; border:1px solid var(--border); border-radius:6px; padding:0.7em 1em; font-family:monospace; font-size:0.77em; color:#6EE7B7; line-height:1.6; white-space:pre-wrap; overflow:auto; }
+  .hl-box { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:8px; padding:0.7em 1em; margin-top:0.7em; }
+  .hl-box .hl-label { font-size:0.68em; color:var(--s3); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.25em; }
+  .hl-box p { font-size:0.8em; color:#CBD5E1; }
+  table.stbl { width:100%; border-collapse:collapse; font-size:0.8em; }
+  table.stbl th { background:rgba(16,185,129,0.15); color:var(--s3); padding:0.45em 0.8em; border:1px solid var(--border); text-align:left; }
+  table.stbl td { padding:0.4em 0.8em; border:1px solid var(--border); color:#CBD5E1; }
+  table.stbl tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
+  .prompt-box { background:#0A1520; border:1px solid rgba(16,185,129,0.3); border-radius:6px; padding:0.7em 1em; margin:0.5em 0; }
+  .pl { font-size:0.68em; color:var(--s3); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.2em; }
+  .pt { font-family:monospace; font-size:0.78em; color:var(--text); line-height:1.5; }
+  .app-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.6em; }
+  @media print { body{overflow:visible;background:#fff;} .controls{display:none;} .slide-viewport{width:100%;height:auto;display:block;} .slide-wrap{width:100%;height:auto;position:relative;} .slide{position:relative;display:flex!important;height:calc(100vw*9/16);margin-bottom:1rem;page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact;} }
+</style>
+</head>
+<body>
+<div class="slide-viewport">
+<div class="slide-wrap">
+
+  <!-- S1 COVER -->
+  <div class="slide cover-bg active" id="s1">
+    <div class="cover-inner">
+      <div class="cover-badge">Session 3 of 3 · June 27, 2026</div>
+      <div class="cover-title">Vibe Coding:<br><span>Build PM Apps</span></div>
+      <div class="cover-sub">Natural language → working program management app — built live, deployed, yours to keep</div>
+      <div class="cover-meta">
+        <div class="cover-meta-item">📅 June 27, 2026</div>
+        <div class="cover-meta-item">🕓 4:00–5:00 PM</div>
+        <div class="cover-meta-item">👤 Subhankar Pattanayak</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2 RECAP + AGENDA -->
+  <div class="slide" id="s2">
+    <div class="slide-header"><span class="slide-tag">Agenda</span><span class="slide-num">02 / 10</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">Today's <span>Game Plan</span></h2>
+      <div class="two-col" style="margin-bottom:0.7em">
+        <div class="card"><div class="card-icon">⚡</div><div class="card-title">Sessions 1 &amp; 2 Recap</div><div class="card-body">Agents · Open Claw · Token efficiency · Do's &amp; Don'ts</div></div>
+        <div class="card"><div class="card-icon">🎵</div><div class="card-title">What is Vibe Coding?</div><div class="card-body">Natural language → working app. No syntax memorisation required.</div></div>
+        <div class="card"><div class="card-icon">📋</div><div class="card-title">Pick Your App</div><div class="card-body">6 PM app ideas — pick one and build it live in 25 minutes</div></div>
+        <div class="card"><div class="card-icon">🚀</div><div class="card-title">Live Build + Showcase</div><div class="card-body">Build, refine, deploy — then demo your finished app to the group</div></div>
+      </div>
+      <div class="hl-box">
+        <div class="hl-label">🏆 Deliverable</div>
+        <p>Working PM app + source code + digital completion certificate</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">🚀 Session 3</span></div>
+  </div>
+
+  <!-- S3 WHAT IS VIBE CODING -->
+  <div class="slide" id="s3">
+    <div class="slide-header"><span class="slide-tag">What is Vibe Coding</span><span class="slide-num">03 / 10</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">Natural Language → <span>Working App</span></h2>
+      <p class="sp">Vibe coding = describing what you want in plain English and letting the agent write, run, fix, and refine the code for you.</p>
+      <table class="stbl" style="margin-bottom:0.7em">
+        <tr><th>Traditional Coding</th><th>Vibe Coding</th></tr>
+        <tr><td>Write every line manually</td><td>Describe the outcome — agent writes</td></tr>
+        <tr><td>Requires syntax expertise</td><td>Requires clarity of thought</td></tr>
+        <tr><td>Debug line by line</td><td>Agent self-corrects with your feedback</td></tr>
+        <tr><td>Weeks to a prototype</td><td>Hours or less to a working app</td></tr>
+        <tr><td>Barrier: learning curve</td><td>Barrier: knowing what you want</td></tr>
+      </table>
+      <div class="prompt-box">
+        <div class="pl">Live Demo Prompt</div>
+        <div class="pt">"Build a webpage with today's date, a motivational quote, and a button that changes the background colour when clicked."</div>
+      </div>
+      <div class="hl-box">
+        <div class="hl-label">⚡ Result</div>
+        <p>A fully styled, functional webpage — under 30 seconds. Zero lines of code written by the instructor.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">🚀 Session 3</span></div>
+  </div>
+
+  <!-- S4 APP IDEAS -->
+  <div class="slide" id="s4">
+    <div class="slide-header"><span class="slide-tag">Pick Your App</span><span class="slide-num">04 / 10</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">6 PM Apps to <span>Build Today</span></h2>
+      <div class="app-grid">
+        <div class="card"><div class="card-icon">📊</div><div class="card-title">Status Dashboard</div><div class="card-body">Projects with RAG status, owner, due date, % complete + filters</div></div>
+        <div class="card"><div class="card-icon">✅</div><div class="card-title">Task Register</div><div class="card-body">Actions with priority, owner, deadline — overdue highlighting</div></div>
+        <div class="card"><div class="card-icon">⚠️</div><div class="card-title">Risk Register</div><div class="card-body">Probability × impact matrix, auto risk score, colour severity</div></div>
+        <div class="card"><div class="card-icon">📅</div><div class="card-title">Agenda Builder</div><div class="card-body">Meeting agendas with time slots, owners, topics — export HTML</div></div>
+        <div class="card"><div class="card-icon">💰</div><div class="card-title">Budget Tracker</div><div class="card-body">Spend vs budget per workstream, visual charts, variance alerts</div></div>
+        <div class="card"><div class="card-icon">🗺️</div><div class="card-title">Roadmap View</div><div class="card-body">Gantt-style timeline, milestone status, drag to adjust</div></div>
+      </div>
+      <div class="hl-box" style="margin-top:0.5em">
+        <div class="hl-label">All built with a single HTML file — no backend, no setup, runs instantly in any browser</div>
+        <p>Pick the one most useful to you at work. If you can't decide, go with the Status Dashboard.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">🚀 Session 3</span></div>
+  </div>
+
+  <!-- S5 PROMPT 1 -->
+  <div class="slide" id="s5">
+    <div class="slide-header"><span class="slide-tag">Live Build — Step 1</span><span class="slide-num">05 / 10</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">Build Prompt <span>#1 — Foundation</span></h2>
+      <p class="sp" style="margin-bottom:0.6em">Your opening prompt sets up the entire app. Be specific about layout, features, and style.</p>
+      <div class="prompt-box" style="margin-bottom:0.7em">
+        <div class="pl">Prompt 1 — PM Status Dashboard (adapt for your chosen app)</div>
+        <div class="pt">"Create a single-file HTML project status dashboard. Include: a header with the title 'Project Status Dashboard', a table showing Project Name, Status (RAG colour: Red/Amber/Green), Owner, Due Date, and % Complete. Add 5 sample projects. Style: dark navy background (#0D1B2A), gold accents (#F0C040), clean modern typography. Add a filter dropdown to filter by status."</div>
+      </div>
+      <div class="hl-box">
+        <div class="hl-label">💡 Prompting Tips</div>
+        <p>Name specific colours · List every column you want · Give sample data · State the style. The more specific, the closer you get on the first pass.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">🚀 Session 3</span></div>
+  </div>
+
+  <!-- S6 PROMPT 2 -->
+  <div class="slide" id="s6">
+    <div class="slide-header"><span class="slide-tag">Live Build — Step 2</span><span class="slide-num">06 / 10</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">Build Prompt <span>#2 — Features</span></h2>
+      <p class="sp">Once the foundation is working, layer in interactive features.</p>
+      <div class="prompt-box" style="margin-bottom:0.6em">
+        <div class="pl">Prompt 2 — Add Interactivity</div>
+        <div class="pt">"Add: (1) A summary bar at the top showing total projects + count of Green/Amber/Red. (2) An 'Add Project' button opening a form to add rows. (3) Click any row to edit it inline. (4) An 'Export CSV' button that downloads all data."</div>
+      </div>
+      <div class="prompt-box">
+        <div class="pl">Prompt 3 — Polish</div>
+        <div class="pt">"Make it mobile-responsive. Add smooth CSS animations when rows are added or status changes. Add a footer with today's date and 'Built with AI by [Your Name]'. Save all data to localStorage so it persists on refresh."</div>
+      </div>
+      <div class="hl-box" style="margin-top:0.6em">
+        <div class="hl-label">🔄 The Iteration Loop</div>
+        <p>Describe → Review → Refine. If something doesn't look right, describe the issue in plain English. The agent will fix it.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">🚀 Session 3</span></div>
+  </div>
+
+  <!-- S7 DEBUG PROMPT -->
+  <div class="slide" id="s7">
+    <div class="slide-header"><span class="slide-tag">Handling Issues</span><span class="slide-num">07 / 10</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">When Things <span>Don't Look Right</span></h2>
+      <div class="two-col">
+        <div>
+          <h3 class="sh3">The Debug Prompt Formula</h3>
+          <div class="prompt-box">
+            <div class="pt">"The [feature] is not working correctly. When I [action], it should [expected result] but instead [actual result]. Please fix this."</div>
+          </div>
+          <h3 class="sh3">Common Issues + Fixes</h3>
+          <ul class="sul">
+            <li>Filter not working → describe exactly what value and what you expect</li>
+            <li>Colours wrong → paste the hex codes you want</li>
+            <li>Layout broken on mobile → "make this mobile responsive"</li>
+            <li>Data not saving → "add localStorage persistence"</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="sh3">Refinement Philosophy</h3>
+          <p class="sp">Vibe coding is iterative. Your first prompt gets you 70% there. Subsequent prompts refine. Expect 3–5 rounds for a polished result.</p>
+          <div class="hl-box" style="margin-top:0.5em">
+            <div class="hl-label">Key Mindset</div>
+            <p>You are the product manager, the agent is the developer. Your job is to describe outcomes clearly — not to write code.</p>
+          </div>
+          <h3 class="sh3" style="margin-top:0.7em">Save Your Work</h3>
+          <pre class="code">Save as: my_pm_app.html
+on your Desktop — open in
+any browser instantly</pre>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">🚀 Session 3</span></div>
+  </div>
+
+  <!-- S8 DEPLOYMENT -->
+  <div class="slide" id="s8">
+    <div class="slide-header"><span class="slide-tag">Deploy &amp; Share</span><span class="slide-num">08 / 10</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">Share Your <span>App with the World</span></h2>
+      <div class="three-col">
+        <div class="card">
+          <div class="card-icon">📁</div>
+          <div class="card-title">Option 1: Direct File</div>
+          <div class="card-body">Email the .html file. Recipient opens it locally. Zero setup. Instant.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🐙</div>
+          <div class="card-title">Option 2: GitHub Pages</div>
+          <div class="card-body">Push to GitHub repo → enable Pages → get a public URL. Free forever.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">▲</div>
+          <div class="card-title">Option 3: Vercel</div>
+          <div class="card-body">Drag-drop folder at vercel.com → live URL in 30 seconds. Free tier.</div>
+        </div>
+      </div>
+      <h3 class="sh3" style="margin-top:0.7em">GitHub Pages — Quickest Steps</h3>
+      <pre class="code">1. Create repo at github.com (public, enable Pages in Settings)
+2. Upload your .html file as index.html
+3. Go to Settings → Pages → Source: main branch → Save
+4. Your URL: https://[username].github.io/[repo-name]/</pre>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">🚀 Session 3</span></div>
+  </div>
+
+  <!-- S9 SHOWCASE -->
+  <div class="slide" id="s9">
+    <div class="slide-header"><span class="slide-tag">Showcase</span><span class="slide-num">09 / 10</span></div>
+    <div class="slide-body" style="text-align:center;align-items:center">
+      <div style="font-size:3em;margin-bottom:0.4em">🎤</div>
+      <h2 class="stitle" style="text-align:center">Your <span>2-Minute Demo</span></h2>
+      <p class="sp" style="max-width:70%;margin:0 auto 1em">Each participant gets 2 minutes to show their app. Answer 3 questions:</p>
+      <div class="three-col" style="max-width:85%;margin:0 auto">
+        <div class="card" style="text-align:left"><div class="card-title">1. What did you build?</div><div class="card-body">Name the app type and the core problem it solves</div></div>
+        <div class="card" style="text-align:left"><div class="card-title">2. Best feature?</div><div class="card-body">Demo the feature you're most proud of — live on screen</div></div>
+        <div class="card" style="text-align:left"><div class="card-title">3. What's next?</div><div class="card-body">One feature you'd add in the next vibe coding session</div></div>
+      </div>
+      <div class="hl-box" style="margin-top:0.8em;max-width:70%">
+        <div class="hl-label">Remember</div>
+        <p>You built this in 25 minutes using natural language. No coding background required. That's the power of vibe coding.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">🚀 Session 3</span></div>
+  </div>
+
+  <!-- S10 FINALE -->
+  <div class="slide" id="s10">
+    <div class="slide-header"><span class="slide-tag">Congratulations</span><span class="slide-num">10 / 10</span></div>
+    <div class="slide-body" style="text-align:center;align-items:center">
+      <div style="font-size:2.5em;margin-bottom:0.3em">🏅🧠🔧🚀</div>
+      <h2 class="stitle" style="text-align:center">You Are Now a <span>Vibe Coding Expert</span></h2>
+      <p class="sp" style="max-width:65%;margin:0.3em auto">You've completed the Agentic AI &amp; Vibe Coding Bootcamp. Here's what you've achieved:</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.6em;max-width:85%;margin:0.8em auto">
+        <div class="card" style="text-align:center"><div class="card-icon">🧠</div><div class="card-title">AI Expert in Communication</div><div class="card-body">Vocabulary, executive talking points, elevator pitch</div></div>
+        <div class="card" style="text-align:center"><div class="card-icon">🔧</div><div class="card-title">Open Claw Expert</div><div class="card-body">Architecture, token efficiency, playbook, Do's &amp; Don'ts</div></div>
+        <div class="card" style="text-align:center"><div class="card-icon">🚀</div><div class="card-title">Vibe Coding Expert</div><div class="card-body">Working PM app, source code, deployment knowledge</div></div>
+      </div>
+      <div class="hl-box" style="margin-top:0.6em;max-width:70%">
+        <div class="hl-label">Your Digital Certificate</div>
+        <p>Will be emailed within 24 hours. Share on LinkedIn — you've earned it!</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">🚀 Session 3</span></div>
+  </div>
+
+</div>
+</div>
+
+<div class="controls">
+  <a class="home-link" href="index.html">← Session 3</a>
+  <div class="ctrl-nav-group">
+    <button class="ctrl-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>◀ Prev</button>
+    <div class="nav-dots" id="dots"></div>
+    <button class="ctrl-btn" id="nextBtn" onclick="changeSlide(1)">Next ▶</button>
+  </div>
+  <span class="slide-counter" id="counter">1 / 10</span>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  <button class="print-btn" onclick="window.print()">🖨 Print / PDF</button>
+</div>
+
+<script>
+  const TOTAL=10; let cur=1;
+  const dots=document.getElementById('dots');
+  for(let i=1;i<=TOTAL;i++){const d=document.createElement('div');d.className='dot'+(i===1?' active':'');d.onclick=()=>goTo(i);dots.appendChild(d);}
+  function goTo(n){document.getElementById('s'+cur).classList.remove('active');document.querySelectorAll('.dot')[cur-1].classList.remove('active');cur=n;document.getElementById('s'+cur).classList.add('active');document.querySelectorAll('.dot')[cur-1].classList.add('active');document.getElementById('counter').textContent=cur+' / '+TOTAL;document.getElementById('progress').style.width=(cur/TOTAL*100)+'%';document.getElementById('prevBtn').disabled=cur===1;document.getElementById('nextBtn').disabled=cur===TOTAL;}
+  function changeSlide(d){goTo(Math.min(Math.max(cur+d,1),TOTAL));}
+  document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')changeSlide(1);if(e.key==='ArrowLeft')changeSlide(-1);});
+  document.getElementById('progress').style.width=(1/TOTAL*100)+'%';
+</script>
+</body>
+</html>
