@@ -85,6 +85,11 @@
     <span class="badge">No Anthropic subscription needed</span>
   </div>
 
+  <div class="what-is" style="margin-bottom:1rem;">
+    <h3>📌 Quick Clarification — What is "Open Claw"?</h3>
+    <p>In this bootcamp, <strong style="color:var(--text)">Open Claw</strong> is our friendly name for <strong style="color:var(--text)">Claude Code</strong> — the agentic coding CLI made by Anthropic. The actual command you type is always <code>claude</code>. We point it at <strong style="color:var(--text)">OpenRouter</strong> so you can use any AI model (not just Claude) with the same tool.</p>
+  </div>
+
   <div class="what-is">
     <h3>What is OpenRouter?</h3>
     <p>OpenRouter is a single API that gives you access to 200+ AI models from different providers — all with one API key and one bill. Instead of paying separately for Claude, GPT-4, Gemini etc., you top up OpenRouter credits and use any model.</p>
@@ -121,15 +126,15 @@
   <!-- Step 2 -->
   <div class="step">
     <div class="step-num">2</div>
-    <h2>Install Open Claw</h2>
-    <p>Copy and paste this command into PowerShell, then press <strong>Enter</strong>:</p>
+    <h2>Install the Open Claw CLI (Claude Code)</h2>
+    <p>Open Claw runs on the <strong>Claude Code CLI</strong> made by Anthropic — it's the engine under the hood. Copy and paste this command into PowerShell, then press <strong>Enter</strong>:</p>
     <div class="cmd-block">
-      <span class="cmd-label">PowerShell</span>
+      <span class="cmd-label">PowerShell — installs the claude CLI (Open Claw's engine)</span>
       <button class="copy-btn" onclick="copyCmd(this, 'irm https://claude.ai/install.ps1 | iex')">Copy</button>
       <span class="cmd">irm https://claude.ai/install.ps1 | iex</span>
     </div>
     <div class="tip"><strong>How to paste in PowerShell:</strong> Right-click anywhere in the window — it pastes automatically. Or use <strong>Ctrl + Shift + V</strong>.</div>
-    <p>Wait 1–2 minutes for the installation to finish.</p>
+    <p>Wait 1–2 minutes for the installation to finish. After this you will have the <code>claude</code> command available. In the next steps we wire it to OpenRouter so it uses your chosen model, not Claude.</p>
   </div>
 
   <!-- Step 3 -->
