@@ -3,266 +3,509 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Install Open Claw on Windows with OpenRouter</title>
+<title>Open Claw Quest — Windows Installation</title>
 <style>
   :root {
-    --bg: #0D1B2A; --card: #1A2B3C; --accent: #F0C040;
+    --bg: #0A1628; --card: #1A2B3C; --accent: #F0C040;
     --text: #E8EDF2; --muted: #8AABB8; --border: #2A4055;
     --green: #10B981; --red: #EF4444; --blue: #60A5FA;
-    --purple: #A78BFA;
+    --purple: #A78BFA; --orange: #F97316;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; min-height:100vh; padding:2rem 1rem; }
-  .container { max-width:760px; margin:0 auto; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; min-height:100vh; padding:2rem 1rem 6rem; }
+  .container { max-width:720px; margin:0 auto; }
 
+  /* BACK */
   .back { display:inline-flex; align-items:center; gap:0.5rem; color:var(--muted); font-size:0.85rem; text-decoration:none; margin-bottom:2rem; transition:color 0.2s; }
   .back:hover { color:var(--accent); }
 
-  .hero { text-align:center; margin-bottom:2.5rem; }
-  .hero .icon { font-size:3rem; margin-bottom:1rem; }
-  .hero h1 { font-size:2rem; font-weight:800; margin-bottom:0.5rem; }
+  /* HERO */
+  .hero { text-align:center; margin-bottom:2rem; }
+  .hero .quest-icon { font-size:3.5rem; margin-bottom:0.5rem; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .hero h1 { font-size:2.2rem; font-weight:900; }
   .hero h1 span { color:var(--accent); }
-  .hero p { color:var(--muted); font-size:1rem; }
-  .badge { display:inline-block; background:rgba(167,139,250,0.15); border:1px solid rgba(167,139,250,0.3); color:var(--purple); font-size:0.75rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:20px; margin-top:0.6rem; }
+  .hero .subtitle { color:var(--muted); margin-top:0.4rem; font-size:0.95rem; }
 
-  .what-is { background:rgba(167,139,250,0.07); border:1px solid rgba(167,139,250,0.2); border-radius:12px; padding:1.2rem 1.4rem; margin-bottom:1.2rem; }
-  .what-is h3 { color:var(--purple); font-size:0.82rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.7rem; }
-  .what-is p { color:var(--muted); font-size:0.9rem; line-height:1.7; }
-  .what-is .models { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem; }
-  .model-pill { background:rgba(255,255,255,0.06); border:1px solid var(--border); color:var(--text); font-size:0.78rem; padding:0.25rem 0.7rem; border-radius:20px; }
+  /* XP BAR */
+  .xp-bar-wrap { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1rem 1.4rem; margin-bottom:2rem; }
+  .xp-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; }
+  .xp-label { font-size:0.8rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+  .xp-count { font-size:0.9rem; font-weight:800; color:var(--accent); }
+  .xp-track { background:#0A1628; border-radius:999px; height:12px; overflow:hidden; }
+  .xp-fill { height:100%; background:linear-gradient(90deg,#F0C040,#F97316); border-radius:999px; transition:width 0.6s cubic-bezier(.34,1.56,.64,1); width:0%; }
+  .level-badges { display:flex; gap:0.5rem; margin-top:0.8rem; flex-wrap:wrap; }
+  .lvl-badge { font-size:0.75rem; font-weight:700; padding:0.25rem 0.7rem; border-radius:20px; border:1px solid; opacity:0.35; transition:all 0.4s; }
+  .lvl-badge.unlocked { opacity:1; animation:popIn 0.4s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes popIn { 0%{transform:scale(0.5)} 100%{transform:scale(1)} }
+  .lvl-badge.l1 { color:#60A5FA; border-color:#60A5FA; background:rgba(96,165,250,0.1); }
+  .lvl-badge.l2 { color:#A78BFA; border-color:#A78BFA; background:rgba(167,139,250,0.1); }
+  .lvl-badge.l3 { color:#F0C040; border-color:#F0C040; background:rgba(240,192,64,0.1); }
+  .lvl-badge.l4 { color:#F97316; border-color:#F97316; background:rgba(249,115,22,0.1); }
+  .lvl-badge.l5 { color:#10B981; border-color:#10B981; background:rgba(16,185,129,0.1); }
 
-  .prereq-box { background:rgba(96,165,250,0.08); border:1px solid rgba(96,165,250,0.25); border-radius:12px; padding:1.2rem 1.4rem; margin-bottom:2rem; }
-  .prereq-box h3 { color:var(--blue); font-size:0.82rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.8rem; }
-  .prereq-box ul { list-style:none; }
-  .prereq-box li { color:var(--text); font-size:0.9rem; padding:0.3rem 0; display:flex; align-items:flex-start; gap:0.6rem; }
-  .prereq-box li::before { content:"✓"; color:var(--green); font-weight:700; margin-top:1px; }
+  /* QUEST STEP */
+  .quest { border-radius:16px; margin-bottom:1.2rem; overflow:hidden; transition:all 0.3s; border:2px solid var(--border); }
+  .quest.locked { opacity:0.45; filter:grayscale(0.5); pointer-events:none; }
+  .quest.completed { border-color:var(--green); }
+  .quest.active { border-color:var(--accent); box-shadow:0 0 24px rgba(240,192,64,0.15); }
 
-  .step { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:1.2rem; }
-  .step-num { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; background:var(--accent); color:#0D1B2A; font-weight:900; font-size:1rem; border-radius:50%; margin-bottom:1rem; }
-  .step h2 { font-size:1.1rem; font-weight:800; margin-bottom:0.6rem; }
-  .step p { color:var(--muted); font-size:0.9rem; line-height:1.7; margin-bottom:0.8rem; }
-  .step p:last-child { margin-bottom:0; }
+  .quest-header { display:flex; align-items:center; gap:1rem; padding:1.1rem 1.4rem; background:var(--card); cursor:pointer; user-select:none; }
+  .quest-icon-wrap { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; background:rgba(255,255,255,0.06); border:1px solid var(--border); transition:all 0.3s; }
+  .quest.completed .quest-icon-wrap { background:rgba(16,185,129,0.15); border-color:var(--green); }
+  .quest.active .quest-icon-wrap { background:rgba(240,192,64,0.12); border-color:var(--accent); }
+  .quest-meta { flex:1; }
+  .quest-level { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:0.2rem; }
+  .quest-title { font-size:1rem; font-weight:800; }
+  .quest-xp { font-size:0.8rem; font-weight:700; color:var(--accent); white-space:nowrap; }
+  .quest-status { font-size:1.2rem; flex-shrink:0; }
 
-  .cmd-block { background:#060F18; border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; font-family:'Courier New',monospace; font-size:0.88rem; color:#7DD3FC; position:relative; margin:0.8rem 0; line-height:1.9; }
-  .cmd-label { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:0.5rem; display:block; }
-  .copy-btn { position:absolute; top:0.7rem; right:0.7rem; background:rgba(255,255,255,0.08); border:1px solid var(--border); color:var(--muted); font-size:0.7rem; padding:0.3rem 0.6rem; border-radius:6px; cursor:pointer; transition:all 0.2s; }
-  .copy-btn:hover { background:rgba(255,255,255,0.15); color:var(--text); }
-  .comment { color:#4B6A7A; }
-  .val { color:#86EFAC; }
+  .quest-body { padding:1.2rem 1.4rem; background:#111E2E; border-top:1px solid var(--border); display:none; }
+  .quest.active .quest-body, .quest.completed .quest-body { display:block; }
 
-  .tip { background:rgba(240,192,64,0.08); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.8rem 0; font-size:0.88rem; color:var(--muted); line-height:1.6; }
+  .quest-body p { color:var(--muted); font-size:0.9rem; line-height:1.7; margin-bottom:0.8rem; }
+
+  /* CMD */
+  .cmd-block { background:#060F18; border:1px solid var(--border); border-radius:10px; padding:0.9rem 1.1rem; font-family:'Courier New',monospace; font-size:0.88rem; color:#7DD3FC; position:relative; margin:0.8rem 0; line-height:1.9; }
+  .cmd-label { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:0.4rem; display:block; }
+  .copy-btn { position:absolute; top:0.6rem; right:0.6rem; background:rgba(255,255,255,0.07); border:1px solid var(--border); color:var(--muted); font-size:0.68rem; padding:0.25rem 0.55rem; border-radius:5px; cursor:pointer; transition:all 0.2s; }
+  .copy-btn:hover { background:rgba(255,255,255,0.14); color:var(--text); }
+  .comment { color:#3D5A6A; }
+
+  /* TIP / WARN */
+  .tip { background:rgba(240,192,64,0.07); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:0.7rem 1rem; margin:0.8rem 0; font-size:0.87rem; color:var(--muted); line-height:1.6; }
   .tip strong { color:var(--accent); }
-  .warning { background:rgba(239,68,68,0.08); border-left:3px solid var(--red); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.8rem 0; font-size:0.88rem; color:#FCA5A5; line-height:1.6; }
-  .info { background:rgba(96,165,250,0.08); border-left:3px solid var(--blue); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.8rem 0; font-size:0.88rem; color:#BAD4F5; line-height:1.6; }
+  .warn { background:rgba(239,68,68,0.07); border-left:3px solid var(--red); border-radius:0 8px 8px 0; padding:0.7rem 1rem; margin:0.8rem 0; font-size:0.87rem; color:#FCA5A5; line-height:1.6; }
+  .info { background:rgba(96,165,250,0.07); border-left:3px solid var(--blue); border-radius:0 8px 8px 0; padding:0.7rem 1rem; margin:0.8rem 0; font-size:0.87rem; color:#BAD4F5; line-height:1.6; }
 
-  .success-box { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:12px; padding:1.5rem; text-align:center; margin-top:2rem; }
-  .success-box .icon { font-size:2.5rem; margin-bottom:0.8rem; }
-  .success-box h3 { color:var(--green); font-size:1.2rem; font-weight:800; margin-bottom:0.5rem; }
-  .success-box p { color:var(--muted); font-size:0.9rem; }
+  /* COMPLETE BTN */
+  .complete-btn { width:100%; margin-top:1rem; padding:0.85rem; border-radius:10px; border:none; font-size:0.95rem; font-weight:800; cursor:pointer; transition:all 0.2s; background:var(--accent); color:#0A1628; }
+  .complete-btn:hover { background:#d9a800; transform:translateY(-1px); }
+  .complete-btn.done { background:rgba(16,185,129,0.15); color:var(--green); border:1px solid var(--green); cursor:default; transform:none; }
 
-  .ref-table { width:100%; font-size:0.88rem; border-collapse:collapse; margin-top:0.5rem; }
-  .ref-table td { padding:0.6rem 0; border-bottom:1px solid var(--border); vertical-align:top; }
-  .ref-table tr:last-child td { border-bottom:none; }
-  .ref-table td:first-child { color:var(--muted); width:45%; }
-  .ref-table td:last-child { font-family:monospace; color:#7DD3FC; }
+  /* CELEBRATION */
+  .celebration { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(10,22,40,0.85); z-index:100; align-items:center; justify-content:center; flex-direction:column; gap:1rem; }
+  .celebration.show { display:flex; animation:fadeIn 0.3s; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .cel-icon { font-size:5rem; animation:bounce 0.6s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes bounce { 0%{transform:scale(0)} 100%{transform:scale(1)} }
+  .cel-title { font-size:1.8rem; font-weight:900; color:var(--accent); text-align:center; }
+  .cel-sub { color:var(--muted); font-size:1rem; text-align:center; }
+  .cel-xp { font-size:1.4rem; font-weight:800; color:var(--green); }
+  .cel-next { margin-top:0.5rem; background:var(--accent); color:#0A1628; font-weight:800; padding:0.8rem 2rem; border-radius:10px; border:none; font-size:1rem; cursor:pointer; }
+  .confetti { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:99; }
 
-  .footer { text-align:center; color:var(--muted); font-size:0.78rem; margin-top:3rem; }
+  /* FINAL TROPHY */
+  .trophy { display:none; text-align:center; padding:2.5rem 2rem; background:linear-gradient(135deg,#1A2B3C,#0F1E2D); border:2px solid var(--accent); border-radius:20px; margin-top:1.5rem; }
+  .trophy.show { display:block; animation:popIn 0.5s cubic-bezier(.34,1.56,.64,1); }
+  .trophy .t-icon { font-size:4rem; margin-bottom:0.8rem; }
+  .trophy h2 { font-size:1.6rem; font-weight:900; color:var(--accent); margin-bottom:0.5rem; }
+  .trophy p { color:var(--muted); font-size:0.95rem; line-height:1.7; }
+  .trophy .badges-final { display:flex; justify-content:center; gap:0.6rem; flex-wrap:wrap; margin-top:1.2rem; }
+
+  /* MODELS PILLS */
+  .model-pill { background:rgba(255,255,255,0.06); border:1px solid var(--border); color:var(--text); font-size:0.78rem; padding:0.25rem 0.7rem; border-radius:20px; display:inline-block; margin:0.2rem; }
+
   code { background:#060F18; padding:2px 6px; border-radius:4px; font-family:monospace; color:#7DD3FC; font-size:0.85em; }
+  .footer { text-align:center; color:var(--muted); font-size:0.78rem; margin-top:3rem; }
 </style>
 </head>
 <body>
-<div class="container">
+<canvas class="confetti" id="confetti"></canvas>
 
+<div class="container">
   <a href="index.html" class="back">← Back to Course Home</a>
 
   <div class="hero">
-    <div class="icon">🪟</div>
-    <h1>Install <span>Open Claw</span> on Windows</h1>
-    <h1>with <span>OpenRouter</span></h1>
-    <p>Use any AI model — GPT-4o, Gemini, Llama, Mistral and more</p>
-    <span class="badge">Open Source · No single-vendor lock-in</span>
+    <div class="quest-icon">🦞</div>
+    <h1>The <span>Open Claw</span> Quest</h1>
+    <p class="subtitle">Complete 7 challenges to unlock your AI setup · Windows Edition</p>
   </div>
 
-  <div class="what-is">
-    <h3>What is Open Claw?</h3>
-    <p>Open Claw is an open-source, self-hosted AI gateway that runs on your own machine. It connects to any AI model provider and lets you chat, code, and build agents through a browser dashboard or any messaging app. Full docs at <strong style="color:var(--text)">docs.openclaw.ai</strong></p>
-  </div>
-
-  <div class="what-is">
-    <h3>What is OpenRouter?</h3>
-    <p>OpenRouter is a single API that gives you access to 200+ AI models — GPT-4o, Gemini, Llama, Mistral, DeepSeek and more — all with one key and one bill.</p>
-    <div class="models">
-      <span class="model-pill">GPT-4o</span>
-      <span class="model-pill">Gemini 2.5 Pro</span>
-      <span class="model-pill">Llama 3.3 70B</span>
-      <span class="model-pill">Mistral Large</span>
-      <span class="model-pill">DeepSeek R1</span>
-      <span class="model-pill">Kimi K2</span>
-      <span class="model-pill">+ 200 more</span>
+  <!-- XP BAR -->
+  <div class="xp-bar-wrap">
+    <div class="xp-top">
+      <span class="xp-label">⚡ Quest Progress</span>
+      <span class="xp-count" id="xpCount">0 / 700 XP</span>
+    </div>
+    <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+    <div class="level-badges">
+      <span class="lvl-badge l1" id="b1">🟦 Installer</span>
+      <span class="lvl-badge l2" id="b2">🟪 Node Master</span>
+      <span class="lvl-badge l3" id="b3">🟨 Claw Agent</span>
+      <span class="lvl-badge l4" id="b4">🟧 Router Pro</span>
+      <span class="lvl-badge l5" id="b5">🏆 Claw Champion</span>
     </div>
   </div>
 
-  <div class="prereq-box">
-    <h3>Before You Start — You Need</h3>
-    <ul>
-      <li>Windows 10 or Windows 11</li>
-      <li>Internet connection</li>
-      <li>Node.js 22.19+ or Node 24 installed (step 1 below)</li>
-      <li>An OpenRouter account — free at openrouter.ai</li>
-      <li>About 15 minutes</li>
-    </ul>
-  </div>
-
-  <!-- Step 1 -->
-  <div class="step">
-    <div class="step-num">1</div>
-    <h2>Install Node.js</h2>
-    <p>Open Claw requires Node.js. Go to <strong>nodejs.org</strong> → download <strong>Node 24 (LTS)</strong> → run the installer → click Next all the way through.</p>
-    <p>Once done, verify it installed correctly. Open PowerShell (Windows key → type PowerShell → Enter) and run:</p>
-    <div class="cmd-block">
-      <span class="cmd-label">PowerShell</span>
-      <button class="copy-btn" onclick="copyCmd(this, 'node --version')">Copy</button>
-      node --version
+  <!-- QUEST 1 -->
+  <div class="quest active" id="q1">
+    <div class="quest-header" onclick="toggleBody(1)">
+      <div class="quest-icon-wrap">🪟</div>
+      <div class="quest-meta">
+        <div class="quest-level">Challenge 1 of 7</div>
+        <div class="quest-title">Open Your Terminal</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="s1">🔓</div>
     </div>
-    <p>You should see something like <code>v24.x.x</code>. If you do, Node.js is ready.</p>
-    <div class="tip"><strong>How to paste in PowerShell:</strong> Right-click anywhere in the window. Or use <strong>Ctrl + Shift + V</strong>.</div>
-  </div>
-
-  <!-- Step 2 -->
-  <div class="step">
-    <div class="step-num">2</div>
-    <h2>Install Open Claw</h2>
-    <p>Run the official Open Claw installer for Windows in PowerShell:</p>
-    <div class="cmd-block">
-      <span class="cmd-label">PowerShell</span>
-      <button class="copy-btn" onclick="copyCmd(this, 'iwr -useb https://openclaw.ai/install.ps1 | iex')">Copy</button>
-      iwr -useb https://openclaw.ai/install.ps1 | iex
+    <div class="quest-body">
+      <p>Every quest starts with opening your command terminal. Press the <strong>Windows key</strong> on your keyboard, type <strong>PowerShell</strong>, and click <strong>Windows PowerShell</strong>.</p>
+      <p>A dark window opens with a blinking cursor. That's your command terminal — the gateway to everything.</p>
+      <div class="tip"><strong>To paste in PowerShell:</strong> Right-click anywhere in the window. Or use <strong>Ctrl + Shift + V</strong>.</div>
+      <p>✅ <strong>You're done when:</strong> You see a blinking cursor in a dark window.</p>
+      <button class="complete-btn" onclick="complete(1, '🪟 Terminal Opened!', 'Your command terminal is ready.', 100)">✔ Terminal is Open — Claim 100 XP</button>
     </div>
-    <p>Wait for it to complete — usually takes 1–2 minutes. Then verify:</p>
-    <div class="cmd-block">
-      <span class="cmd-label">PowerShell</span>
-      <button class="copy-btn" onclick="copyCmd(this, 'openclaw --version')">Copy</button>
-      openclaw --version
+  </div>
+
+  <!-- QUEST 2 -->
+  <div class="quest locked" id="q2">
+    <div class="quest-header" onclick="toggleBody(2)">
+      <div class="quest-icon-wrap">⚙️</div>
+      <div class="quest-meta">
+        <div class="quest-level">Challenge 2 of 7</div>
+        <div class="quest-title">Install Node.js</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="s2">🔒</div>
     </div>
-    <p>You should see a version number. If so, Open Claw is installed.</p>
-    <div class="warning"><strong>If you see "command not found":</strong> Close PowerShell, reopen it, and try again — the install needs a fresh terminal to take effect.</div>
-  </div>
-
-  <!-- Step 3 -->
-  <div class="step">
-    <div class="step-num">3</div>
-    <h2>Get Your OpenRouter API Key</h2>
-    <p>Go to <strong>openrouter.ai</strong> → Sign up (free) → Click your profile icon → <strong>Keys</strong> → <strong>Create Key</strong> → copy it.</p>
-    <p>Your key looks like: <code>sk-or-v1-xxxxxxxxxxxxxxxx</code></p>
-    <div class="tip"><strong>Add credits:</strong> Go to openrouter.ai → Settings → Credits → Add $5 to start. Most models cost fractions of a cent per message.</div>
-  </div>
-
-  <!-- Step 4 -->
-  <div class="step">
-    <div class="step-num">4</div>
-    <h2>Run the Onboarding Wizard</h2>
-    <p>Open Claw has a built-in setup wizard. Run this command and it will guide you through connecting to OpenRouter:</p>
-    <div class="cmd-block">
-      <span class="cmd-label">PowerShell</span>
-      <button class="copy-btn" onclick="copyCmd(this, 'openclaw onboard --auth-choice openrouter-api-key')">Copy</button>
-      openclaw onboard --auth-choice openrouter-api-key
+    <div class="quest-body">
+      <p>Open Claw needs Node.js to run. Go to <strong>nodejs.org</strong>, download <strong>Node 24 (LTS)</strong>, run the installer, click Next all the way through.</p>
+      <p>Then verify it worked by running this in PowerShell:</p>
+      <div class="cmd-block">
+        <span class="cmd-label">PowerShell</span>
+        <button class="copy-btn" onclick="copyCmd(this,'node --version')">Copy</button>
+        node --version
+      </div>
+      <p>✅ <strong>You're done when:</strong> You see <code>v24.x.x</code> printed in the terminal.</p>
+      <div class="warn"><strong>Seeing an error?</strong> Close PowerShell, reopen it, and try again — Node needs a fresh terminal after install.</div>
+      <button class="complete-btn" onclick="complete(2, '⚙️ Node.js Installed!', 'The engine is ready. +Unlocked badge: Node Master', 100)">✔ I see v24.x.x — Claim 100 XP</button>
     </div>
-    <p>When prompted, paste your OpenRouter API key (<code>sk-or-v1-...</code>) and press Enter. The wizard will configure everything automatically in about 2 minutes.</p>
   </div>
 
-  <!-- Step 5 -->
-  <div class="step">
-    <div class="step-num">5</div>
-    <h2>Install the Daemon and Open the Dashboard</h2>
-    <p>This starts Open Claw as a background service and opens the browser dashboard:</p>
-    <div class="cmd-block">
-      <span class="cmd-label">PowerShell — install daemon</span>
-      <button class="copy-btn" onclick="copyCmd(this, 'openclaw onboard --install-daemon')">Copy</button>
-      openclaw onboard --install-daemon
+  <!-- QUEST 3 -->
+  <div class="quest locked" id="q3">
+    <div class="quest-header" onclick="toggleBody(3)">
+      <div class="quest-icon-wrap">🦞</div>
+      <div class="quest-meta">
+        <div class="quest-level">Challenge 3 of 7</div>
+        <div class="quest-title">Install Open Claw</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="s3">🔒</div>
     </div>
-    <div class="cmd-block">
-      <span class="cmd-label">PowerShell — open dashboard</span>
-      <button class="copy-btn" onclick="copyCmd(this, 'openclaw dashboard')">Copy</button>
-      openclaw dashboard
+    <div class="quest-body">
+      <p>Time to install Open Claw itself. Copy and paste this one command into PowerShell:</p>
+      <div class="cmd-block">
+        <span class="cmd-label">PowerShell — official installer</span>
+        <button class="copy-btn" onclick="copyCmd(this,'iwr -useb https://openclaw.ai/install.ps1 | iex')">Copy</button>
+        iwr -useb https://openclaw.ai/install.ps1 | iex
+      </div>
+      <p>Wait 1–2 minutes for it to finish. Then verify:</p>
+      <div class="cmd-block">
+        <span class="cmd-label">PowerShell</span>
+        <button class="copy-btn" onclick="copyCmd(this,'openclaw --version')">Copy</button>
+        openclaw --version
+      </div>
+      <p>✅ <strong>You're done when:</strong> You see an Open Claw version number.</p>
+      <div class="warn"><strong>Command not found?</strong> Close PowerShell, reopen it, and try <code>openclaw --version</code> again.</div>
+      <button class="complete-btn" onclick="complete(3, '🦞 Open Claw Installed!', 'The claw is in your machine. You are now a Claw Agent!', 100)">✔ I see the version number — Claim 100 XP</button>
     </div>
-    <p>Your browser will open at <code>http://127.0.0.1:18789</code> — this is your Open Claw control panel. You can chat with your AI model directly from here.</p>
   </div>
 
-  <!-- Step 6 -->
-  <div class="step">
-    <div class="step-num">6</div>
-    <h2>Choose Your AI Model</h2>
-    <p>By default Open Claw uses <code>openrouter/auto</code> which picks the best model automatically. To set a specific model:</p>
-    <div class="cmd-block">
-      <span class="cmd-label">PowerShell — set model</span>
-      <button class="copy-btn" onclick="copyCmd(this, 'openclaw models set openrouter/openai/gpt-4o')">Copy</button>
-      <span class="comment"># GPT-4o (OpenAI)</span><br>
-      openclaw models set openrouter/openai/gpt-4o<br><br>
-      <span class="comment"># Gemini 2.5 Pro (Google)</span><br>
-      openclaw models set openrouter/google/gemini-2.5-pro<br><br>
-      <span class="comment"># Llama 3.3 70B (Free tier)</span><br>
-      openclaw models set openrouter/meta-llama/llama-3.3-70b-instruct:free<br><br>
-      <span class="comment"># DeepSeek R1 (low cost, high capability)</span><br>
-      openclaw models set openrouter/deepseek/deepseek-r1
+  <!-- QUEST 4 -->
+  <div class="quest locked" id="q4">
+    <div class="quest-header" onclick="toggleBody(4)">
+      <div class="quest-icon-wrap">🔑</div>
+      <div class="quest-meta">
+        <div class="quest-level">Challenge 4 of 7</div>
+        <div class="quest-title">Get Your OpenRouter Key</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="s4">🔒</div>
     </div>
-    <div class="info">Browse all available models at <strong>openrouter.ai/models</strong> — filter by free, by cost, or by provider.</div>
-  </div>
-
-  <!-- Step 7 -->
-  <div class="step">
-    <div class="step-num">7</div>
-    <h2>Check Gateway Status</h2>
-    <p>Verify everything is running correctly:</p>
-    <div class="cmd-block">
-      <span class="cmd-label">PowerShell</span>
-      <button class="copy-btn" onclick="copyCmd(this, 'openclaw gateway status')">Copy</button>
-      openclaw gateway status
+    <div class="quest-body">
+      <p>OpenRouter gives you access to 200+ AI models with one key. Go to <strong>openrouter.ai</strong> → Sign up (free) → Profile icon → <strong>Keys</strong> → <strong>Create Key</strong> → Copy it.</p>
+      <p>Your key looks like: <code>sk-or-v1-xxxxxxxxxxxxxxxx</code></p>
+      <div class="tip"><strong>Add $5 credits:</strong> openrouter.ai → Settings → Credits. Most models cost fractions of a cent per message. Free models are also available!</div>
+      <div style="margin-top:0.8rem;">
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;">Models you'll be able to use:</div>
+        <span class="model-pill">GPT-4o</span>
+        <span class="model-pill">Gemini 2.5 Pro</span>
+        <span class="model-pill">Llama 3.3 70B (Free)</span>
+        <span class="model-pill">DeepSeek R1</span>
+        <span class="model-pill">Mistral Large</span>
+        <span class="model-pill">+ 200 more</span>
+      </div>
+      <p style="margin-top:0.8rem;">✅ <strong>You're done when:</strong> You have your <code>sk-or-v1-...</code> key copied.</p>
+      <button class="complete-btn" onclick="complete(4, '🔑 Key Acquired!', 'You now hold the key to 200+ AI models.', 100)">✔ I have my API key — Claim 100 XP</button>
     </div>
-    <p>You should see the gateway is listening on port 18789. If it shows running — you're all set!</p>
   </div>
 
-  <div class="success-box">
-    <div class="icon">🎉</div>
-    <h3>You're Ready!</h3>
-    <p>Open Claw is running on your Windows machine, powered by OpenRouter. Open the dashboard anytime with <code>openclaw dashboard</code> and start building with any AI model.</p>
+  <!-- QUEST 5 -->
+  <div class="quest locked" id="q5">
+    <div class="quest-header" onclick="toggleBody(5)">
+      <div class="quest-icon-wrap">🧙</div>
+      <div class="quest-meta">
+        <div class="quest-level">Challenge 5 of 7</div>
+        <div class="quest-title">Run the Setup Wizard</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="s5">🔒</div>
+    </div>
+    <div class="quest-body">
+      <p>Open Claw's onboarding wizard connects it to OpenRouter. Run this command — it will ask for your API key:</p>
+      <div class="cmd-block">
+        <span class="cmd-label">PowerShell</span>
+        <button class="copy-btn" onclick="copyCmd(this,'openclaw onboard --auth-choice openrouter-api-key')">Copy</button>
+        openclaw onboard --auth-choice openrouter-api-key
+      </div>
+      <p>When prompted, paste your <code>sk-or-v1-...</code> key and press Enter. The wizard configures everything in ~2 minutes.</p>
+      <p>Then install the background service:</p>
+      <div class="cmd-block">
+        <span class="cmd-label">PowerShell</span>
+        <button class="copy-btn" onclick="copyCmd(this,'openclaw onboard --install-daemon')">Copy</button>
+        openclaw onboard --install-daemon
+      </div>
+      <p>✅ <strong>You're done when:</strong> The wizard completes without errors.</p>
+      <button class="complete-btn" onclick="complete(5, '🧙 Wizard Complete!', 'Open Claw is now connected to OpenRouter. You are a Router Pro!', 100)">✔ Wizard finished — Claim 100 XP</button>
+    </div>
   </div>
 
-  <!-- Quick Reference -->
-  <div style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;">
-    <h3 style="color:var(--accent);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">Quick Reference</h3>
-    <table class="ref-table">
-      <tr><td>Open dashboard</td><td>openclaw dashboard</td></tr>
-      <tr><td>Check version</td><td>openclaw --version</td></tr>
-      <tr><td>Check gateway</td><td>openclaw gateway status</td></tr>
-      <tr><td>Set model</td><td>openclaw models set openrouter/&lt;model&gt;</td></tr>
-      <tr><td>Dashboard URL</td><td>http://127.0.0.1:18789</td></tr>
-      <tr><td>Full docs</td><td>docs.openclaw.ai</td></tr>
-    </table>
+  <!-- QUEST 6 -->
+  <div class="quest locked" id="q6">
+    <div class="quest-header" onclick="toggleBody(6)">
+      <div class="quest-icon-wrap">🖥️</div>
+      <div class="quest-meta">
+        <div class="quest-level">Challenge 6 of 7</div>
+        <div class="quest-title">Open the Dashboard</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="s6">🔒</div>
+    </div>
+    <div class="quest-body">
+      <p>Launch your Open Claw control panel in the browser:</p>
+      <div class="cmd-block">
+        <span class="cmd-label">PowerShell</span>
+        <button class="copy-btn" onclick="copyCmd(this,'openclaw dashboard')">Copy</button>
+        openclaw dashboard
+      </div>
+      <p>Your browser opens at <code>http://127.0.0.1:18789</code> — this is your personal AI command centre. Everything you need to manage models, sessions, and agents is here.</p>
+      <div class="tip"><strong>Bookmark it:</strong> Save <code>http://127.0.0.1:18789</code> in your browser for quick access.</div>
+      <p>✅ <strong>You're done when:</strong> The Open Claw dashboard loads in your browser.</p>
+      <button class="complete-btn" onclick="complete(6, '🖥️ Dashboard Live!', 'Your AI command centre is open. One challenge left!', 100)">✔ Dashboard is open — Claim 100 XP</button>
+    </div>
   </div>
 
-  <!-- Popular Models -->
-  <div style="margin-top:1.2rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;">
-    <h3 style="color:var(--accent);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">Popular Models on OpenRouter</h3>
-    <table class="ref-table">
-      <tr><td>GPT-4o (OpenAI)</td><td>openrouter/openai/gpt-4o</td></tr>
-      <tr><td>Gemini 2.5 Pro (Google)</td><td>openrouter/google/gemini-2.5-pro</td></tr>
-      <tr><td>Llama 3.3 70B (Free)</td><td>openrouter/meta-llama/llama-3.3-70b-instruct:free</td></tr>
-      <tr><td>DeepSeek R1</td><td>openrouter/deepseek/deepseek-r1</td></tr>
-      <tr><td>Mistral Large</td><td>openrouter/mistralai/mistral-large</td></tr>
-      <tr><td>Auto (best available)</td><td>openrouter/auto</td></tr>
-    </table>
+  <!-- QUEST 7 -->
+  <div class="quest locked" id="q7">
+    <div class="quest-header" onclick="toggleBody(7)">
+      <div class="quest-icon-wrap">🤖</div>
+      <div class="quest-meta">
+        <div class="quest-level">Challenge 7 of 7 — FINAL BOSS</div>
+        <div class="quest-title">Send Your First AI Message</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="s7">🔒</div>
+    </div>
+    <div class="quest-body">
+      <p>The final challenge. In the Open Claw dashboard, find the chat box and type your first message to the AI:</p>
+      <div class="cmd-block" style="color:#86EFAC;">
+        <span class="cmd-label">Type this in the dashboard chat</span>
+        Hello! What AI model are you? What can you help me build?
+      </div>
+      <p>If you want to switch to a specific model first, run this in PowerShell:</p>
+      <div class="cmd-block">
+        <span class="cmd-label">PowerShell — optional: pick a model</span>
+        <button class="copy-btn" onclick="copyCmd(this,'openclaw models set openrouter/meta-llama/llama-3.3-70b-instruct:free')">Copy</button>
+        <span class="comment"># Free option — Llama 3.3 70B</span><br>
+        openclaw models set openrouter/meta-llama/llama-3.3-70b-instruct:free<br><br>
+        <span class="comment"># Or GPT-4o if you have credits</span><br>
+        openclaw models set openrouter/openai/gpt-4o
+      </div>
+      <p>✅ <strong>You're done when:</strong> The AI replies in the dashboard. You are now a <strong style="color:var(--accent)">Claw Champion</strong>!</p>
+      <button class="complete-btn" onclick="complete(7, '🏆 QUEST COMPLETE!', 'You are now a Claw Champion. Open Claw is fully operational!', 100)">✔ AI replied! — Claim Final 100 XP</button>
+    </div>
   </div>
 
-  <div class="footer" style="margin-top:2rem;">by Subhankar Pattanayak · Agentic AI & Vibe Coding Bootcamp 2026</div>
+  <!-- TROPHY (hidden until complete) -->
+  <div class="trophy" id="trophy">
+    <div class="t-icon">🏆</div>
+    <h2>Claw Champion Unlocked!</h2>
+    <p>You've completed the Open Claw Quest. Your AI setup is fully operational on Windows with OpenRouter. You can now use 200+ AI models from a single dashboard.</p>
+    <div class="badges-final">
+      <span class="lvl-badge l1 unlocked">🟦 Installer</span>
+      <span class="lvl-badge l2 unlocked">🟪 Node Master</span>
+      <span class="lvl-badge l3 unlocked">🟨 Claw Agent</span>
+      <span class="lvl-badge l4 unlocked">🟧 Router Pro</span>
+      <span class="lvl-badge l5 unlocked">🏆 Claw Champion</span>
+    </div>
+    <div style="margin-top:1.5rem;background:#0A1628;border-radius:10px;padding:1rem;text-align:left;">
+      <div style="color:var(--accent);font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.8rem;">Quick Reference</div>
+      <div style="font-family:monospace;font-size:0.85rem;color:#7DD3FC;line-height:2;">
+        openclaw dashboard &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted)"># Open control panel</span><br>
+        openclaw gateway status &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted)"># Check if running</span><br>
+        openclaw models set &lt;model&gt; &nbsp;<span style="color:var(--muted)"># Switch AI model</span><br>
+        openclaw --version &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted)"># Check version</span>
+      </div>
+    </div>
+  </div>
 
+  <div class="footer" style="margin-top:2rem;">by Subhankar Pattanayak · Agentic AI & Vibe Coding Bootcamp 2026 · <a href="https://docs.openclaw.ai" target="_blank" style="color:var(--accent)">docs.openclaw.ai</a></div>
+</div>
+
+<!-- CELEBRATION OVERLAY -->
+<div class="celebration" id="cel">
+  <div class="cel-icon" id="celIcon">🎉</div>
+  <div class="cel-title" id="celTitle">Level Up!</div>
+  <div class="cel-sub" id="celSub">Great work!</div>
+  <div class="cel-xp" id="celXp">+100 XP</div>
+  <button class="cel-next" onclick="closeCel()">Continue Quest →</button>
 </div>
 
 <script>
+const TOTAL = 7
+const XP_PER = 100
+let completed = JSON.parse(localStorage.getItem('ocq_completed') || '[]')
+let xp = completed.length * XP_PER
+
+const badges = [
+  {at:1, id:'b1', label:'🟦 Installer'},
+  {at:2, id:'b2', label:'🟪 Node Master'},
+  {at:3, id:'b3', label:'🟨 Claw Agent'},
+  {at:5, id:'b4', label:'🟧 Router Pro'},
+  {at:7, id:'b5', label:'🏆 Claw Champion'},
+]
+
+function save() { localStorage.setItem('ocq_completed', JSON.stringify(completed)) }
+
+function updateXP() {
+  xp = completed.length * XP_PER
+  document.getElementById('xpCount').textContent = xp + ' / 700 XP'
+  document.getElementById('xpFill').style.width = (xp / 700 * 100) + '%'
+  badges.forEach(b => {
+    if (completed.length >= b.at) document.getElementById(b.id).classList.add('unlocked')
+  })
+}
+
+function updateSteps() {
+  for (let i = 1; i <= TOTAL; i++) {
+    const q = document.getElementById('q' + i)
+    const s = document.getElementById('s' + i)
+    const btn = q.querySelector('.complete-btn')
+    if (completed.includes(i)) {
+      q.classList.remove('active','locked')
+      q.classList.add('completed')
+      s.textContent = '✅'
+      if (btn) { btn.textContent = '✅ Completed'; btn.classList.add('done'); btn.disabled = true; }
+    } else if (i === 1 || completed.includes(i - 1)) {
+      q.classList.remove('locked','completed')
+      q.classList.add('active')
+      s.textContent = '🔓'
+    } else {
+      q.classList.remove('active','completed')
+      q.classList.add('locked')
+      s.textContent = '🔒'
+    }
+  }
+  if (completed.length === TOTAL) document.getElementById('trophy').classList.add('show')
+}
+
+function toggleBody(n) {
+  // already handled by active/locked/completed CSS
+}
+
+function complete(n, title, sub, xpGain) {
+  if (completed.includes(n)) return
+  completed.push(n)
+  save()
+  updateXP()
+  updateSteps()
+  showCel(n === TOTAL ? '🏆' : '🎉', title, sub, xpGain)
+  if (n < TOTAL) fireConfetti()
+  else fireBigConfetti()
+}
+
+function showCel(icon, title, sub, xp) {
+  document.getElementById('celIcon').textContent = icon
+  document.getElementById('celTitle').textContent = title
+  document.getElementById('celSub').textContent = sub
+  document.getElementById('celXp').textContent = '+' + xp + ' XP'
+  document.getElementById('cel').classList.add('show')
+}
+
+function closeCel() {
+  document.getElementById('cel').classList.remove('show')
+  // scroll to next active
+  const next = document.querySelector('.quest.active')
+  if (next) next.scrollIntoView({behavior:'smooth', block:'center'})
+}
+
+// Confetti
+const canvas = document.getElementById('confetti')
+const ctx = canvas.getContext('2d')
+let particles = []
+
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight }
+window.addEventListener('resize', resize); resize()
+
+function fireConfetti() {
+  for (let i = 0; i < 80; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height * 0.3,
+      vx: (Math.random() - 0.5) * 4,
+      vy: Math.random() * 3 + 1,
+      color: ['#F0C040','#10B981','#60A5FA','#A78BFA','#F97316'][Math.floor(Math.random()*5)],
+      size: Math.random() * 8 + 4,
+      life: 1
+    })
+  }
+  animConfetti()
+}
+
+function fireBigConfetti() {
+  for (let i = 0; i < 200; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: -20,
+      vx: (Math.random() - 0.5) * 6,
+      vy: Math.random() * 4 + 2,
+      color: ['#F0C040','#10B981','#60A5FA','#A78BFA','#F97316','#fff'][Math.floor(Math.random()*6)],
+      size: Math.random() * 10 + 5,
+      life: 1
+    })
+  }
+  animConfetti()
+}
+
+let animId = null
+function animConfetti() {
+  if (animId) cancelAnimationFrame(animId)
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    particles = particles.filter(p => p.life > 0)
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.1; p.life -= 0.012
+      ctx.globalAlpha = p.life
+      ctx.fillStyle = p.color
+      ctx.fillRect(p.x, p.y, p.size, p.size * 0.5)
+    })
+    ctx.globalAlpha = 1
+    if (particles.length > 0) animId = requestAnimationFrame(draw)
+  }
+  draw()
+}
+
 function copyCmd(btn, text) {
   navigator.clipboard.writeText(text)
   btn.textContent = 'Copied!'
   setTimeout(() => btn.textContent = 'Copy', 2000)
 }
+
+// Init
+updateXP()
+updateSteps()
 </script>
 </body>
 </html>
