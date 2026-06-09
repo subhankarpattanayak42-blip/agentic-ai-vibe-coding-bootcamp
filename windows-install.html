@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Install Open Claw with OpenRouter on Windows</title>
+<title>Install Open Claw on Windows with OpenRouter</title>
 <style>
   :root {
     --bg: #0D1B2A; --card: #1A2B3C; --accent: #F0C040;
@@ -25,7 +25,7 @@
   .hero p { color:var(--muted); font-size:1rem; }
   .badge { display:inline-block; background:rgba(167,139,250,0.15); border:1px solid rgba(167,139,250,0.3); color:var(--purple); font-size:0.75rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:20px; margin-top:0.6rem; }
 
-  .what-is { background:rgba(167,139,250,0.07); border:1px solid rgba(167,139,250,0.2); border-radius:12px; padding:1.2rem 1.4rem; margin-bottom:2rem; }
+  .what-is { background:rgba(167,139,250,0.07); border:1px solid rgba(167,139,250,0.2); border-radius:12px; padding:1.2rem 1.4rem; margin-bottom:1.2rem; }
   .what-is h3 { color:var(--purple); font-size:0.82rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.7rem; }
   .what-is p { color:var(--muted); font-size:0.9rem; line-height:1.7; }
   .what-is .models { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem; }
@@ -43,18 +43,16 @@
   .step p { color:var(--muted); font-size:0.9rem; line-height:1.7; margin-bottom:0.8rem; }
   .step p:last-child { margin-bottom:0; }
 
-  .cmd-block { background:#060F18; border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; font-family:'Courier New',monospace; font-size:0.88rem; color:#7DD3FC; position:relative; margin:0.8rem 0; line-height:1.8; }
+  .cmd-block { background:#060F18; border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; font-family:'Courier New',monospace; font-size:0.88rem; color:#7DD3FC; position:relative; margin:0.8rem 0; line-height:1.9; }
   .cmd-label { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:0.5rem; display:block; }
   .copy-btn { position:absolute; top:0.7rem; right:0.7rem; background:rgba(255,255,255,0.08); border:1px solid var(--border); color:var(--muted); font-size:0.7rem; padding:0.3rem 0.6rem; border-radius:6px; cursor:pointer; transition:all 0.2s; }
   .copy-btn:hover { background:rgba(255,255,255,0.15); color:var(--text); }
   .comment { color:#4B6A7A; }
-  .var { color:#F0C040; }
-  .cmd { color:#7DD3FC; }
+  .val { color:#86EFAC; }
 
   .tip { background:rgba(240,192,64,0.08); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.8rem 0; font-size:0.88rem; color:var(--muted); line-height:1.6; }
   .tip strong { color:var(--accent); }
   .warning { background:rgba(239,68,68,0.08); border-left:3px solid var(--red); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.8rem 0; font-size:0.88rem; color:#FCA5A5; line-height:1.6; }
-  .warning strong { color:var(--red); }
   .info { background:rgba(96,165,250,0.08); border-left:3px solid var(--blue); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.8rem 0; font-size:0.88rem; color:#BAD4F5; line-height:1.6; }
 
   .success-box { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:12px; padding:1.5rem; text-align:center; margin-top:2rem; }
@@ -63,7 +61,7 @@
   .success-box p { color:var(--muted); font-size:0.9rem; }
 
   .ref-table { width:100%; font-size:0.88rem; border-collapse:collapse; margin-top:0.5rem; }
-  .ref-table td { padding:0.6rem 0; border-bottom:1px solid var(--border); }
+  .ref-table td { padding:0.6rem 0; border-bottom:1px solid var(--border); vertical-align:top; }
   .ref-table tr:last-child td { border-bottom:none; }
   .ref-table td:first-child { color:var(--muted); width:45%; }
   .ref-table td:last-child { font-family:monospace; color:#7DD3FC; }
@@ -79,28 +77,27 @@
 
   <div class="hero">
     <div class="icon">🪟</div>
-    <h1>Open Claw on Windows</h1>
+    <h1>Install <span>Open Claw</span> on Windows</h1>
     <h1>with <span>OpenRouter</span></h1>
-    <p>Use any AI model — GPT-4o, Gemini, Llama, Mistral — not just Claude</p>
-    <span class="badge">No Anthropic subscription needed</span>
+    <p>Use any AI model — GPT-4o, Gemini, Llama, Mistral and more</p>
+    <span class="badge">Open Source · No single-vendor lock-in</span>
   </div>
 
-  <div class="what-is" style="margin-bottom:1rem;">
-    <h3>📌 Quick Clarification — What is "Open Claw"?</h3>
-    <p>In this bootcamp, <strong style="color:var(--text)">Open Claw</strong> is our friendly name for <strong style="color:var(--text)">Claude Code</strong> — the agentic coding CLI made by Anthropic. The actual command you type is always <code>claude</code>. We point it at <strong style="color:var(--text)">OpenRouter</strong> so you can use any AI model (not just Claude) with the same tool.</p>
+  <div class="what-is">
+    <h3>What is Open Claw?</h3>
+    <p>Open Claw is an open-source, self-hosted AI gateway that runs on your own machine. It connects to any AI model provider and lets you chat, code, and build agents through a browser dashboard or any messaging app. Full docs at <strong style="color:var(--text)">docs.openclaw.ai</strong></p>
   </div>
 
   <div class="what-is">
     <h3>What is OpenRouter?</h3>
-    <p>OpenRouter is a single API that gives you access to 200+ AI models from different providers — all with one API key and one bill. Instead of paying separately for Claude, GPT-4, Gemini etc., you top up OpenRouter credits and use any model.</p>
+    <p>OpenRouter is a single API that gives you access to 200+ AI models — GPT-4o, Gemini, Llama, Mistral, DeepSeek and more — all with one key and one bill.</p>
     <div class="models">
       <span class="model-pill">GPT-4o</span>
       <span class="model-pill">Gemini 2.5 Pro</span>
-      <span class="model-pill">Claude Sonnet</span>
       <span class="model-pill">Llama 3.3 70B</span>
       <span class="model-pill">Mistral Large</span>
       <span class="model-pill">DeepSeek R1</span>
-      <span class="model-pill">Qwen 2.5</span>
+      <span class="model-pill">Kimi K2</span>
       <span class="model-pill">+ 200 more</span>
     </div>
   </div>
@@ -108,9 +105,10 @@
   <div class="prereq-box">
     <h3>Before You Start — You Need</h3>
     <ul>
-      <li>A Windows 10 or Windows 11 computer</li>
+      <li>Windows 10 or Windows 11</li>
       <li>Internet connection</li>
-      <li>An OpenRouter account (free to sign up at openrouter.ai)</li>
+      <li>Node.js 22.19+ or Node 24 installed (step 1 below)</li>
+      <li>An OpenRouter account — free at openrouter.ai</li>
       <li>About 15 minutes</li>
     </ul>
   </div>
@@ -118,135 +116,127 @@
   <!-- Step 1 -->
   <div class="step">
     <div class="step-num">1</div>
-    <h2>Open PowerShell</h2>
-    <p>Press the <strong>Windows key</strong> → type <strong>PowerShell</strong> → click <strong>Windows PowerShell</strong>.</p>
-    <p>A blue/dark window opens with a blinking cursor. You do <strong>not</strong> need to run as Administrator.</p>
+    <h2>Install Node.js</h2>
+    <p>Open Claw requires Node.js. Go to <strong>nodejs.org</strong> → download <strong>Node 24 (LTS)</strong> → run the installer → click Next all the way through.</p>
+    <p>Once done, verify it installed correctly. Open PowerShell (Windows key → type PowerShell → Enter) and run:</p>
+    <div class="cmd-block">
+      <span class="cmd-label">PowerShell</span>
+      <button class="copy-btn" onclick="copyCmd(this, 'node --version')">Copy</button>
+      node --version
+    </div>
+    <p>You should see something like <code>v24.x.x</code>. If you do, Node.js is ready.</p>
+    <div class="tip"><strong>How to paste in PowerShell:</strong> Right-click anywhere in the window. Or use <strong>Ctrl + Shift + V</strong>.</div>
   </div>
 
   <!-- Step 2 -->
   <div class="step">
     <div class="step-num">2</div>
-    <h2>Install the Open Claw CLI (Claude Code)</h2>
-    <p>Open Claw runs on the <strong>Claude Code CLI</strong> made by Anthropic — it's the engine under the hood. Copy and paste this command into PowerShell, then press <strong>Enter</strong>:</p>
+    <h2>Install Open Claw</h2>
+    <p>Run the official Open Claw installer for Windows in PowerShell:</p>
     <div class="cmd-block">
-      <span class="cmd-label">PowerShell — installs the claude CLI (Open Claw's engine)</span>
-      <button class="copy-btn" onclick="copyCmd(this, 'irm https://claude.ai/install.ps1 | iex')">Copy</button>
-      <span class="cmd">irm https://claude.ai/install.ps1 | iex</span>
+      <span class="cmd-label">PowerShell</span>
+      <button class="copy-btn" onclick="copyCmd(this, 'iwr -useb https://openclaw.ai/install.ps1 | iex')">Copy</button>
+      iwr -useb https://openclaw.ai/install.ps1 | iex
     </div>
-    <div class="tip"><strong>How to paste in PowerShell:</strong> Right-click anywhere in the window — it pastes automatically. Or use <strong>Ctrl + Shift + V</strong>.</div>
-    <p>Wait 1–2 minutes for the installation to finish. After this you will have the <code>claude</code> command available. In the next steps we wire it to OpenRouter so it uses your chosen model, not Claude.</p>
+    <p>Wait for it to complete — usually takes 1–2 minutes. Then verify:</p>
+    <div class="cmd-block">
+      <span class="cmd-label">PowerShell</span>
+      <button class="copy-btn" onclick="copyCmd(this, 'openclaw --version')">Copy</button>
+      openclaw --version
+    </div>
+    <p>You should see a version number. If so, Open Claw is installed.</p>
+    <div class="warning"><strong>If you see "command not found":</strong> Close PowerShell, reopen it, and try again — the install needs a fresh terminal to take effect.</div>
   </div>
 
   <!-- Step 3 -->
   <div class="step">
     <div class="step-num">3</div>
     <h2>Get Your OpenRouter API Key</h2>
-    <p>Go to <strong>openrouter.ai</strong> → Sign up (it's free) → Click your profile → <strong>Keys</strong> → <strong>Create Key</strong>.</p>
-    <p>Copy the key — it looks like: <code>sk-or-v1-xxxxxxxxxxxxxxxx</code></p>
-    <div class="tip"><strong>Add credits:</strong> Go to openrouter.ai → Settings → Credits → Add $5–$10 to start. Most models cost fractions of a cent per request.</div>
+    <p>Go to <strong>openrouter.ai</strong> → Sign up (free) → Click your profile icon → <strong>Keys</strong> → <strong>Create Key</strong> → copy it.</p>
+    <p>Your key looks like: <code>sk-or-v1-xxxxxxxxxxxxxxxx</code></p>
+    <div class="tip"><strong>Add credits:</strong> Go to openrouter.ai → Settings → Credits → Add $5 to start. Most models cost fractions of a cent per message.</div>
   </div>
 
   <!-- Step 4 -->
   <div class="step">
     <div class="step-num">4</div>
-    <h2>Set OpenRouter as Your Provider</h2>
-    <p>This tells Open Claw to use OpenRouter instead of Anthropic. Run both commands in PowerShell (replace the key with yours):</p>
+    <h2>Run the Onboarding Wizard</h2>
+    <p>Open Claw has a built-in setup wizard. Run this command and it will guide you through connecting to OpenRouter:</p>
     <div class="cmd-block">
-      <span class="cmd-label">PowerShell — set environment variables</span>
-      <button class="copy-btn" onclick="copyCmd(this, '$env:ANTHROPIC_BASE_URL=\"https://openrouter.ai/api/v1\"\n$env:ANTHROPIC_API_KEY=\"sk-or-v1-your-key-here\"')">Copy</button>
-      <span class="var">$env:ANTHROPIC_BASE_URL</span><span class="cmd"> = </span><span style="color:#86EFAC">"https://openrouter.ai/api/v1"</span><br>
-      <span class="var">$env:ANTHROPIC_API_KEY</span><span class="cmd"> = </span><span style="color:#86EFAC">"sk-or-v1-your-key-here"</span>
+      <span class="cmd-label">PowerShell</span>
+      <button class="copy-btn" onclick="copyCmd(this, 'openclaw onboard --auth-choice openrouter-api-key')">Copy</button>
+      openclaw onboard --auth-choice openrouter-api-key
     </div>
-    <div class="warning"><strong>Note:</strong> These variables last only for this PowerShell session. See Step 6 to make them permanent.</div>
+    <p>When prompted, paste your OpenRouter API key (<code>sk-or-v1-...</code>) and press Enter. The wizard will configure everything automatically in about 2 minutes.</p>
   </div>
 
   <!-- Step 5 -->
   <div class="step">
     <div class="step-num">5</div>
-    <h2>Choose Your Model</h2>
-    <p>Tell Open Claw which model to use. This is the fun part — pick any model from OpenRouter:</p>
+    <h2>Install the Daemon and Open the Dashboard</h2>
+    <p>This starts Open Claw as a background service and opens the browser dashboard:</p>
     <div class="cmd-block">
-      <span class="cmd-label">PowerShell — popular free/cheap options</span>
-      <span class="comment"># GPT-4o (OpenAI)</span><br>
-      <span class="var">$env:CLAUDE_MODEL</span><span class="cmd"> = </span><span style="color:#86EFAC">"openai/gpt-4o"</span><br><br>
-      <span class="comment"># Gemini 2.5 Pro (Google)</span><br>
-      <span class="var">$env:CLAUDE_MODEL</span><span class="cmd"> = </span><span style="color:#86EFAC">"google/gemini-2.5-pro"</span><br><br>
-      <span class="comment"># Llama 3.3 70B (free on OpenRouter)</span><br>
-      <span class="var">$env:CLAUDE_MODEL</span><span class="cmd"> = </span><span style="color:#86EFAC">"meta-llama/llama-3.3-70b-instruct:free"</span><br><br>
-      <span class="comment"># DeepSeek R1 (very capable, low cost)</span><br>
-      <span class="var">$env:CLAUDE_MODEL</span><span class="cmd"> = </span><span style="color:#86EFAC">"deepseek/deepseek-r1"</span>
+      <span class="cmd-label">PowerShell — install daemon</span>
+      <button class="copy-btn" onclick="copyCmd(this, 'openclaw onboard --install-daemon')">Copy</button>
+      openclaw onboard --install-daemon
     </div>
-    <div class="info">Browse all models at <strong>openrouter.ai/models</strong> — filter by free, by price, or by provider.</div>
+    <div class="cmd-block">
+      <span class="cmd-label">PowerShell — open dashboard</span>
+      <button class="copy-btn" onclick="copyCmd(this, 'openclaw dashboard')">Copy</button>
+      openclaw dashboard
+    </div>
+    <p>Your browser will open at <code>http://127.0.0.1:18789</code> — this is your Open Claw control panel. You can chat with your AI model directly from here.</p>
   </div>
 
   <!-- Step 6 -->
   <div class="step">
     <div class="step-num">6</div>
-    <h2>Make Settings Permanent (Recommended)</h2>
-    <p>So you don't have to re-enter the keys every time, save them permanently. Run this in PowerShell:</p>
+    <h2>Choose Your AI Model</h2>
+    <p>By default Open Claw uses <code>openrouter/auto</code> which picks the best model automatically. To set a specific model:</p>
     <div class="cmd-block">
-      <span class="cmd-label">PowerShell — save permanently</span>
-      <button class="copy-btn" onclick="copyCmd(this, '[System.Environment]::SetEnvironmentVariable(\"ANTHROPIC_BASE_URL\",\"https://openrouter.ai/api/v1\",\"User\")\n[System.Environment]::SetEnvironmentVariable(\"ANTHROPIC_API_KEY\",\"sk-or-v1-your-key-here\",\"User\")')">Copy</button>
-      <span style="color:#C084FC">[System.Environment]</span><span class="cmd">::SetEnvironmentVariable(</span><span style="color:#86EFAC">"ANTHROPIC_BASE_URL"</span><span class="cmd">, </span><span style="color:#86EFAC">"https://openrouter.ai/api/v1"</span><span class="cmd">, </span><span style="color:#86EFAC">"User"</span><span class="cmd">)</span><br>
-      <span style="color:#C084FC">[System.Environment]</span><span class="cmd">::SetEnvironmentVariable(</span><span style="color:#86EFAC">"ANTHROPIC_API_KEY"</span><span class="cmd">, </span><span style="color:#86EFAC">"sk-or-v1-your-key-here"</span><span class="cmd">, </span><span style="color:#86EFAC">"User"</span><span class="cmd">)</span>
+      <span class="cmd-label">PowerShell — set model</span>
+      <button class="copy-btn" onclick="copyCmd(this, 'openclaw models set openrouter/openai/gpt-4o')">Copy</button>
+      <span class="comment"># GPT-4o (OpenAI)</span><br>
+      openclaw models set openrouter/openai/gpt-4o<br><br>
+      <span class="comment"># Gemini 2.5 Pro (Google)</span><br>
+      openclaw models set openrouter/google/gemini-2.5-pro<br><br>
+      <span class="comment"># Llama 3.3 70B (Free tier)</span><br>
+      openclaw models set openrouter/meta-llama/llama-3.3-70b-instruct:free<br><br>
+      <span class="comment"># DeepSeek R1 (low cost, high capability)</span><br>
+      openclaw models set openrouter/deepseek/deepseek-r1
     </div>
-    <p>Close and reopen PowerShell after running this. The settings will now load automatically every time.</p>
+    <div class="info">Browse all available models at <strong>openrouter.ai/models</strong> — filter by free, by cost, or by provider.</div>
   </div>
 
   <!-- Step 7 -->
   <div class="step">
     <div class="step-num">7</div>
-    <h2>Launch Open Claw</h2>
-    <p>Navigate to any project folder (or stay where you are) and type:</p>
+    <h2>Check Gateway Status</h2>
+    <p>Verify everything is running correctly:</p>
     <div class="cmd-block">
       <span class="cmd-label">PowerShell</span>
-      <button class="copy-btn" onclick="copyCmd(this, 'claude')">Copy</button>
-      <span class="cmd">claude</span>
+      <button class="copy-btn" onclick="copyCmd(this, 'openclaw gateway status')">Copy</button>
+      openclaw gateway status
     </div>
-    <p>Open Claw will start and connect to OpenRouter. You'll see a prompt where you can start typing your first instruction.</p>
-    <div class="tip"><strong>First thing to try:</strong> Type <code>What model are you using?</code> — it should respond with the OpenRouter model you selected.</div>
-  </div>
-
-  <!-- Step 8 -->
-  <div class="step">
-    <div class="step-num">8</div>
-    <h2>Create Your AGENTS.md Config File</h2>
-    <p>Open Claw looks for an <strong>AGENTS.md</strong> file in your project folder. This is where you give it standing instructions.</p>
-    <div class="cmd-block">
-      <span class="cmd-label">PowerShell — create a project and AGENTS.md</span>
-      <button class="copy-btn" onclick="copyCmd(this, 'mkdir my-project\ncd my-project\nNew-Item AGENTS.md -ItemType File')">Copy</button>
-      <span class="cmd">mkdir my-project</span><br>
-      <span class="cmd">cd my-project</span><br>
-      <span class="cmd">New-Item AGENTS.md -ItemType File</span>
-    </div>
-    <p>Open AGENTS.md in Notepad and write your rules — for example:</p>
-    <div class="cmd-block">
-      <span class="cmd-label">AGENTS.md — example content</span>
-      <span class="comment"># My Project Rules</span><br>
-      <span class="cmd">- Use Python 3.10+</span><br>
-      <span class="cmd">- Write clean, commented code</span><br>
-      <span class="cmd">- Always create a requirements.txt</span><br>
-      <span class="cmd">- Keep responses concise</span>
-    </div>
+    <p>You should see the gateway is listening on port 18789. If it shows running — you're all set!</p>
   </div>
 
   <div class="success-box">
     <div class="icon">🎉</div>
     <h3>You're Ready!</h3>
-    <p>Open Claw is running on your Windows machine, powered by OpenRouter. Switch models anytime by changing <code>ANTHROPIC_MODEL</code> — no reinstall needed.</p>
+    <p>Open Claw is running on your Windows machine, powered by OpenRouter. Open the dashboard anytime with <code>openclaw dashboard</code> and start building with any AI model.</p>
   </div>
 
   <!-- Quick Reference -->
-  <div style="margin-top:2rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;">
+  <div style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;">
     <h3 style="color:var(--accent);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">Quick Reference</h3>
     <table class="ref-table">
-      <tr><td>Start Open Claw</td><td>claude</td></tr>
-      <tr><td>Check version</td><td>claude --version</td></tr>
-      <tr><td>OpenRouter base URL</td><td>https://openrouter.ai/api/v1</td></tr>
-      <tr><td>Config file</td><td>AGENTS.md (in project folder)</td></tr>
-      <tr><td>Browse models</td><td>openrouter.ai/models</td></tr>
-      <tr><td>Check credits</td><td>openrouter.ai → Settings → Credits</td></tr>
-      <tr><td>Health check</td><td>claude doctor</td></tr>
+      <tr><td>Open dashboard</td><td>openclaw dashboard</td></tr>
+      <tr><td>Check version</td><td>openclaw --version</td></tr>
+      <tr><td>Check gateway</td><td>openclaw gateway status</td></tr>
+      <tr><td>Set model</td><td>openclaw models set openrouter/&lt;model&gt;</td></tr>
+      <tr><td>Dashboard URL</td><td>http://127.0.0.1:18789</td></tr>
+      <tr><td>Full docs</td><td>docs.openclaw.ai</td></tr>
     </table>
   </div>
 
@@ -254,12 +244,12 @@
   <div style="margin-top:1.2rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;">
     <h3 style="color:var(--accent);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">Popular Models on OpenRouter</h3>
     <table class="ref-table">
-      <tr><td>GPT-4o (OpenAI)</td><td>openai/gpt-4o</td></tr>
-      <tr><td>Gemini 2.5 Pro (Google)</td><td>google/gemini-2.5-pro</td></tr>
-      <tr><td>Claude Sonnet (Anthropic)</td><td>anthropic/claude-sonnet-4-5</td></tr>
-      <tr><td>Llama 3.3 70B (Free)</td><td>meta-llama/llama-3.3-70b-instruct:free</td></tr>
-      <tr><td>DeepSeek R1</td><td>deepseek/deepseek-r1</td></tr>
-      <tr><td>Mistral Large</td><td>mistralai/mistral-large</td></tr>
+      <tr><td>GPT-4o (OpenAI)</td><td>openrouter/openai/gpt-4o</td></tr>
+      <tr><td>Gemini 2.5 Pro (Google)</td><td>openrouter/google/gemini-2.5-pro</td></tr>
+      <tr><td>Llama 3.3 70B (Free)</td><td>openrouter/meta-llama/llama-3.3-70b-instruct:free</td></tr>
+      <tr><td>DeepSeek R1</td><td>openrouter/deepseek/deepseek-r1</td></tr>
+      <tr><td>Mistral Large</td><td>openrouter/mistralai/mistral-large</td></tr>
+      <tr><td>Auto (best available)</td><td>openrouter/auto</td></tr>
     </table>
   </div>
 
