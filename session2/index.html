@@ -284,6 +284,95 @@ open-claw</pre>
     </ul>
   </div>
 
+  <!-- SKILLS & CLAW HUB -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-time">Bonus: Skills</div>
+      <div class="block-title">Skill Building in Open Claw — Claw Hub &amp; Custom Commands</div>
+    </div>
+
+    <h3>What Are Skills?</h3>
+    <p>Skills (also called slash commands) are reusable, named workflows you invoke with a <code>/command</code> shortcut. Instead of typing a long prompt every time, you define it once and call it in one word. Open Claw loads skills from a <code>.open-claw/commands/</code> folder in your project.</p>
+
+    <h3>Claw Hub — The Skill Marketplace</h3>
+    <p>Claw Hub is Open Claw's community skill library — browse, install, and share skills built by other users. Think of it like an app store for agent workflows.</p>
+    <div class="diagram-box">
+      <strong style="color:#C4B5FD">How Claw Hub works:</strong><br><br>
+      Browse skills at hub.openclaw.ai<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      Install a skill: <span style="color:#F0C040">openclaw skills install &lt;skill-name&gt;</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      Skill saved to .open-claw/commands/&lt;skill-name&gt;.md<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      Use it instantly: type <span style="color:#F0C040">/skill-name</span> in any session<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      Agent reads the skill file and executes the workflow
+    </div>
+
+    <h3>Enabling Skills — Step by Step</h3>
+    <table>
+      <tr><th>Step</th><th>Command / Action</th><th>What Happens</th></tr>
+      <tr><td>1. Create commands folder</td><td><code>mkdir .open-claw/commands</code></td><td>Tells Open Claw where to look for skills</td></tr>
+      <tr><td>2. Write a skill file</td><td>Create <code>.open-claw/commands/my-skill.md</code></td><td>Contains the prompt/workflow definition</td></tr>
+      <tr><td>3. Invoke the skill</td><td>Type <code>/my-skill</code> in session</td><td>Agent loads &amp; runs the skill with current context</td></tr>
+      <tr><td>4. Install from Claw Hub</td><td><code>openclaw skills install &lt;name&gt;</code></td><td>Downloads skill file to commands folder automatically</td></tr>
+      <tr><td>5. List installed skills</td><td><code>openclaw skills list</code></td><td>Shows all available slash commands</td></tr>
+    </table>
+
+    <h3>Anatomy of a Skill File</h3>
+    <pre># skill: daily-standup
+# description: Generate a standup update from recent git commits and open tasks
+
+Look at the last 5 git commits using Bash.
+Check for any open TODO comments in the codebase.
+Then write a concise standup update in this format:
+- What I did yesterday
+- What I'm doing today
+- Any blockers
+
+Keep it under 100 words. Use bullet points.</pre>
+
+    <h3>5 Ready-to-Use Skill Examples</h3>
+
+    <div class="dos-donts" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:0.5rem">
+      <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.3);border-radius:8px;padding:1.2rem">
+        <p style="color:#C4B5FD;font-weight:700;margin-bottom:0.5rem;font-size:0.9rem">/daily-standup</p>
+        <p style="font-size:0.85rem;color:#CBD5E1;margin:0">Reads git log + open tasks → formats a 3-bullet standup in seconds. Great for Monday morning.</p>
+        <pre style="margin-top:0.7rem;font-size:0.8rem">/daily-standup</pre>
+      </div>
+      <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.3);border-radius:8px;padding:1.2rem">
+        <p style="color:#C4B5FD;font-weight:700;margin-bottom:0.5rem;font-size:0.9rem">/code-review</p>
+        <p style="font-size:0.85rem;color:#CBD5E1;margin:0">Reviews changed files vs main branch — flags bugs, style issues, and missing tests. Instant Pink Team.</p>
+        <pre style="margin-top:0.7rem;font-size:0.8rem">/code-review</pre>
+      </div>
+      <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.3);border-radius:8px;padding:1.2rem">
+        <p style="color:#C4B5FD;font-weight:700;margin-bottom:0.5rem;font-size:0.9rem">/write-readme</p>
+        <p style="font-size:0.85rem;color:#CBD5E1;margin:0">Reads the codebase, understands the project, and generates a professional README.md with setup instructions.</p>
+        <pre style="margin-top:0.7rem;font-size:0.8rem">/write-readme</pre>
+      </div>
+      <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.3);border-radius:8px;padding:1.2rem">
+        <p style="color:#C4B5FD;font-weight:700;margin-bottom:0.5rem;font-size:0.9rem">/bug-hunt</p>
+        <p style="font-size:0.85rem;color:#CBD5E1;margin:0">Scans all source files for error-prone patterns, uncaught exceptions, and missing validations. Returns a ranked bug list.</p>
+        <pre style="margin-top:0.7rem;font-size:0.8rem">/bug-hunt</pre>
+      </div>
+    </div>
+
+    <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.3);border-radius:8px;padding:1.2rem;margin-top:1rem">
+      <p style="color:#C4B5FD;font-weight:700;margin-bottom:0.5rem;font-size:0.9rem">/pm-status-report [your most powerful skill]</p>
+      <p style="font-size:0.85rem;color:#CBD5E1;margin:0">Reads your project folder, extracts task statuses, calculates % complete, flags overdue items, and emails a formatted status report. One command replaces 45 minutes of manual work.</p>
+      <pre style="margin-top:0.7rem;font-size:0.8rem">/pm-status-report --project "Q3 Rollout" --send-to manager@company.com</pre>
+    </div>
+
+    <h3>Pro Tips for Skill Design</h3>
+    <ul>
+      <li><strong>One skill = one job</strong> — keep each skill focused on a single, repeatable workflow</li>
+      <li><strong>Use arguments</strong> — skills can accept <code>$ARGUMENTS</code> to make them flexible (e.g. <code>/summarise --file report.pdf</code>)</li>
+      <li><strong>Chain skills</strong> — run <code>/research</code> first, then <code>/write-email</code> to build multi-step pipelines</li>
+      <li><strong>Version control your skills</strong> — commit <code>.open-claw/commands/</code> so the whole team shares the same skill library</li>
+      <li><strong>Share on Claw Hub</strong> — once a skill is useful, publish it for the community with <code>openclaw skills publish</code></li>
+    </ul>
+  </div>
+
   <!-- TEACHING AIDS -->
   <div class="block">
     <div class="block-header">
