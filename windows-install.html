@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Install Open Claw on Windows — Step-by-Step</title>
+<title>Install Open Claw with OpenRouter on Windows</title>
 <style>
   :root {
     --bg: #0D1B2A; --card: #1A2B3C; --accent: #F0C040;
     --text: #E8EDF2; --muted: #8AABB8; --border: #2A4055;
     --green: #10B981; --red: #EF4444; --blue: #60A5FA;
+    --purple: #A78BFA;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; min-height:100vh; padding:2rem 1rem; }
@@ -17,49 +18,58 @@
   .back { display:inline-flex; align-items:center; gap:0.5rem; color:var(--muted); font-size:0.85rem; text-decoration:none; margin-bottom:2rem; transition:color 0.2s; }
   .back:hover { color:var(--accent); }
 
-  .hero { text-align:center; margin-bottom:3rem; }
-  .hero .os-icon { font-size:3rem; margin-bottom:1rem; }
+  .hero { text-align:center; margin-bottom:2.5rem; }
+  .hero .icon { font-size:3rem; margin-bottom:1rem; }
   .hero h1 { font-size:2rem; font-weight:800; margin-bottom:0.5rem; }
   .hero h1 span { color:var(--accent); }
   .hero p { color:var(--muted); font-size:1rem; }
+  .badge { display:inline-block; background:rgba(167,139,250,0.15); border:1px solid rgba(167,139,250,0.3); color:var(--purple); font-size:0.75rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:20px; margin-top:0.6rem; }
+
+  .what-is { background:rgba(167,139,250,0.07); border:1px solid rgba(167,139,250,0.2); border-radius:12px; padding:1.2rem 1.4rem; margin-bottom:2rem; }
+  .what-is h3 { color:var(--purple); font-size:0.82rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.7rem; }
+  .what-is p { color:var(--muted); font-size:0.9rem; line-height:1.7; }
+  .what-is .models { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem; }
+  .model-pill { background:rgba(255,255,255,0.06); border:1px solid var(--border); color:var(--text); font-size:0.78rem; padding:0.25rem 0.7rem; border-radius:20px; }
 
   .prereq-box { background:rgba(96,165,250,0.08); border:1px solid rgba(96,165,250,0.25); border-radius:12px; padding:1.2rem 1.4rem; margin-bottom:2rem; }
-  .prereq-box h3 { color:var(--blue); font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.8rem; }
+  .prereq-box h3 { color:var(--blue); font-size:0.82rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.8rem; }
   .prereq-box ul { list-style:none; }
-  .prereq-box li { color:var(--text); font-size:0.9rem; padding:0.3rem 0; display:flex; align-items:center; gap:0.6rem; }
-  .prereq-box li::before { content:"✓"; color:var(--green); font-weight:700; }
+  .prereq-box li { color:var(--text); font-size:0.9rem; padding:0.3rem 0; display:flex; align-items:flex-start; gap:0.6rem; }
+  .prereq-box li::before { content:"✓"; color:var(--green); font-weight:700; margin-top:1px; }
 
-  .step { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:1.2rem; position:relative; }
+  .step { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:1.2rem; }
   .step-num { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; background:var(--accent); color:#0D1B2A; font-weight:900; font-size:1rem; border-radius:50%; margin-bottom:1rem; }
-  .step h2 { font-size:1.1rem; font-weight:800; margin-bottom:0.5rem; }
+  .step h2 { font-size:1.1rem; font-weight:800; margin-bottom:0.6rem; }
   .step p { color:var(--muted); font-size:0.9rem; line-height:1.7; margin-bottom:0.8rem; }
   .step p:last-child { margin-bottom:0; }
 
-  .cmd-block { background:#060F18; border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; font-family:'Courier New',monospace; font-size:0.9rem; color:#7DD3FC; position:relative; margin:0.8rem 0; }
-  .cmd-label { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:0.4rem; }
+  .cmd-block { background:#060F18; border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; font-family:'Courier New',monospace; font-size:0.88rem; color:#7DD3FC; position:relative; margin:0.8rem 0; line-height:1.8; }
+  .cmd-label { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:0.5rem; display:block; }
   .copy-btn { position:absolute; top:0.7rem; right:0.7rem; background:rgba(255,255,255,0.08); border:1px solid var(--border); color:var(--muted); font-size:0.7rem; padding:0.3rem 0.6rem; border-radius:6px; cursor:pointer; transition:all 0.2s; }
   .copy-btn:hover { background:rgba(255,255,255,0.15); color:var(--text); }
+  .comment { color:#4B6A7A; }
+  .var { color:#F0C040; }
+  .cmd { color:#7DD3FC; }
 
-  .tip { background:rgba(240,192,64,0.08); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.8rem 0; font-size:0.88rem; color:var(--muted); }
+  .tip { background:rgba(240,192,64,0.08); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.8rem 0; font-size:0.88rem; color:var(--muted); line-height:1.6; }
   .tip strong { color:var(--accent); }
-
-  .warning { background:rgba(239,68,68,0.08); border-left:3px solid var(--red); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.8rem 0; font-size:0.88rem; color:#FCA5A5; }
+  .warning { background:rgba(239,68,68,0.08); border-left:3px solid var(--red); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.8rem 0; font-size:0.88rem; color:#FCA5A5; line-height:1.6; }
   .warning strong { color:var(--red); }
+  .info { background:rgba(96,165,250,0.08); border-left:3px solid var(--blue); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.8rem 0; font-size:0.88rem; color:#BAD4F5; line-height:1.6; }
 
   .success-box { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:12px; padding:1.5rem; text-align:center; margin-top:2rem; }
   .success-box .icon { font-size:2.5rem; margin-bottom:0.8rem; }
   .success-box h3 { color:var(--green); font-size:1.2rem; font-weight:800; margin-bottom:0.5rem; }
   .success-box p { color:var(--muted); font-size:0.9rem; }
 
-  .tab-row { display:flex; gap:0.5rem; margin-bottom:0.5rem; }
-  .tab { padding:0.4rem 0.9rem; border-radius:8px 8px 0 0; font-size:0.8rem; font-weight:700; cursor:pointer; border:1px solid var(--border); border-bottom:none; background:rgba(255,255,255,0.04); color:var(--muted); transition:all 0.2s; }
-  .tab.active { background:var(--accent); color:#0D1B2A; border-color:var(--accent); }
+  .ref-table { width:100%; font-size:0.88rem; border-collapse:collapse; margin-top:0.5rem; }
+  .ref-table td { padding:0.6rem 0; border-bottom:1px solid var(--border); }
+  .ref-table tr:last-child td { border-bottom:none; }
+  .ref-table td:first-child { color:var(--muted); width:45%; }
+  .ref-table td:last-child { font-family:monospace; color:#7DD3FC; }
 
   .footer { text-align:center; color:var(--muted); font-size:0.78rem; margin-top:3rem; }
-
-  @media(max-width:600px) {
-    .hero h1 { font-size:1.5rem; }
-  }
+  code { background:#060F18; padding:2px 6px; border-radius:4px; font-family:monospace; color:#7DD3FC; font-size:0.85em; }
 </style>
 </head>
 <body>
@@ -68,9 +78,26 @@
   <a href="index.html" class="back">← Back to Course Home</a>
 
   <div class="hero">
-    <div class="os-icon">🪟</div>
-    <h1>Install <span>Open Claw</span> on Windows</h1>
-    <p>Step-by-step guide — no technical background needed</p>
+    <div class="icon">🪟</div>
+    <h1>Open Claw on Windows</h1>
+    <h1>with <span>OpenRouter</span></h1>
+    <p>Use any AI model — GPT-4o, Gemini, Llama, Mistral — not just Claude</p>
+    <span class="badge">No Anthropic subscription needed</span>
+  </div>
+
+  <div class="what-is">
+    <h3>What is OpenRouter?</h3>
+    <p>OpenRouter is a single API that gives you access to 200+ AI models from different providers — all with one API key and one bill. Instead of paying separately for Claude, GPT-4, Gemini etc., you top up OpenRouter credits and use any model.</p>
+    <div class="models">
+      <span class="model-pill">GPT-4o</span>
+      <span class="model-pill">Gemini 2.5 Pro</span>
+      <span class="model-pill">Claude Sonnet</span>
+      <span class="model-pill">Llama 3.3 70B</span>
+      <span class="model-pill">Mistral Large</span>
+      <span class="model-pill">DeepSeek R1</span>
+      <span class="model-pill">Qwen 2.5</span>
+      <span class="model-pill">+ 200 more</span>
+    </div>
   </div>
 
   <div class="prereq-box">
@@ -78,8 +105,8 @@
     <ul>
       <li>A Windows 10 or Windows 11 computer</li>
       <li>Internet connection</li>
-      <li>A Claude.ai account (Pro, Max, Team, or Enterprise plan)</li>
-      <li>About 10 minutes</li>
+      <li>An OpenRouter account (free to sign up at openrouter.ai)</li>
+      <li>About 15 minutes</li>
     </ul>
   </div>
 
@@ -87,116 +114,147 @@
   <div class="step">
     <div class="step-num">1</div>
     <h2>Open PowerShell</h2>
-    <p>PowerShell is a built-in Windows tool — no download needed. Here's how to open it:</p>
-    <p>Press the <strong>Windows key</strong> on your keyboard → type <strong>PowerShell</strong> → click <strong>Windows PowerShell</strong></p>
-    <div class="tip"><strong>Tip:</strong> You do NOT need to right-click "Run as Administrator" — a normal PowerShell window works fine.</div>
-    <p>A blue (or dark) window will open with a blinking cursor. That's PowerShell — you're in the right place.</p>
+    <p>Press the <strong>Windows key</strong> → type <strong>PowerShell</strong> → click <strong>Windows PowerShell</strong>.</p>
+    <p>A blue/dark window opens with a blinking cursor. You do <strong>not</strong> need to run as Administrator.</p>
   </div>
 
   <!-- Step 2 -->
   <div class="step">
     <div class="step-num">2</div>
-    <h2>Run the Installer</h2>
-    <p>Copy the command below and paste it into PowerShell, then press <strong>Enter</strong>:</p>
+    <h2>Install Open Claw</h2>
+    <p>Copy and paste this command into PowerShell, then press <strong>Enter</strong>:</p>
     <div class="cmd-block">
-      <div class="cmd-label">PowerShell</div>
+      <span class="cmd-label">PowerShell</span>
       <button class="copy-btn" onclick="copyCmd(this, 'irm https://claude.ai/install.ps1 | iex')">Copy</button>
-      irm https://claude.ai/install.ps1 | iex
+      <span class="cmd">irm https://claude.ai/install.ps1 | iex</span>
     </div>
     <div class="tip"><strong>How to paste in PowerShell:</strong> Right-click anywhere in the window — it pastes automatically. Or use <strong>Ctrl + Shift + V</strong>.</div>
-    <p>The installer will download and set up Open Claw automatically. Wait for it to finish — it usually takes 1–2 minutes.</p>
+    <p>Wait 1–2 minutes for the installation to finish.</p>
   </div>
 
   <!-- Step 3 -->
   <div class="step">
     <div class="step-num">3</div>
-    <h2>Verify the Installation</h2>
-    <p>Once the installer finishes, type this command and press <strong>Enter</strong>:</p>
-    <div class="cmd-block">
-      <div class="cmd-label">PowerShell</div>
-      <button class="copy-btn" onclick="copyCmd(this, 'claude --version')">Copy</button>
-      claude --version
-    </div>
-    <p>You should see a version number printed (e.g. <code style="background:#060F18;padding:2px 6px;border-radius:4px;color:#7DD3FC">claude 2.x.x</code>). That means Open Claw is installed correctly.</p>
-    <div class="warning"><strong>If you see "command not found":</strong> Close PowerShell, reopen it, and try again. The installation needs a fresh terminal to take effect.</div>
+    <h2>Get Your OpenRouter API Key</h2>
+    <p>Go to <strong>openrouter.ai</strong> → Sign up (it's free) → Click your profile → <strong>Keys</strong> → <strong>Create Key</strong>.</p>
+    <p>Copy the key — it looks like: <code>sk-or-v1-xxxxxxxxxxxxxxxx</code></p>
+    <div class="tip"><strong>Add credits:</strong> Go to openrouter.ai → Settings → Credits → Add $5–$10 to start. Most models cost fractions of a cent per request.</div>
   </div>
 
   <!-- Step 4 -->
   <div class="step">
     <div class="step-num">4</div>
-    <h2>Launch Open Claw</h2>
-    <p>Navigate to the folder where your project is (or just stay in the home directory for now), then type:</p>
+    <h2>Set OpenRouter as Your Provider</h2>
+    <p>This tells Open Claw to use OpenRouter instead of Anthropic. Run both commands in PowerShell (replace the key with yours):</p>
     <div class="cmd-block">
-      <div class="cmd-label">PowerShell</div>
-      <button class="copy-btn" onclick="copyCmd(this, 'claude')">Copy</button>
-      claude
+      <span class="cmd-label">PowerShell — set environment variables</span>
+      <button class="copy-btn" onclick="copyCmd(this, '$env:ANTHROPIC_BASE_URL=\"https://openrouter.ai/api/v1\"\n$env:ANTHROPIC_API_KEY=\"sk-or-v1-your-key-here\"')">Copy</button>
+      <span class="var">$env:ANTHROPIC_BASE_URL</span><span class="cmd"> = </span><span style="color:#86EFAC">"https://openrouter.ai/api/v1"</span><br>
+      <span class="var">$env:ANTHROPIC_API_KEY</span><span class="cmd"> = </span><span style="color:#86EFAC">"sk-or-v1-your-key-here"</span>
     </div>
-    <p>Open Claw will open in your browser and ask you to log in with your Claude account.</p>
+    <div class="warning"><strong>Note:</strong> These variables last only for this PowerShell session. See Step 6 to make them permanent.</div>
   </div>
 
   <!-- Step 5 -->
   <div class="step">
     <div class="step-num">5</div>
-    <h2>Log In with Your Claude Account</h2>
-    <p>A browser window will open automatically. Log in with the same email and password you use on <strong>claude.ai</strong>.</p>
-    <div class="tip"><strong>Important:</strong> You need a <strong>Pro, Max, Team, or Enterprise</strong> plan. The free Claude.ai plan does not include Open Claw access.</div>
-    <p>Once logged in, go back to PowerShell — Open Claw is now ready to use.</p>
+    <h2>Choose Your Model</h2>
+    <p>Tell Open Claw which model to use. This is the fun part — pick any model from OpenRouter:</p>
+    <div class="cmd-block">
+      <span class="cmd-label">PowerShell — popular free/cheap options</span>
+      <span class="comment"># GPT-4o (OpenAI)</span><br>
+      <span class="var">$env:CLAUDE_MODEL</span><span class="cmd"> = </span><span style="color:#86EFAC">"openai/gpt-4o"</span><br><br>
+      <span class="comment"># Gemini 2.5 Pro (Google)</span><br>
+      <span class="var">$env:CLAUDE_MODEL</span><span class="cmd"> = </span><span style="color:#86EFAC">"google/gemini-2.5-pro"</span><br><br>
+      <span class="comment"># Llama 3.3 70B (free on OpenRouter)</span><br>
+      <span class="var">$env:CLAUDE_MODEL</span><span class="cmd"> = </span><span style="color:#86EFAC">"meta-llama/llama-3.3-70b-instruct:free"</span><br><br>
+      <span class="comment"># DeepSeek R1 (very capable, low cost)</span><br>
+      <span class="var">$env:CLAUDE_MODEL</span><span class="cmd"> = </span><span style="color:#86EFAC">"deepseek/deepseek-r1"</span>
+    </div>
+    <div class="info">Browse all models at <strong>openrouter.ai/models</strong> — filter by free, by price, or by provider.</div>
   </div>
 
   <!-- Step 6 -->
   <div class="step">
     <div class="step-num">6</div>
-    <h2>Create Your AGENTS.md File (Open Claw Config)</h2>
-    <p>Open Claw looks for an <strong>AGENTS.md</strong> file in your project folder to understand how to behave. Create one like this:</p>
+    <h2>Make Settings Permanent (Recommended)</h2>
+    <p>So you don't have to re-enter the keys every time, save them permanently. Run this in PowerShell:</p>
     <div class="cmd-block">
-      <div class="cmd-label">PowerShell — create a project folder and AGENTS.md</div>
-      <button class="copy-btn" onclick="copyCmd(this, 'mkdir my-project\ncd my-project\nnew-item AGENTS.md')">Copy</button>
-      mkdir my-project<br>
-      cd my-project<br>
-      new-item AGENTS.md
+      <span class="cmd-label">PowerShell — save permanently</span>
+      <button class="copy-btn" onclick="copyCmd(this, '[System.Environment]::SetEnvironmentVariable(\"ANTHROPIC_BASE_URL\",\"https://openrouter.ai/api/v1\",\"User\")\n[System.Environment]::SetEnvironmentVariable(\"ANTHROPIC_API_KEY\",\"sk-or-v1-your-key-here\",\"User\")')">Copy</button>
+      <span style="color:#C084FC">[System.Environment]</span><span class="cmd">::SetEnvironmentVariable(</span><span style="color:#86EFAC">"ANTHROPIC_BASE_URL"</span><span class="cmd">, </span><span style="color:#86EFAC">"https://openrouter.ai/api/v1"</span><span class="cmd">, </span><span style="color:#86EFAC">"User"</span><span class="cmd">)</span><br>
+      <span style="color:#C084FC">[System.Environment]</span><span class="cmd">::SetEnvironmentVariable(</span><span style="color:#86EFAC">"ANTHROPIC_API_KEY"</span><span class="cmd">, </span><span style="color:#86EFAC">"sk-or-v1-your-key-here"</span><span class="cmd">, </span><span style="color:#86EFAC">"User"</span><span class="cmd">)</span>
     </div>
-    <p>Open the file in Notepad and add your instructions — for example, what language to use, how to name files, etc.</p>
-    <div class="tip"><strong>Tip:</strong> AGENTS.md is the Open Claw equivalent of a rulebook. Think of it as telling the AI: "Here's how I want you to work in this project."</div>
+    <p>Close and reopen PowerShell after running this. The settings will now load automatically every time.</p>
   </div>
 
   <!-- Step 7 -->
   <div class="step">
     <div class="step-num">7</div>
-    <h2>Optional — Install Git for Windows (Recommended)</h2>
-    <p>Git gives Open Claw a full Bash terminal, which makes it much more powerful. It's free and takes 2 minutes to install.</p>
-    <p>Download from: <strong>https://git-scm.com/downloads/win</strong> → run the installer → click Next all the way through.</p>
-    <div class="tip"><strong>Why bother?</strong> Without Git, Open Claw can only use PowerShell commands. With Git, it can run the full range of shell commands — much more capable.</div>
+    <h2>Launch Open Claw</h2>
+    <p>Navigate to any project folder (or stay where you are) and type:</p>
+    <div class="cmd-block">
+      <span class="cmd-label">PowerShell</span>
+      <button class="copy-btn" onclick="copyCmd(this, 'claude')">Copy</button>
+      <span class="cmd">claude</span>
+    </div>
+    <p>Open Claw will start and connect to OpenRouter. You'll see a prompt where you can start typing your first instruction.</p>
+    <div class="tip"><strong>First thing to try:</strong> Type <code>What model are you using?</code> — it should respond with the OpenRouter model you selected.</div>
+  </div>
+
+  <!-- Step 8 -->
+  <div class="step">
+    <div class="step-num">8</div>
+    <h2>Create Your AGENTS.md Config File</h2>
+    <p>Open Claw looks for an <strong>AGENTS.md</strong> file in your project folder. This is where you give it standing instructions.</p>
+    <div class="cmd-block">
+      <span class="cmd-label">PowerShell — create a project and AGENTS.md</span>
+      <button class="copy-btn" onclick="copyCmd(this, 'mkdir my-project\ncd my-project\nNew-Item AGENTS.md -ItemType File')">Copy</button>
+      <span class="cmd">mkdir my-project</span><br>
+      <span class="cmd">cd my-project</span><br>
+      <span class="cmd">New-Item AGENTS.md -ItemType File</span>
+    </div>
+    <p>Open AGENTS.md in Notepad and write your rules — for example:</p>
+    <div class="cmd-block">
+      <span class="cmd-label">AGENTS.md — example content</span>
+      <span class="comment"># My Project Rules</span><br>
+      <span class="cmd">- Use Python 3.10+</span><br>
+      <span class="cmd">- Write clean, commented code</span><br>
+      <span class="cmd">- Always create a requirements.txt</span><br>
+      <span class="cmd">- Keep responses concise</span>
+    </div>
   </div>
 
   <div class="success-box">
     <div class="icon">🎉</div>
     <h3>You're Ready!</h3>
-    <p>Open Claw is installed on your Windows machine. Type <code style="background:#060F18;padding:2px 8px;border-radius:4px;color:#7DD3FC">claude</code> in PowerShell from any project folder to start building.</p>
+    <p>Open Claw is running on your Windows machine, powered by OpenRouter. Switch models anytime by changing <code>ANTHROPIC_MODEL</code> — no reinstall needed.</p>
   </div>
 
+  <!-- Quick Reference -->
   <div style="margin-top:2rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;">
     <h3 style="color:var(--accent);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">Quick Reference</h3>
-    <table style="width:100%;font-size:0.88rem;border-collapse:collapse;">
-      <tr style="border-bottom:1px solid var(--border)">
-        <td style="padding:0.6rem 0;color:var(--muted);width:45%">Start Open Claw</td>
-        <td style="padding:0.6rem 0;font-family:monospace;color:#7DD3FC">claude</td>
-      </tr>
-      <tr style="border-bottom:1px solid var(--border)">
-        <td style="padding:0.6rem 0;color:var(--muted)">Check version</td>
-        <td style="padding:0.6rem 0;font-family:monospace;color:#7DD3FC">claude --version</td>
-      </tr>
-      <tr style="border-bottom:1px solid var(--border)">
-        <td style="padding:0.6rem 0;color:var(--muted)">Config file</td>
-        <td style="padding:0.6rem 0;font-family:monospace;color:#7DD3FC">AGENTS.md</td>
-      </tr>
-      <tr style="border-bottom:1px solid var(--border)">
-        <td style="padding:0.6rem 0;color:var(--muted)">Run health check</td>
-        <td style="padding:0.6rem 0;font-family:monospace;color:#7DD3FC">claude doctor</td>
-      </tr>
-      <tr>
-        <td style="padding:0.6rem 0;color:var(--muted)">Uninstall</td>
-        <td style="padding:0.6rem 0;font-family:monospace;color:#7DD3FC">Remove-Item "$env:USERPROFILE\.local\bin\claude.exe"</td>
-      </tr>
+    <table class="ref-table">
+      <tr><td>Start Open Claw</td><td>claude</td></tr>
+      <tr><td>Check version</td><td>claude --version</td></tr>
+      <tr><td>OpenRouter base URL</td><td>https://openrouter.ai/api/v1</td></tr>
+      <tr><td>Config file</td><td>AGENTS.md (in project folder)</td></tr>
+      <tr><td>Browse models</td><td>openrouter.ai/models</td></tr>
+      <tr><td>Check credits</td><td>openrouter.ai → Settings → Credits</td></tr>
+      <tr><td>Health check</td><td>claude doctor</td></tr>
+    </table>
+  </div>
+
+  <!-- Popular Models -->
+  <div style="margin-top:1.2rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;">
+    <h3 style="color:var(--accent);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">Popular Models on OpenRouter</h3>
+    <table class="ref-table">
+      <tr><td>GPT-4o (OpenAI)</td><td>openai/gpt-4o</td></tr>
+      <tr><td>Gemini 2.5 Pro (Google)</td><td>google/gemini-2.5-pro</td></tr>
+      <tr><td>Claude Sonnet (Anthropic)</td><td>anthropic/claude-sonnet-4-5</td></tr>
+      <tr><td>Llama 3.3 70B (Free)</td><td>meta-llama/llama-3.3-70b-instruct:free</td></tr>
+      <tr><td>DeepSeek R1</td><td>deepseek/deepseek-r1</td></tr>
+      <tr><td>Mistral Large</td><td>mistralai/mistral-large</td></tr>
     </table>
   </div>
 
