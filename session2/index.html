@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><script>
-(function(){
-  var k="VibeXIMB_auth";
-  if(sessionStorage.getItem(k)!=="1"){
-    var p=prompt("Enter password to access this site:");
-    if(p!=="VibeXIMB"){
-      document.documentElement.innerHTML="<body style='background:#0D1B2A;color:#E8EDF2;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0'><div style='text-align:center'><div style='font-size:2rem;margin-bottom:1rem'>🔒</div><div>Access denied. Please reload and enter the correct password.</div></div></body>";
-      return;
-    }
-    sessionStorage.setItem(k,"1");
-  }
-})();
-</script>
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Session 2: Open Claw Deep Dive</title>
