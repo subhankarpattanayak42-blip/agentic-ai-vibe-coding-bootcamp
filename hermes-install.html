@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermes Agent — Installation Guide</title>
+<style>
+  :root {
+    --bg: #0D1B2A; --card: #1A2B3C; --accent: #F0C040; --text: #E8EDF2;
+    --muted: #8AABB8; --border: #2A4055; --green: #10B981; --purple: #8B5CF6;
+    --hermes: #F97316;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; line-height:1.7; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  nav {
+    position:sticky; top:0; z-index:100;
+    background:rgba(13,27,42,0.95); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px;
+  }
+  .nav-logo { color:var(--hermes); font-weight:700; }
+  .nav-links { display:flex; gap:1.5rem; font-size:0.9rem; }
+  .nav-links a { color:var(--muted); }
+  .nav-links a:hover { color:var(--accent); text-decoration:none; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, rgba(249,115,22,0.12) 0%, transparent 60%);
+    padding:4rem 2rem 3rem; border-bottom:1px solid var(--border);
+    max-width:900px; margin:0 auto; text-align:center;
+  }
+  .hero-icon { font-size:4rem; margin-bottom:1rem; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .hermes-badge {
+    display:inline-block; background:rgba(249,115,22,0.15); border:1px solid rgba(249,115,22,0.4);
+    color:var(--hermes); font-size:0.8rem; font-weight:600; padding:0.3rem 1rem;
+    border-radius:20px; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px;
+  }
+  h1 { font-size:2.4rem; font-weight:800; margin-bottom:0.8rem; }
+  .hero-sub { color:var(--muted); font-size:1rem; max-width:600px; margin:0 auto 1.5rem; }
+  .hero-pills { display:flex; gap:0.6rem; justify-content:center; flex-wrap:wrap; }
+  .pill { background:rgba(255,255,255,0.07); border:1px solid var(--border); border-radius:20px; padding:0.3rem 0.9rem; font-size:0.8rem; color:var(--muted); }
+
+  /* CONTENT */
+  .content { max-width:900px; margin:0 auto; padding:3rem 2rem; }
+
+  /* XP BAR */
+  .xp-bar-wrap { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1rem 1.4rem; margin-bottom:2rem; }
+  .xp-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; }
+  .xp-label { font-size:0.8rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+  .xp-count { font-size:0.9rem; font-weight:800; color:var(--accent); }
+  .xp-track { background:#0A1628; border-radius:999px; height:12px; overflow:hidden; }
+  .xp-fill { height:100%; background:linear-gradient(90deg,#F97316,#F0C040); border-radius:999px; transition:width 0.6s cubic-bezier(.34,1.56,.64,1); width:0%; }
+  .level-badges { display:flex; gap:0.5rem; margin-top:0.8rem; flex-wrap:wrap; }
+  .lvl-badge { font-size:0.75rem; font-weight:700; padding:0.25rem 0.7rem; border-radius:20px; border:1px solid; opacity:0.3; transition:all 0.4s; }
+  .lvl-badge.unlocked { opacity:1; animation:popIn 0.4s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes popIn { 0%{transform:scale(0.6)} 80%{transform:scale(1.15)} 100%{transform:scale(1)} }
+  .lvl-badge.b1 { color:#60A5FA; border-color:#60A5FA; background:rgba(96,165,250,0.1); }
+  .lvl-badge.b2 { color:#A78BFA; border-color:#A78BFA; background:rgba(167,139,250,0.1); }
+  .lvl-badge.b3 { color:#F0C040; border-color:#F0C040; background:rgba(240,192,64,0.1); }
+  .lvl-badge.b4 { color:#F97316; border-color:#F97316; background:rgba(249,115,22,0.1); }
+  .lvl-badge.b5 { color:#10B981; border-color:#10B981; background:rgba(16,185,129,0.1); }
+
+  /* QUEST STEPS */
+  .quest { border-radius:16px; margin-bottom:1.2rem; overflow:hidden; transition:all 0.3s; border:2px solid var(--border); }
+  .quest.locked { opacity:0.4; filter:grayscale(0.5); pointer-events:none; }
+  .quest.completed { border-color:var(--green); }
+  .quest.active { border-color:var(--hermes); box-shadow:0 0 20px rgba(249,115,22,0.15); }
+  .quest-header {
+    display:flex; align-items:center; gap:1rem; padding:1.2rem 1.5rem;
+    background:var(--card); cursor:pointer; user-select:none;
+  }
+  .quest.completed .quest-header { background:rgba(16,185,129,0.06); }
+  .quest.active .quest-header { background:rgba(249,115,22,0.06); }
+  .quest-num {
+    width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:0.9rem; flex-shrink:0;
+    background:rgba(249,115,22,0.15); color:var(--hermes); border:2px solid rgba(249,115,22,0.3);
+  }
+  .quest.completed .quest-num { background:rgba(16,185,129,0.2); color:var(--green); border-color:var(--green); }
+  .quest-meta { flex:1; }
+  .quest-title { font-weight:700; font-size:1rem; color:var(--text); }
+  .quest-subtitle { font-size:0.8rem; color:var(--muted); margin-top:0.1rem; }
+  .quest-xp { font-size:0.75rem; font-weight:700; color:var(--accent); background:rgba(240,192,64,0.1); border:1px solid rgba(240,192,64,0.2); padding:0.2rem 0.6rem; border-radius:20px; flex-shrink:0; }
+  .quest-status { font-size:1.2rem; flex-shrink:0; }
+  .quest-body { padding:0 1.5rem; max-height:0; overflow:hidden; transition:max-height 0.4s ease, padding 0.3s; }
+  .quest-body.open { max-height:1000px; padding:1.2rem 1.5rem 1.5rem; }
+  .quest-body p { color:#CBD5E1; font-size:0.92rem; margin-bottom:0.8rem; }
+  .quest-body ul { padding-left:1.4rem; margin-bottom:0.8rem; }
+  .quest-body li { color:#CBD5E1; font-size:0.9rem; padding:0.2rem 0; }
+
+  pre {
+    background:#060F18; border:1px solid var(--border); border-radius:8px;
+    padding:1rem 1.2rem; font-family:monospace; font-size:0.85rem; color:#7DD3FC;
+    overflow-x:auto; margin:0.8rem 0; line-height:1.7; white-space:pre-wrap;
+    position:relative;
+  }
+  .copy-btn {
+    position:absolute; top:0.5rem; right:0.6rem;
+    background:rgba(249,115,22,0.15); border:1px solid rgba(249,115,22,0.3);
+    color:var(--hermes); font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem;
+    border-radius:5px; cursor:pointer; transition:all 0.2s;
+  }
+  .copy-btn:hover { background:rgba(249,115,22,0.3); }
+  code { background:rgba(255,255,255,0.08); padding:0.1rem 0.4rem; border-radius:4px; font-family:monospace; font-size:0.85rem; color:#7DD3FC; }
+
+  /* COMPLETE BUTTON */
+  .complete-btn {
+    width:100%; padding:0.9rem; border-radius:10px; border:none; cursor:pointer;
+    font-weight:800; font-size:0.95rem; margin-top:1rem;
+    background:linear-gradient(135deg,#F97316,#F0C040); color:#0D1B2A;
+    transition:all 0.2s; letter-spacing:0.5px;
+  }
+  .complete-btn:hover { transform:translateY(-1px); box-shadow:0 4px 20px rgba(249,115,22,0.4); }
+  .complete-btn:disabled { background:#2A4055; color:#8AABB8; cursor:not-allowed; transform:none; box-shadow:none; }
+
+  /* CELEBRATE OVERLAY */
+  #celebrate {
+    display:none; position:fixed; inset:0; z-index:999;
+    background:rgba(0,0,0,0.75); align-items:center; justify-content:center;
+  }
+  #celebrate.show { display:flex; }
+  .celebrate-card {
+    background:var(--card); border:2px solid var(--hermes); border-radius:20px;
+    padding:2.5rem 3rem; text-align:center; max-width:380px;
+    animation:popIn 0.4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .celebrate-icon { font-size:3.5rem; margin-bottom:0.8rem; }
+  .celebrate-title { font-size:1.4rem; font-weight:800; color:var(--accent); margin-bottom:0.4rem; }
+  .celebrate-sub { color:var(--muted); font-size:0.9rem; margin-bottom:1.2rem; }
+  .celebrate-close {
+    background:linear-gradient(135deg,#F97316,#F0C040); color:#0D1B2A;
+    border:none; border-radius:10px; padding:0.7rem 2rem; font-weight:800; cursor:pointer; font-size:0.95rem;
+  }
+  canvas#confetti { position:fixed; inset:0; pointer-events:none; z-index:998; }
+
+  /* TROPHY */
+  .trophy-card {
+    display:none; background:linear-gradient(135deg,rgba(249,115,22,0.15),rgba(240,192,64,0.1));
+    border:2px solid var(--accent); border-radius:20px; padding:2.5rem; text-align:center; margin-top:2rem;
+  }
+  .trophy-card.show { display:block; animation:popIn 0.5s cubic-bezier(.34,1.56,.64,1); }
+  .trophy-card h2 { color:var(--accent); font-size:1.8rem; margin-bottom:0.5rem; }
+  .trophy-card p { color:var(--muted); }
+
+  /* COMPARE TABLE */
+  table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.9rem; }
+  th { background:rgba(249,115,22,0.12); color:var(--hermes); padding:0.7rem 1rem; text-align:left; border:1px solid var(--border); }
+  td { padding:0.7rem 1rem; border:1px solid var(--border); color:#CBD5E1; }
+  tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
+
+  .info-box { background:rgba(249,115,22,0.07); border:1px solid rgba(249,115,22,0.25); border-radius:8px; padding:1.2rem 1.4rem; margin:1rem 0; }
+  .info-box .label { color:var(--hermes); font-weight:700; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.4rem; }
+
+  .nav-bottom { display:flex; justify-content:space-between; padding:2rem; border-top:1px solid var(--border); margin-top:2rem; }
+</style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+<div id="celebrate">
+  <div class="celebrate-card">
+    <div class="celebrate-icon" id="cel-icon">🎉</div>
+    <div class="celebrate-title" id="cel-title">Challenge Complete!</div>
+    <div class="celebrate-sub" id="cel-sub">+100 XP earned</div>
+    <button class="celebrate-close" onclick="closeCelebrate()">Continue →</button>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-logo">🐺 Hermes Agent — Install Quest</div>
+  <div class="nav-links">
+    <a href="index.html">← Home</a>
+    <a href="windows-install.html">Open Claw Guide</a>
+    <a href="session2/index.html">Session 2</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-icon">🐺</div>
+  <div class="hermes-badge">Hermes Agent · By Nous Research</div>
+  <h1>Install Hermes Agent</h1>
+  <p class="hero-sub">A self-improving autonomous AI agent with 60+ built-in tools, persistent memory, and support for 300+ AI models. Complete 6 challenges to go from zero to running your first AI task.</p>
+  <div class="hero-pills">
+    <span class="pill">Model-Agnostic</span>
+    <span class="pill">60+ Tools</span>
+    <span class="pill">Persistent Memory</span>
+    <span class="pill">Plugin System</span>
+    <span class="pill">MIT Licensed</span>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- WHAT IS HERMES -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:2rem;">
+    <h2 style="color:var(--hermes);margin-bottom:1rem;font-size:1.2rem;">What is Hermes Agent?</h2>
+    <table>
+      <tr><th>Feature</th><th>Hermes Agent</th><th>Open Claw</th></tr>
+      <tr><td>Creator</td><td>Nous Research</td><td>Open Source Community</td></tr>
+      <tr><td>Built-in tools</td><td>60+ (web, files, code, media)</td><td>Core file/shell tools</td></tr>
+      <tr><td>Memory</td><td>Persistent across sessions</td><td>Session-based</td></tr>
+      <tr><td>Model support</td><td>300+ via Nous Portal / OpenRouter</td><td>Claude + OpenRouter</td></tr>
+      <tr><td>Messaging gateways</td><td>Telegram, Discord, Slack, WhatsApp</td><td>CLI only</td></tr>
+      <tr><td>Skill learning</td><td>Creates skills from experience</td><td>Manual skill files</td></tr>
+      <tr><td>Install</td><td>One-line script</td><td>npm install</td></tr>
+    </table>
+    <p style="color:var(--muted);font-size:0.85rem;margin-top:0.8rem;">Both are excellent — Hermes excels at persistent, multi-session workflows; Open Claw excels at code-focused agentic tasks.</p>
+  </div>
+
+  <!-- XP BAR -->
+  <div class="xp-bar-wrap">
+    <div class="xp-top">
+      <span class="xp-label">Your Progress</span>
+      <span class="xp-count" id="xp-display">0 / 600 XP</span>
+    </div>
+    <div class="xp-track"><div class="xp-fill" id="xp-fill"></div></div>
+    <div class="level-badges">
+      <span class="lvl-badge b1" id="b1" title="Installer">🖥️ Installer</span>
+      <span class="lvl-badge b2" id="b2" title="Configured">⚙️ Configured</span>
+      <span class="lvl-badge b3" id="b3" title="Model Master">🤖 Model Master</span>
+      <span class="lvl-badge b4" id="b4" title="Tool Activator">🔧 Tool Activator</span>
+      <span class="lvl-badge b5" id="b5" title="Hermes Agent">🐺 Hermes Agent</span>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 1: INSTALL -->
+  <div class="quest active" id="q1">
+    <div class="quest-header" onclick="toggleQuest(1)">
+      <div class="quest-num" id="qn1">1</div>
+      <div class="quest-meta">
+        <div class="quest-title">Install Hermes Agent</div>
+        <div class="quest-subtitle">One command — handles everything automatically</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="qs1">▼</div>
+    </div>
+    <div class="quest-body open" id="qb1">
+      <p>Hermes installs with a single command. The installer automatically handles Python, Node.js, and all dependencies. No admin rights required on Windows.</p>
+
+      <p><strong style="color:var(--hermes)">Windows (PowerShell):</strong></p>
+      <pre id="pre1a">iex (irm https://hermes-agent.nousresearch.com/install.ps1)<button class="copy-btn" onclick="copyCode('pre1a')">Copy</button></pre>
+
+      <p><strong style="color:var(--hermes)">Mac / Linux / WSL2:</strong></p>
+      <pre id="pre1b">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+source ~/.bashrc<button class="copy-btn" onclick="copyCode('pre1b')">Copy</button></pre>
+
+      <div class="info-box">
+        <div class="label">What the installer does</div>
+        <ul>
+          <li>Checks for Python 3.11, Node.js, Git — installs if missing</li>
+          <li>Downloads and installs the Hermes Agent runtime</li>
+          <li>Creates config directory: <code>%LOCALAPPDATA%\hermes\</code> (Windows) or <code>~/.hermes/</code> (Mac/Linux)</li>
+          <li>Adds <code>hermes</code> to your PATH automatically</li>
+        </ul>
+      </div>
+
+      <p>Verify the install worked:</p>
+      <pre id="pre1c">hermes --version<button class="copy-btn" onclick="copyCode('pre1c')">Copy</button></pre>
+      <p style="color:var(--green);">You should see a version number like <code>hermes 1.x.x</code>. If so, you're ready!</p>
+      <button class="complete-btn" onclick="completeQuest(1, '🐺', 'Hermes Installed!', 'The agent runtime is on your machine.')">Mark Complete — I see the version number ✓</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 2: CONFIGURE -->
+  <div class="quest locked" id="q2">
+    <div class="quest-header" onclick="toggleQuest(2)">
+      <div class="quest-num" id="qn2">2</div>
+      <div class="quest-meta">
+        <div class="quest-title">Run the Setup Wizard</div>
+        <div class="quest-subtitle">Connect Hermes to an AI model in 2 minutes</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="qs2">🔒</div>
+    </div>
+    <div class="quest-body" id="qb2">
+      <p>Hermes needs an AI model to think with. The fastest way is to connect to <strong>Nous Portal</strong> (free OAuth — covers 300+ models, web search, image generation). Alternatively use OpenRouter with your own API key.</p>
+
+      <p><strong style="color:var(--hermes)">Option A — Nous Portal (Recommended, Free):</strong></p>
+      <pre id="pre2a">hermes setup --portal<button class="copy-btn" onclick="copyCode('pre2a')">Copy</button></pre>
+      <p>This opens a browser window. Sign in with Google/GitHub. Done — no API key needed.</p>
+
+      <p><strong style="color:var(--hermes)">Option B — OpenRouter (Use any model):</strong></p>
+      <pre id="pre2b">hermes setup<button class="copy-btn" onclick="copyCode('pre2b')">Copy</button></pre>
+      <p>When prompted, choose <strong>OpenRouter</strong> as the provider and paste your API key from <a href="https://openrouter.ai" target="_blank">openrouter.ai</a>.</p>
+
+      <div class="info-box">
+        <div class="label">Tip — Which option to choose?</div>
+        <ul>
+          <li><strong>Nous Portal</strong> — best for beginners, no billing setup, works immediately</li>
+          <li><strong>OpenRouter</strong> — best if you want full model choice (Claude, GPT-4, Gemini, etc.)</li>
+          <li>You can always switch later with <code>hermes setup</code></li>
+        </ul>
+      </div>
+
+      <button class="complete-btn" onclick="completeQuest(2, '⚙️', 'Agent Configured!', 'Hermes is connected to an AI model.')">Mark Complete — Setup wizard finished ✓</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 3: VERIFY -->
+  <div class="quest locked" id="q3">
+    <div class="quest-header" onclick="toggleQuest(3)">
+      <div class="quest-num" id="qn3">3</div>
+      <div class="quest-meta">
+        <div class="quest-title">Check Everything Works</div>
+        <div class="quest-subtitle">Run the doctor and check your model connection</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="qs3">🔒</div>
+    </div>
+    <div class="quest-body" id="qb3">
+      <p>Use Hermes's built-in diagnostic tool to confirm everything is wired up correctly.</p>
+
+      <pre id="pre3a">hermes doctor<button class="copy-btn" onclick="copyCode('pre3a')">Copy</button></pre>
+      <p>This checks your install, config, model connection, and tool availability. You should see all green checkmarks.</p>
+
+      <pre id="pre3b">hermes model<button class="copy-btn" onclick="copyCode('pre3b')">Copy</button></pre>
+      <p>This shows which AI model is currently selected and lets you switch. Confirm you see a model listed.</p>
+
+      <div class="info-box">
+        <div class="label">Common issues</div>
+        <ul>
+          <li><strong>hermes: command not found</strong> — close and reopen your terminal, then try again</li>
+          <li><strong>API key error</strong> — run <code>hermes setup</code> again and re-enter your key</li>
+          <li><strong>Python not found</strong> — run the installer again; it will install Python automatically</li>
+        </ul>
+      </div>
+
+      <button class="complete-btn" onclick="completeQuest(3, '🤖', 'Model Connected!', 'The doctor says all systems are go.')">Mark Complete — Doctor shows all green ✓</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 4: TOOLS -->
+  <div class="quest locked" id="q4">
+    <div class="quest-header" onclick="toggleQuest(4)">
+      <div class="quest-num" id="qn4">4</div>
+      <div class="quest-meta">
+        <div class="quest-title">Explore the Built-in Tools</div>
+        <div class="quest-subtitle">60+ tools — web search, code, files, and more</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="qs4">🔒</div>
+    </div>
+    <div class="quest-body" id="qb4">
+      <p>Hermes comes with 60+ built-in tools out of the box. You can see and manage them with one command.</p>
+
+      <pre id="pre4a">hermes tools<button class="copy-btn" onclick="copyCode('pre4a')">Copy</button></pre>
+      <p>This lists all available tools. Browse the categories:</p>
+
+      <table>
+        <tr><th>Category</th><th>What it can do</th></tr>
+        <tr><td>Web</td><td>Search the web, fetch pages, extract data from URLs</td></tr>
+        <tr><td>Files</td><td>Read, write, edit, rename, search files on your computer</td></tr>
+        <tr><td>Code</td><td>Run Python/JS/Bash, analyse code, find bugs</td></tr>
+        <tr><td>Media</td><td>Image generation, text-to-speech, audio processing</td></tr>
+        <tr><td>Memory</td><td>Store facts, recall past sessions, build knowledge base</td></tr>
+        <tr><td>Messaging</td><td>Send via Telegram, Discord, Slack, WhatsApp, Email</td></tr>
+      </table>
+
+      <p style="margin-top:1rem">Enable or disable individual tools:</p>
+      <pre id="pre4b">hermes tools enable web-search
+hermes tools disable text-to-speech<button class="copy-btn" onclick="copyCode('pre4b')">Copy</button></pre>
+
+      <button class="complete-btn" onclick="completeQuest(4, '🔧', 'Tools Activated!', 'You have 60+ superpowers ready to use.')">Mark Complete — I can see the tools list ✓</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 5: FIRST TASK -->
+  <div class="quest locked" id="q5">
+    <div class="quest-header" onclick="toggleQuest(5)">
+      <div class="quest-num" id="qn5">5</div>
+      <div class="quest-meta">
+        <div class="quest-title">Send Your First AI Task</div>
+        <div class="quest-subtitle">Launch Hermes and give it a real job</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="qs5">🔒</div>
+    </div>
+    <div class="quest-body" id="qb5">
+      <p>Launch the Hermes interactive CLI:</p>
+      <pre id="pre5a">hermes<button class="copy-btn" onclick="copyCode('pre5a')">Copy</button></pre>
+
+      <p>You'll see the Hermes prompt. Now try these starter tasks — type them and press Enter:</p>
+
+      <p><strong style="color:var(--hermes)">Starter Task 1 — Web Search:</strong></p>
+      <pre id="pre5b">Search the web for the top 3 AI agent frameworks in 2026 and summarise them in bullet points<button class="copy-btn" onclick="copyCode('pre5b')">Copy</button></pre>
+
+      <p><strong style="color:var(--hermes)">Starter Task 2 — File Awareness:</strong></p>
+      <pre id="pre5c">List all files in my current directory and tell me what kind of project this looks like<button class="copy-btn" onclick="copyCode('pre5c')">Copy</button></pre>
+
+      <p><strong style="color:var(--hermes)">Starter Task 3 — Memory Test:</strong></p>
+      <pre id="pre5d">Remember that my name is [your name] and I am learning agentic AI. Next time I start Hermes, greet me by name.<button class="copy-btn" onclick="copyCode('pre5d')">Copy</button></pre>
+
+      <div class="info-box">
+        <div class="label">What to observe</div>
+        <ul>
+          <li>Watch which <strong>tools</strong> Hermes picks for each task</li>
+          <li>Notice how it <strong>plans</strong> before acting</li>
+          <li>See how it <strong>remembers</strong> your context across turns</li>
+          <li>Compare the tool count vs Open Claw for similar tasks</li>
+        </ul>
+      </div>
+
+      <button class="complete-btn" onclick="completeQuest(5, '🐺', 'First Task Done!', 'You just ran your first Hermes agent task.')">Mark Complete — Hermes responded to my task ✓</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 6: PLUGIN -->
+  <div class="quest locked" id="q6">
+    <div class="quest-header" onclick="toggleQuest(6)">
+      <div class="quest-num" id="qn6">6</div>
+      <div class="quest-meta">
+        <div class="quest-title">Install a Plugin from the Community</div>
+        <div class="quest-subtitle">Extend Hermes with community-built capabilities</div>
+      </div>
+      <div class="quest-xp">+100 XP</div>
+      <div class="quest-status" id="qs6">🔒</div>
+    </div>
+    <div class="quest-body" id="qb6">
+      <p>Hermes has a plugin system — community members publish extensions that add new tools, integrations, and workflows. Install one to see how it works.</p>
+
+      <p>Install the model-sherpa safety plugin (adds model switching and safety middleware):</p>
+      <pre id="pre6a">hermes plugins install nordicnode/model-sherpa<button class="copy-btn" onclick="copyCode('pre6a')">Copy</button></pre>
+
+      <p>List all installed plugins:</p>
+      <pre id="pre6b">hermes plugins list<button class="copy-btn" onclick="copyCode('pre6b')">Copy</button></pre>
+
+      <p>Update Hermes to the latest version:</p>
+      <pre id="pre6c">hermes update<button class="copy-btn" onclick="copyCode('pre6c')">Copy</button></pre>
+
+      <div class="info-box">
+        <div class="label">Plugin ideas for PM / Business users</div>
+        <ul>
+          <li>Search the Hermes plugin community for <strong>project management</strong> plugins</li>
+          <li>Look for <strong>email integration</strong> plugins to send reports via Gmail/Outlook</li>
+          <li>Find <strong>spreadsheet</strong> plugins for automated Excel/Sheets workflows</li>
+          <li>Or build your own and share it with the community!</li>
+        </ul>
+      </div>
+
+      <button class="complete-btn" onclick="completeQuest(6, '🏆', 'Hermes Master!', 'You have completed the full Hermes installation quest.')">Mark Complete — Plugin installed ✓</button>
+    </div>
+  </div>
+
+  <!-- TROPHY -->
+  <div class="trophy-card" id="trophy">
+    <div style="font-size:4rem;margin-bottom:1rem;">🐺🏆</div>
+    <h2>You Are a Hermes Agent!</h2>
+    <p style="color:var(--muted);margin-top:0.5rem;">600 XP earned · All 6 challenges complete</p>
+    <p style="color:#CBD5E1;margin-top:1.2rem;font-size:0.95rem;">You have installed, configured, and run your first autonomous AI agent with 60+ tools and persistent memory. You're ready for Session 2.</p>
+    <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <a href="session2/index.html" style="display:inline-block;background:linear-gradient(135deg,#F97316,#F0C040);color:#0D1B2A;font-weight:800;padding:0.7rem 1.6rem;border-radius:10px;text-decoration:none;">Go to Session 2 →</a>
+      <a href="windows-install.html" style="display:inline-block;background:rgba(255,255,255,0.1);color:var(--text);font-weight:700;padding:0.7rem 1.6rem;border-radius:10px;border:1px solid var(--border);text-decoration:none;">Try Open Claw Too →</a>
+    </div>
+  </div>
+
+  <div class="nav-bottom">
+    <a href="index.html">← Back to Course Home</a>
+    <a href="session2/index.html">Session 2: Open Claw Deep Dive →</a>
+  </div>
+
+</div>
+
+<script>
+const TOTAL = 6;
+const BADGES = ['b1','b2','b3','b4','b5'];
+const BADGE_AT = [1,2,3,4,6]; // complete quest N to unlock badge
+
+let progress = JSON.parse(localStorage.getItem('hermes_progress') || '{"completed":[],"xp":0}');
+
+function save() { localStorage.setItem('hermes_progress', JSON.stringify(progress)); }
+
+function render() {
+  const xp = progress.xp;
+  const pct = Math.min(100, (xp / 600) * 100);
+  document.getElementById('xp-fill').style.width = pct + '%';
+  document.getElementById('xp-display').textContent = xp + ' / 600 XP';
+
+  BADGES.forEach((b, i) => {
+    const threshold = BADGE_AT[i];
+    const unlocked = progress.completed.length >= threshold;
+    document.getElementById(b).classList.toggle('unlocked', unlocked);
+  });
+
+  for (let i = 1; i <= TOTAL; i++) {
+    const done = progress.completed.includes(i);
+    const unlocked = i === 1 || progress.completed.includes(i - 1);
+    const el = document.getElementById('q' + i);
+    const num = document.getElementById('qn' + i);
+    const status = document.getElementById('qs' + i);
+    const btn = el.querySelector('.complete-btn');
+
+    el.classList.toggle('locked', !unlocked);
+    el.classList.toggle('completed', done);
+    el.classList.toggle('active', unlocked && !done);
+
+    if (done) { num.textContent = '✓'; status.textContent = '✓'; if (btn) btn.disabled = true; }
+    else if (!unlocked) { status.textContent = '🔒'; }
+    else { status.textContent = '▼'; }
+  }
+
+  if (progress.completed.length === TOTAL) {
+    document.getElementById('trophy').classList.add('show');
+  }
+}
+
+function toggleQuest(n) {
+  const body = document.getElementById('qb' + n);
+  body.classList.toggle('open');
+  const status = document.getElementById('qs' + n);
+  if (!progress.completed.includes(n) && (n === 1 || progress.completed.includes(n-1))) {
+    status.textContent = body.classList.contains('open') ? '▼' : '▶';
+  }
+}
+
+let confettiAnimId = null;
+function launchConfetti() {
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const colors = ['#F97316','#F0C040','#10B981','#8B5CF6','#60A5FA'];
+  const particles = Array.from({length:120}, () => ({
+    x: Math.random()*canvas.width, y: -10,
+    vx: (Math.random()-0.5)*4, vy: Math.random()*4+2,
+    color: colors[Math.floor(Math.random()*colors.length)],
+    size: Math.random()*8+4, rot: Math.random()*360, vr: (Math.random()-0.5)*8,
+  }));
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < 90) confettiAnimId = requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+function completeQuest(n, icon, title, sub) {
+  if (progress.completed.includes(n)) return;
+  progress.completed.push(n);
+  progress.xp += 100;
+  save();
+  render();
+
+  // Open next quest
+  if (n < TOTAL) {
+    setTimeout(() => {
+      const next = document.getElementById('qb' + (n+1));
+      if (next) next.classList.add('open');
+      document.getElementById('q' + (n+1)).scrollIntoView({behavior:'smooth', block:'center'});
+    }, 600);
+  }
+
+  document.getElementById('cel-icon').textContent = icon;
+  document.getElementById('cel-title').textContent = title;
+  document.getElementById('cel-sub').textContent = '+100 XP — ' + sub;
+  document.getElementById('celebrate').classList.add('show');
+  launchConfetti();
+}
+
+function closeCelebrate() {
+  document.getElementById('celebrate').classList.remove('show');
+}
+
+function copyCode(id) {
+  const pre = document.getElementById(id);
+  const text = pre.childNodes[0].textContent.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = pre.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+
+// Init — open first incomplete quest
+render();
+for (let i = 1; i <= TOTAL; i++) {
+  if (!progress.completed.includes(i)) {
+    const unlocked = i === 1 || progress.completed.includes(i-1);
+    if (unlocked) { document.getElementById('qb'+i).classList.add('open'); break; }
+  }
+}
+</script>
+</body>
+</html>
