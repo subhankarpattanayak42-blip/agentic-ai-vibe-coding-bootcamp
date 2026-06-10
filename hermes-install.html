@@ -187,6 +187,7 @@
     <span class="pill">Model-Agnostic</span>
     <span class="pill">60+ Tools</span>
     <span class="pill">Persistent Memory</span>
+    <span class="pill">Desktop App + CLI</span>
     <span class="pill">Plugin System</span>
     <span class="pill">MIT Licensed</span>
   </div>
@@ -205,7 +206,8 @@
       <tr><td>Model support</td><td>300+ via Nous Portal / OpenRouter</td><td>Claude + OpenRouter</td></tr>
       <tr><td>Messaging gateways</td><td>Telegram, Discord, Slack, WhatsApp</td><td>CLI only</td></tr>
       <tr><td>Skill learning</td><td>Creates skills from experience</td><td>Manual skill files</td></tr>
-      <tr><td>Install</td><td>One-line script</td><td>npm install</td></tr>
+      <tr><td>Install</td><td>Desktop App (GUI) + CLI (one-line)</td><td>npm install</td></tr>
+      <tr><td>Desktop App</td><td>Yes — native Electron app (v0.16.0, Jun 2026)</td><td>No — terminal only</td></tr>
     </table>
     <p style="color:var(--muted);font-size:0.85rem;margin-top:0.8rem;">Both are excellent — Hermes excels at persistent, multi-session workflows; Open Claw excels at code-focused agentic tasks.</p>
   </div>
@@ -232,35 +234,100 @@
       <div class="quest-num" id="qn1">1</div>
       <div class="quest-meta">
         <div class="quest-title">Install Hermes Agent</div>
-        <div class="quest-subtitle">One command — handles everything automatically</div>
+        <div class="quest-subtitle">Choose: Desktop App (GUI) or CLI (Terminal)</div>
       </div>
       <div class="quest-xp">+100 XP</div>
       <div class="quest-status" id="qs1">▼</div>
     </div>
     <div class="quest-body open" id="qb1">
-      <p>Hermes installs with a single command. The installer automatically handles Python, Node.js, and all dependencies. No admin rights required on Windows.</p>
+      <p>Hermes offers two ways to install — a native Desktop App (easiest, no terminal needed) or the CLI for power users. Pick one — both give you the same agent capabilities.</p>
 
-      <p><strong style="color:var(--hermes)">Windows (PowerShell):</strong></p>
-      <pre id="pre1a">iex (irm https://hermes-agent.nousresearch.com/install.ps1)<button class="copy-btn" onclick="copyCode('pre1a')">Copy</button></pre>
-
-      <p><strong style="color:var(--hermes)">Mac / Linux / WSL2:</strong></p>
-      <pre id="pre1b">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
-source ~/.bashrc<button class="copy-btn" onclick="copyCode('pre1b')">Copy</button></pre>
-
-      <div class="info-box">
-        <div class="label">What the installer does</div>
-        <ul>
-          <li>Checks for Python 3.11, Node.js, Git — installs if missing</li>
-          <li>Downloads and installs the Hermes Agent runtime</li>
-          <li>Creates config directory: <code>%LOCALAPPDATA%\hermes\</code> (Windows) or <code>~/.hermes/</code> (Mac/Linux)</li>
-          <li>Adds <code>hermes</code> to your PATH automatically</li>
-        </ul>
+      <!-- TAB SWITCHER -->
+      <div style="display:flex;gap:0.5rem;margin:1rem 0 0;">
+        <button id="tab-desktop" onclick="switchTab('desktop')"
+          style="flex:1;padding:0.65rem;border-radius:8px 8px 0 0;border:2px solid var(--hermes);border-bottom:none;background:rgba(249,115,22,0.15);color:var(--hermes);font-weight:800;font-size:0.88rem;cursor:pointer;">
+          🖥️ Desktop App (Recommended)
+        </button>
+        <button id="tab-cli" onclick="switchTab('cli')"
+          style="flex:1;padding:0.65rem;border-radius:8px 8px 0 0;border:2px solid var(--border);border-bottom:none;background:transparent;color:var(--muted);font-weight:700;font-size:0.88rem;cursor:pointer;">
+          ⌨️ CLI / Terminal
+        </button>
       </div>
 
-      <p>Verify the install worked:</p>
-      <pre id="pre1c">hermes --version<button class="copy-btn" onclick="copyCode('pre1c')">Copy</button></pre>
-      <p style="color:var(--green);">You should see a version number like <code>hermes 1.x.x</code>. If so, you're ready!</p>
-      <button class="complete-btn" onclick="completeQuest(1, '🐺', 'Hermes Installed!', 'The agent runtime is on your machine.')">Mark Complete — I see the version number ✓</button>
+      <!-- DESKTOP TAB -->
+      <div id="pane-desktop" style="border:2px solid var(--hermes);border-radius:0 8px 8px 8px;padding:1.2rem 1.4rem;margin-bottom:1rem;">
+        <p><strong style="color:var(--hermes)">New in June 2026 — Native Desktop App (v0.16.0)</strong></p>
+        <p>The Hermes Desktop App is a full GUI — no terminal needed. Drag-and-drop files, visual session history, inline model switcher, and one-click updates.</p>
+
+        <p><strong style="color:#7DD3FC;">Step 1 — Download the installer for your OS:</strong></p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin:0.8rem 0;">
+          <a href="https://hermes-assets.nousresearch.com/Hermes-Setup.exe" target="_blank"
+            style="display:flex;align-items:center;gap:0.7rem;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.3);border-radius:8px;padding:0.9rem 1.1rem;text-decoration:none;color:var(--text);">
+            <span style="font-size:1.8rem;">🪟</span>
+            <div><div style="font-weight:700;font-size:0.9rem;color:#7DD3FC;">Windows 10/11</div><div style="font-size:0.78rem;color:var(--muted);">Hermes-Setup.exe</div></div>
+          </a>
+          <a href="https://hermes-assets.nousresearch.com/Hermes-Setup.dmg" target="_blank"
+            style="display:flex;align-items:center;gap:0.7rem;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.3);border-radius:8px;padding:0.9rem 1.1rem;text-decoration:none;color:var(--text);">
+            <span style="font-size:1.8rem;">🍎</span>
+            <div><div style="font-weight:700;font-size:0.9rem;color:#7DD3FC;">macOS 12+</div><div style="font-size:0.78rem;color:var(--muted);">Hermes-Setup.dmg</div></div>
+          </a>
+        </div>
+        <p style="color:var(--muted);font-size:0.8rem;">Or visit the official releases page: <a href="https://github.com/NousResearch/hermes-agent/releases" target="_blank" style="color:var(--accent)">github.com/NousResearch/hermes-agent/releases</a></p>
+
+        <p><strong style="color:#7DD3FC;">Step 2 — Run the installer:</strong></p>
+        <div style="background:#060F18;border:1px solid var(--border);border-radius:8px;padding:1rem 1.2rem;margin:0.5rem 0;">
+          <p style="color:#CBD5E1;font-size:0.88rem;margin:0 0 0.5rem;"><strong style="color:#F97316;">Windows:</strong> Double-click <code>Hermes-Setup.exe</code> → follow the wizard. Handles Python, Node.js, Git automatically. No admin rights needed.</p>
+          <p style="color:#CBD5E1;font-size:0.88rem;margin:0;"><strong style="color:#F97316;">Mac:</strong> Open <code>Hermes-Setup.dmg</code> → drag Hermes into Applications → launch from Launchpad.</p>
+        </div>
+
+        <p><strong style="color:#7DD3FC;">Step 3 — First launch onboarding:</strong></p>
+        <ul>
+          <li>The app opens with a welcome screen — click <strong style="color:var(--hermes)">Quick Setup via Nous Portal</strong> (free, sign in with Google/GitHub)</li>
+          <li>Or click <strong>Full Setup</strong> to configure OpenRouter or another provider manually</li>
+          <li>Once set up, the app self-updates automatically — no manual re-downloads</li>
+        </ul>
+
+        <div class="info-box" style="margin-top:1rem;">
+          <div class="label">Desktop App Features</div>
+          <ul>
+            <li>Drag-and-drop files directly into the chat window</li>
+            <li>Paste images from clipboard — agent analyses them instantly</li>
+            <li>Visual session list — search, archive, rename past conversations</li>
+            <li>Inline model picker in the status bar (fuzzy search across 300+ models)</li>
+            <li>Cmd+K / Ctrl+K command palette for slash commands</li>
+            <li>Connect to a remote Hermes server (homelab / cloud) as a thin client</li>
+            <li>One-click in-app updates — always stay current</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CLI TAB -->
+      <div id="pane-cli" style="display:none;border:2px solid var(--border);border-radius:0 8px 8px 8px;padding:1.2rem 1.4rem;margin-bottom:1rem;">
+        <p>Install via terminal with a single command — the script handles all dependencies automatically.</p>
+
+        <p><strong style="color:var(--hermes)">Windows (PowerShell):</strong></p>
+        <pre id="pre1a">iex (irm https://hermes-agent.nousresearch.com/install.ps1)<button class="copy-btn" onclick="copyCode('pre1a')">Copy</button></pre>
+
+        <p><strong style="color:var(--hermes)">Mac / Linux / WSL2:</strong></p>
+        <pre id="pre1b">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+source ~/.bashrc<button class="copy-btn" onclick="copyCode('pre1b')">Copy</button></pre>
+
+        <div class="info-box">
+          <div class="label">What the CLI installer does</div>
+          <ul>
+            <li>Checks for Python 3.11, Node.js, Git — installs if missing</li>
+            <li>Downloads and installs the Hermes Agent runtime</li>
+            <li>Creates config at <code>%LOCALAPPDATA%\hermes\</code> (Windows) or <code>~/.hermes/</code> (Mac/Linux)</li>
+            <li>Adds <code>hermes</code> to your PATH automatically</li>
+          </ul>
+        </div>
+
+        <p>Verify the install worked:</p>
+        <pre id="pre1c">hermes --version<button class="copy-btn" onclick="copyCode('pre1c')">Copy</button></pre>
+        <p style="color:var(--green);">You should see a version number like <code>hermes 1.x.x</code>. If so, you're ready!</p>
+      </div>
+
+      <button class="complete-btn" onclick="completeQuest(1, '🐺', 'Hermes Installed!', 'The agent is on your machine.')">Mark Complete — Hermes is installed ✓</button>
     </div>
   </div>
 
@@ -586,6 +653,33 @@ for (let i = 1; i <= TOTAL; i++) {
   if (!progress.completed.includes(i)) {
     const unlocked = i === 1 || progress.completed.includes(i-1);
     if (unlocked) { document.getElementById('qb'+i).classList.add('open'); break; }
+  }
+}
+
+function switchTab(tab) {
+  const desktopPane = document.getElementById('pane-desktop');
+  const cliPane = document.getElementById('pane-cli');
+  const desktopBtn = document.getElementById('tab-desktop');
+  const cliBtn = document.getElementById('tab-cli');
+
+  if (tab === 'desktop') {
+    desktopPane.style.display = 'block';
+    cliPane.style.display = 'none';
+    desktopBtn.style.borderColor = 'var(--hermes)';
+    desktopBtn.style.background = 'rgba(249,115,22,0.15)';
+    desktopBtn.style.color = 'var(--hermes)';
+    cliBtn.style.borderColor = 'var(--border)';
+    cliBtn.style.background = 'transparent';
+    cliBtn.style.color = 'var(--muted)';
+  } else {
+    desktopPane.style.display = 'none';
+    cliPane.style.display = 'block';
+    cliBtn.style.borderColor = 'var(--hermes)';
+    cliBtn.style.background = 'rgba(249,115,22,0.15)';
+    cliBtn.style.color = 'var(--hermes)';
+    desktopBtn.style.borderColor = 'var(--border)';
+    desktopBtn.style.background = 'transparent';
+    desktopBtn.style.color = 'var(--muted)';
   }
 }
 </script>
