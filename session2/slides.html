@@ -92,6 +92,18 @@
   .good { color:#10B981; font-weight:700; }
   .bad { color:#F87171; font-weight:700; }
 
+  /* Runtime split cards */
+  .runtime-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8em; height:100%; }
+  .runtime-col { border-radius:8px; padding:0.8em; display:flex; flex-direction:column; gap:0.4em; }
+  .runtime-col.node { background:rgba(68,180,70,0.07); border:1px solid rgba(68,180,70,0.3); }
+  .runtime-col.python { background:rgba(55,118,171,0.07); border:1px solid rgba(55,118,171,0.3); }
+  .runtime-col-hdr { font-size:0.88em; font-weight:800; margin-bottom:0.3em; display:flex; align-items:center; gap:0.4em; }
+  .runtime-col.node .runtime-col-hdr { color:#4BB446; }
+  .runtime-col.python .runtime-col-hdr { color:#4B9CD3; }
+  .rt-item { background:rgba(255,255,255,0.04); border-radius:6px; padding:0.45em 0.65em; }
+  .rt-item .rt-title { font-size:0.76em; font-weight:700; color:var(--accent); }
+  .rt-item .rt-desc { font-size:0.71em; color:#CBD5E1; line-height:1.35; margin-top:0.1em; }
+
   @media print {
     body { overflow:visible; background:#fff; }
     .controls { display:none; }
@@ -121,7 +133,7 @@
 
   <!-- S2 RECAP + AGENDA -->
   <div class="slide" id="s2">
-    <div class="slide-header"><span class="slide-tag">Agenda</span><span class="slide-num">02 / 09</span></div>
+    <div class="slide-header"><span class="slide-tag">Agenda</span><span class="slide-num">02 / 10</span></div>
     <div class="slide-body">
       <h2 class="stitle">Today's <span>Agenda</span></h2>
       <div class="three-col" style="margin-bottom:0.7em">
@@ -143,7 +155,7 @@
 
   <!-- S3 WHAT IS OPEN CLAW -->
   <div class="slide" id="s3">
-    <div class="slide-header"><span class="slide-tag">What is Open Claw</span><span class="slide-num">03 / 09</span></div>
+    <div class="slide-header"><span class="slide-tag">What is Open Claw</span><span class="slide-num">03 / 10</span></div>
     <div class="slide-body">
       <h2 class="stitle">Open Claw — <span>Positioning</span></h2>
       <p class="sp">Open Claw is an open-source agentic CLI that runs autonomous coding tasks in your terminal — reading files, writing code, running commands, browsing the web — all directed by natural language.</p>
@@ -178,7 +190,7 @@
 
   <!-- S4 ARCHITECTURE -->
   <div class="slide" id="s4">
-    <div class="slide-header"><span class="slide-tag">Architecture</span><span class="slide-num">04 / 09</span></div>
+    <div class="slide-header"><span class="slide-tag">Architecture</span><span class="slide-num">04 / 10</span></div>
     <div class="slide-body">
       <h2 class="stitle">Under the <span>Hood</span></h2>
       <div class="flow-diagram" style="flex-direction:column; align-items:flex-start; gap:0.2em; margin:0.5em 0">
@@ -216,7 +228,7 @@
 
   <!-- S5 TOKEN FLOW -->
   <div class="slide" id="s5">
-    <div class="slide-header"><span class="slide-tag">Token Flow</span><span class="slide-num">05 / 09</span></div>
+    <div class="slide-header"><span class="slide-tag">Token Flow</span><span class="slide-num">05 / 10</span></div>
     <div class="slide-body">
       <h2 class="stitle">What Fills Your <span>Context Window</span></h2>
       <div class="two-col" style="margin-bottom:0.7em">
@@ -252,7 +264,7 @@
 
   <!-- S6 TOKEN EFFICIENCY -->
   <div class="slide" id="s6">
-    <div class="slide-header"><span class="slide-tag">Token Efficiency</span><span class="slide-num">06 / 09</span></div>
+    <div class="slide-header"><span class="slide-tag">Token Efficiency</span><span class="slide-num">06 / 10</span></div>
     <div class="slide-body">
       <h2 class="stitle">3 Efficiency <span>Mechanisms</span></h2>
       <table class="token-table">
@@ -286,7 +298,7 @@
 
   <!-- S7 DO'S AND DON'TS -->
   <div class="slide" id="s7">
-    <div class="slide-header"><span class="slide-tag">Do's &amp; Don'ts</span><span class="slide-num">07 / 09</span></div>
+    <div class="slide-header"><span class="slide-tag">Do's &amp; Don'ts</span><span class="slide-num">07 / 10</span></div>
     <div class="slide-body">
       <h2 class="stitle">Rules for <span>Safe, Effective</span> Use</h2>
       <div class="do-dont">
@@ -327,7 +339,7 @@
 
   <!-- S8 HANDS-ON -->
   <div class="slide" id="s8">
-    <div class="slide-header"><span class="slide-tag">Hands-On</span><span class="slide-num">08 / 09</span></div>
+    <div class="slide-header"><span class="slide-tag">Hands-On</span><span class="slide-num">08 / 10</span></div>
     <div class="slide-body">
       <h2 class="stitle">Your First <span>Open Claw</span> Session</h2>
       <div class="two-col">
@@ -359,9 +371,63 @@ open-claw</pre>
     <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">🔧 Session 2</span></div>
   </div>
 
-  <!-- S9 TAKEAWAY -->
+  <!-- S9 NODE.JS & PYTHON IN THE HARNESS — NEW SLIDE -->
   <div class="slide" id="s9">
-    <div class="slide-header"><span class="slide-tag">Your Deliverable</span><span class="slide-num">09 / 09</span></div>
+    <div class="slide-header"><span class="slide-tag">Runtime Architecture</span><span class="slide-num">09 / 10</span></div>
+    <div class="slide-body">
+      <h2 class="stitle">Node.js &amp; Python — <span>The Harness Split</span></h2>
+      <p class="sp" style="margin-bottom:0.6em">Open Claw and Claude Code both use <strong>two runtimes working together</strong>. Node.js owns the shell; Python owns the automation scripts.</p>
+      <div class="runtime-grid">
+        <div class="runtime-col node">
+          <div class="runtime-col-hdr">🟢 Node.js — The Harness Shell</div>
+          <div class="rt-item">
+            <div class="rt-title">CLI &amp; REPL Loop</div>
+            <div class="rt-desc">The harness boots in Node.js — it manages your terminal session, keyboard input, and the agent's plan→act→observe loop.</div>
+          </div>
+          <div class="rt-item">
+            <div class="rt-title">Built-in Tool Execution</div>
+            <div class="rt-desc">Read, Write, Edit, Bash, WebFetch are all Node.js modules. When Claude calls a tool, Node.js runs it and feeds the result back.</div>
+          </div>
+          <div class="rt-item">
+            <div class="rt-title">MCP Server Spawning</div>
+            <div class="rt-desc">Model Context Protocol servers are child processes launched by Node.js — connecting the agent to databases, APIs, and external services.</div>
+          </div>
+          <div class="rt-item">
+            <div class="rt-title">Hooks &amp; Permissions</div>
+            <div class="rt-desc">Pre/post-tool hooks in settings.json are shell commands fired by Node.js's <code>child_process</code> module. Permission gates live here too.</div>
+          </div>
+        </div>
+        <div class="runtime-col python">
+          <div class="runtime-col-hdr">🐍 Python — The Automation Layer</div>
+          <div class="rt-item">
+            <div class="rt-title">Custom Skill Scripts</div>
+            <div class="rt-desc">Every /skill in this bootcamp is a Python script — proposal generation, RFP analysis, Wrike automation. Node.js spawns them as subprocesses.</div>
+          </div>
+          <div class="rt-item">
+            <div class="rt-title">Document &amp; Output Generation</div>
+            <div class="rt-desc">python-docx, openpyxl, python-pptx generate Word docs, Excel sheets, and PowerPoint decks. The output layer is entirely Python.</div>
+          </div>
+          <div class="rt-item">
+            <div class="rt-title">Anthropic SDK Calls</div>
+            <div class="rt-desc">Scripts call <code>anthropic.Anthropic()</code> directly to invoke Claude models — a separate API session from the harness's own model calls.</div>
+          </div>
+          <div class="rt-item">
+            <div class="rt-title">Browser Automation (Playwright)</div>
+            <div class="rt-desc">Playwright-Python drives Chrome via CDP for skills that scrape content libraries or post comments to project management tools.</div>
+          </div>
+        </div>
+      </div>
+      <div class="hl-box" style="margin-top:0.5em; padding:0.5em 1em;">
+        <div class="hl-label">🔄 How They Work Together</div>
+        <p>You type <strong>/skill</strong> → Node.js harness routes it → spawns Python subprocess → Python calls Anthropic API + generates output → Node.js surfaces result back to your session.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="footer-text">Agentic AI &amp; Vibe Coding Bootcamp</span><span class="footer-logo">🔧 Session 2</span></div>
+  </div>
+
+  <!-- S10 TAKEAWAY -->
+  <div class="slide" id="s10">
+    <div class="slide-header"><span class="slide-tag">Your Deliverable</span><span class="slide-num">10 / 10</span></div>
     <div class="slide-body" style="align-items:center;text-align:center">
       <div style="font-size:3em;margin-bottom:0.3em">🔧</div>
       <h2 class="stitle" style="text-align:center">You Are Now an <span>Open Claw Expert</span></h2>
@@ -385,13 +451,13 @@ open-claw</pre>
     <div class="nav-dots" id="dots"></div>
     <button class="ctrl-btn" id="nextBtn" onclick="changeSlide(1)">Next ▶</button>
   </div>
-  <span class="slide-counter" id="counter">1 / 9</span>
+  <span class="slide-counter" id="counter">1 / 10</span>
   <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
   <button class="print-btn" onclick="window.print()">🖨 Print / PDF</button>
 </div>
 
 <script>
-  const TOTAL=9; let cur=1;
+  const TOTAL=10; let cur=1;
   const dots=document.getElementById('dots');
   for(let i=1;i<=TOTAL;i++){const d=document.createElement('div');d.className='dot'+(i===1?' active':'');d.onclick=()=>goTo(i);dots.appendChild(d);}
   function goTo(n){document.getElementById('s'+cur).classList.remove('active');document.querySelectorAll('.dot')[cur-1].classList.remove('active');cur=n;document.getElementById('s'+cur).classList.add('active');document.querySelectorAll('.dot')[cur-1].classList.add('active');document.getElementById('counter').textContent=cur+' / '+TOTAL;document.getElementById('progress').style.width=(cur/TOTAL*100)+'%';document.getElementById('prevBtn').disabled=cur===1;document.getElementById('nextBtn').disabled=cur===TOTAL;}
