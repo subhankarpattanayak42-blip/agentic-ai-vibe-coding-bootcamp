@@ -86,21 +86,27 @@ Response + tool_use call → harness executes → tool_result returned to LLM
   <h2>Setup Guide</h2>
   <pre># 1. Install Node.js (v18+) from nodejs.org
 
-# 2. Install Open Claw
+# 2. Install Python (3.9+) from python.org
+#    Windows: download the installer and tick "Add Python to PATH"
+#    Mac:     brew install python   (or download from python.org)
+#    Verify:  python3 --version
+
+# 3. Install Open Claw
 npm install -g open-claw
 
-# 3. Set your API key (get from console.anthropic.com)
-export ANTHROPIC_API_KEY="sk-ant-your-key-here"
+# 4. Set your OpenRouter API key
+#    Sign up at openrouter.ai → add $5 credit → Keys → Create Key
+export OPENROUTER_API_KEY="sk-or-your-key-here"
 # Add to ~/.zshrc or ~/.bash_profile to persist
 
-# 4. Verify installation
+# 5. Verify installation
 open-claw --version
 
-# 5. Navigate to any project folder and launch
+# 6. Navigate to any project folder and launch
 cd ~/my-project
 open-claw
 
-# 6. (Optional) Create an AGENTS.md in your project root
+# 7. (Optional) Create an AGENTS.md in your project root
 # This is your project-specific instruction file for the agent</pre>
 
   <h2>Token Efficiency — Your Settings</h2>
