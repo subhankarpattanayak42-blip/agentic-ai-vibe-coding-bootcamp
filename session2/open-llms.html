@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choosing Open LLMs — Session 2 · Open Claw Deep Dive</title>
+<style>
+  :root {
+    --bg:#0D1B2A; --card:#1A2B3C; --accent:#F0C040; --text:#E8EDF2;
+    --muted:#8AABB8; --border:#2A4055; --s2:#8B5CF6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; line-height:1.7; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  nav {
+    position:sticky; top:0; z-index:100;
+    background:rgba(13,27,42,0.95); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px;
+  }
+  .nav-logo { color:var(--s2); font-weight:700; font-size:0.95rem; }
+  .nav-links { display:flex; gap:1.5rem; font-size:0.9rem; }
+  .nav-links a { color:var(--muted); }
+  .nav-links a:hover { color:var(--accent); text-decoration:none; }
+  .print-btn { background:var(--accent); color:#0D1B2A; border:none; padding:0.35rem 1rem; border-radius:6px; cursor:pointer; font-weight:700; font-size:0.82rem; }
+
+  .hero {
+    background:linear-gradient(135deg, rgba(139,92,246,0.12) 0%, transparent 60%);
+    padding:3.5rem 2rem 2.5rem; border-bottom:1px solid var(--border);
+    max-width:960px; margin:0 auto;
+  }
+  .session-badge {
+    display:inline-block; background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.4);
+    color:var(--s2); font-size:0.78rem; font-weight:600; padding:0.3rem 1rem;
+    border-radius:20px; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px;
+  }
+  h1 { font-size:2rem; font-weight:800; margin-bottom:0.6rem; }
+  h1 span { color:var(--s2); }
+  .meta { color:var(--muted); font-size:0.92rem; }
+
+  .content { max-width:960px; margin:0 auto; padding:2.5rem 2rem 4rem; }
+
+  .section { margin-bottom:2.5rem; }
+  .section-label {
+    display:inline-block; background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.35);
+    color:var(--s2); font-size:0.72rem; font-weight:700; padding:0.25rem 0.8rem;
+    border-radius:4px; text-transform:uppercase; letter-spacing:1px; margin-bottom:1rem;
+  }
+  h2 { font-size:1.35rem; font-weight:800; margin-bottom:0.8rem; }
+  h2 span { color:var(--s2); }
+  h3 { font-size:1rem; font-weight:700; color:var(--accent); margin:1.4rem 0 0.6rem; }
+  p { color:#CBD5E1; font-size:0.95rem; margin-bottom:0.8rem; line-height:1.7; }
+  ul, ol { padding-left:1.5rem; margin-bottom:0.8rem; }
+  li { color:#CBD5E1; font-size:0.93rem; padding:0.25rem 0; }
+  strong { color:var(--text); }
+
+  table { width:100%; border-collapse:collapse; margin:1rem 0 1.5rem; font-size:0.9rem; }
+  th { background:rgba(139,92,246,0.15); color:var(--s2); padding:0.75rem 1rem; text-align:left; border:1px solid var(--border); font-weight:700; }
+  td { padding:0.7rem 1rem; border:1px solid var(--border); color:#CBD5E1; vertical-align:top; }
+  tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
+
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.8rem 2rem; margin-bottom:1.5rem; }
+  .card-accent { border-left:4px solid var(--s2); }
+
+  .callout { background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.3); border-radius:8px; padding:1rem 1.2rem; margin:1.2rem 0; }
+  .callout .callout-label { font-size:0.7rem; color:var(--s2); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.4rem; }
+  .callout p { margin:0; font-size:0.9rem; }
+
+  .gold-callout { background:rgba(240,192,64,0.07); border:1px solid rgba(240,192,64,0.3); border-radius:8px; padding:1rem 1.2rem; margin:1.2rem 0; }
+  .gold-callout .callout-label { color:var(--accent); font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.4rem; }
+  .gold-callout p { margin:0; font-size:0.9rem; }
+
+  .scenario-box { background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25); border-radius:8px; padding:1.2rem 1.4rem; margin:1rem 0; }
+  .scenario-box .scenario-label { font-size:0.72rem; color:#10B981; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.5rem; }
+
+  .answer-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1rem 0; }
+  .answer-best { background:rgba(16,185,129,0.07); border:1px solid rgba(16,185,129,0.3); border-radius:8px; padding:1rem 1.2rem; }
+  .answer-wrong { background:rgba(239,68,68,0.07); border:1px solid rgba(239,68,68,0.3); border-radius:8px; padding:1rem 1.2rem; }
+  .answer-best h4 { color:#10B981; font-size:0.9rem; margin-bottom:0.5rem; }
+  .answer-wrong h4 { color:#EF4444; font-size:0.9rem; margin-bottom:0.5rem; }
+  .answer-best p, .answer-wrong p { font-size:0.88rem; margin:0; }
+
+  .pitfall-table td:first-child { color:#F87171; font-weight:600; }
+  .pitfall-table td:last-child { color:#10B981; }
+
+  .glossary-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin:1rem 0; }
+  .glossary-item { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:0.9rem 1rem; }
+  .glossary-item .term { font-size:0.82rem; font-weight:700; color:var(--s2); margin-bottom:0.3rem; }
+  .glossary-item .def { font-size:0.83rem; color:#CBD5E1; line-height:1.45; }
+
+  .selfcheck-box { background:linear-gradient(135deg, rgba(240,192,64,0.08), rgba(240,192,64,0.03)); border:2px solid rgba(240,192,64,0.35); border-radius:12px; padding:1.8rem 2rem; margin-top:2rem; }
+  .selfcheck-box h2 { color:var(--accent); margin-bottom:0.8rem; font-size:1.1rem; }
+  .selfcheck-box .scenario-text { background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; margin:0.8rem 0 1rem; font-size:0.9rem; color:#CBD5E1; font-style:italic; line-height:1.6; }
+  .selfcheck-box li { font-size:0.92rem; padding:0.4rem 0; }
+  .selfcheck-box li strong { color:var(--accent); }
+
+  .nav-bottom { display:flex; justify-content:space-between; align-items:center; padding:2rem 0; border-top:1px solid var(--border); margin-top:2rem; flex-wrap:wrap; gap:1rem; }
+
+  @media (max-width:640px) {
+    .answer-grid, .glossary-grid { grid-template-columns:1fr; }
+  }
+  @media print {
+    nav { display:none; }
+    body { background:#fff; color:#000; }
+    .card, .callout, .gold-callout, .scenario-box, .selfcheck-box { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Session 2 · Open Claw Deep Dive</div>
+  <div class="nav-links">
+    <a href="index.html">← Session 2 Home</a>
+    <a href="slides.html">Slides</a>
+    <a href="playbook.html">Playbook</a>
+    <a href="../index.html">Course Home</a>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨 Print / PDF</button>
+</nav>
+
+<div class="hero">
+  <div class="session-badge">Session 2 · Supplementary Module</div>
+  <h1>Choosing Between <span>Open LLMs</span></h1>
+  <p class="meta">Size · Speed · Architecture Trade-offs · Production Decision Framework</p>
+</div>
+
+<div class="content">
+
+  <!-- INTRO -->
+  <div class="section card card-accent">
+    <p>When you're choosing between open LLMs, the biggest differences come from <strong>size, speed, and architecture choices</strong>. These directly affect cost, latency, and where the model makes sense in production.</p>
+    <p>The table and notes that follow give you a <strong>decision-ready view</strong> of the leading text and multimodal models — so you can match architecture trade-offs to real-world needs, not just memorise specs.</p>
+  </div>
+
+  <!-- MODEL COMPARISON TABLE -->
+  <div class="section">
+    <div class="section-label">Model Landscape</div>
+    <h2>Leading Open <span>LLMs at a Glance</span></h2>
+    <table>
+      <tr>
+        <th>Model</th>
+        <th>Parameters</th>
+        <th>Context Window</th>
+        <th>Inference Speed</th>
+        <th>Strengths / Limitations</th>
+        <th>Common Use Cases</th>
+      </tr>
+      <tr>
+        <td><strong>LLaMA 2 13B</strong></td>
+        <td>13 B</td>
+        <td>~4k tokens</td>
+        <td>Moderate</td>
+        <td>Dense, good general performance; modest memory footprint</td>
+        <td>Chatbots, summarization, code generation</td>
+      </tr>
+      <tr>
+        <td><strong>Mistral 7B</strong></td>
+        <td>7 B</td>
+        <td>~8k tokens</td>
+        <td><span style="color:#10B981;font-weight:700">High — very fast</span></td>
+        <td>Smaller but efficient optimized architecture</td>
+        <td>Real-time systems, edge deployments</td>
+      </tr>
+      <tr>
+        <td><strong>Mixtral 8×7B</strong></td>
+        <td>8 B active (MoE)</td>
+        <td>~4k tokens</td>
+        <td>Strong (variable)</td>
+        <td>MoE gives expert-routing efficiency; some latency overhead</td>
+        <td>Multi-domain tasks with performance scaling</td>
+      </tr>
+      <tr>
+        <td><strong>LLaVA 13B</strong></td>
+        <td>13 B + vision</td>
+        <td>~4k tokens</td>
+        <td>Moderate to slow</td>
+        <td>Adds image understanding; higher compute cost</td>
+        <td>VQA, multimodal assistants</td>
+      </tr>
+      <tr>
+        <td><strong>Mixtral-Vision</strong></td>
+        <td>8×7B (46.7B total, MoE) + vision</td>
+        <td>~4k tokens</td>
+        <td>Good, but GPU-heavy</td>
+        <td>Image + expert routing; efficient in compute, still heavy</td>
+        <td>Complex multimodal workloads</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- WHY MISTRAL -->
+  <div class="section">
+    <div class="section-label">Deep Dive 1</div>
+    <h2>Why Mistral's Smaller Size Can <span>Outperform Larger Models</span></h2>
+    <p>In speed-sensitive tasks, architecture efficiency beats raw parameter count.</p>
+
+    <div class="scenario-box">
+      <div class="scenario-label">📍 Real-World Scenario</div>
+      <p>Imagine you're building a <strong>real-time fraud detection assistant for a fintech app</strong>. Every second counts — if a response takes too long, the user experience drops, and suspicious activity could slip through.</p>
+      <ul>
+        <li>A larger model like <strong>LLaMA 13B</strong> might give slightly higher accuracy on edge cases — but its slower inference adds noticeable lag.</li>
+        <li><strong>Mistral 7B</strong>, being smaller and optimized, delivers answers faster with less GPU cost — smoother real-time monitoring and higher throughput across millions of transactions.</li>
+      </ul>
+    </div>
+
+    <div class="gold-callout">
+      <div class="callout-label">💡 Key Insight</div>
+      <p>In this case, speed isn't just a nice-to-have — it's a <strong>business-critical requirement</strong>. That's why the "smaller but efficient" design can beat bigger models in production.</p>
+    </div>
+  </div>
+
+  <!-- WHY MIXTRAL MOE -->
+  <div class="section">
+    <div class="section-label">Deep Dive 2</div>
+    <h2>Why Mixtral's MoE Design <span>Matters</span></h2>
+
+    <h3>Dense vs. Mixture of Experts</h3>
+    <p><strong>Traditional dense models</strong> (like LLaMA) apply the same parameters to every input — predictable, but expensive. Every token goes through the full network.</p>
+    <p><strong>Mixture of Experts (MoE)</strong> models (like Mixtral) split into multiple "experts" and only activate a few per input. This means:</p>
+    <ul>
+      <li>You can scale total capacity (more parameters overall) <strong>without scaling cost linearly</strong></li>
+      <li>The model routes inputs to the right expert — more adaptable across diverse tasks</li>
+      <li>You trade a little latency from routing overhead, but get better throughput per unit of compute</li>
+    </ul>
+
+    <div class="scenario-box">
+      <div class="scenario-label">📍 Real-World Scenario</div>
+      <p>Picture a <strong>cloud service company offering an AI-powered support platform</strong> for enterprise clients. Customers ask very different questions — some highly technical (server logs, configs), some general (billing, onboarding).</p>
+      <ul>
+        <li>A <strong>dense model like LLaMA</strong> would treat every query the same — burning full compute on both the complex and the trivial.</li>
+        <li><strong>Mixtral's MoE</strong> routes a billing question to a lightweight expert while sending a debugging request to a specialized expert — response times stay sharp, costs stay controlled, across a wide task mix.</li>
+      </ul>
+    </div>
+
+    <div class="gold-callout">
+      <div class="callout-label">💡 In Short</div>
+      <p>MoE gives you <strong>smarter scaling</strong> — you don't waste resources on simple inputs, and you get specialized strength where it matters.</p>
+    </div>
+  </div>
+
+  <!-- QUICK INSIGHTS -->
+  <div class="section">
+    <div class="section-label">Summary</div>
+    <h2>Quick Insights to <span>Carry Forward</span></h2>
+    <div class="card">
+      <ul>
+        <li>🔑 <strong>Parameter count isn't everything.</strong> Efficient architecture matters — Mistral proves that.</li>
+        <li>⚖️ <strong>Dense vs. MoE is a trade-off:</strong> simplicity and steady latency vs. capacity and specialization.</li>
+        <li>👁️ <strong>Adding vision adds power — and cost.</strong> Make sure it justifies the compute budget.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MINI GLOSSARY -->
+  <div class="section">
+    <div class="section-label">Reference</div>
+    <h2>Mini-<span>Glossary</span></h2>
+    <div class="glossary-grid">
+      <div class="glossary-item">
+        <div class="term">Dense Model</div>
+        <div class="def">A standard transformer where every layer sees every input. Simple but costly at scale — the full parameter set fires on every token.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="term">Mixture of Experts (MoE)</div>
+        <div class="def">Architecture splitting a model into several "experts," using just a few per input to save compute. Enables capacity scaling without linear cost growth.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="term">Context Window</div>
+        <div class="def">The maximum number of tokens the model can process at once. Impacts how long or complex a conversation it can handle in a single pass.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="term">Inference Speed</div>
+        <div class="def">How fast the model responds — influenced by parameter count, architecture efficiency, and available compute resources (GPU/CPU).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE SCENARIOS -->
+  <div class="section">
+    <div class="section-label">Practice</div>
+    <h2>Comparing Models <span>to Scenarios</span></h2>
+    <p>For each scenario below, decide which model design makes the most sense — then check the answer guide.</p>
+
+    <!-- Scenario 1 -->
+    <div class="card" style="margin-bottom:1.2rem">
+      <h3 style="margin-top:0">Scenario 1 — Fintech Startup</h3>
+      <p>You're on a product team at a fintech startup. You need a model for a <strong>customer support chatbot</strong> that answers simple account questions on <strong>mobile devices with limited compute</strong>. Which model is the better fit?</p>
+      <ul style="margin-bottom:1rem">
+        <li>Option A: Mistral 7B (smaller, efficient transformer)</li>
+        <li>Option B: LLaMA 13B (larger dense model)</li>
+      </ul>
+      <div class="answer-grid">
+        <div class="answer-best">
+          <h4>✅ Mistral 7B — Best Choice</h4>
+          <p>Smaller parameter count = faster response times and lower GPU/CPU requirements. Critical for mobile deployment. Users get instant answers; infrastructure costs stay low.</p>
+        </div>
+        <div class="answer-wrong">
+          <h4>❌ LLaMA 13B — Wrong Fit</h4>
+          <p>Running a dense, large model on limited hardware slows response times, frustrates customers, and drives up cloud costs. In fintech, delayed responses are a business risk.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scenario 2 -->
+    <div class="card">
+      <h3 style="margin-top:0">Scenario 2 — Global Tech Enterprise</h3>
+      <p>A global tech company is planning an <strong>internal knowledge assistant for engineers</strong>. It must handle <strong>diverse technical and non-technical queries at enterprise scale</strong>. Which model is the better fit?</p>
+      <ul style="margin-bottom:1rem">
+        <li>Option A: Dense LLaMA (predictable but costly)</li>
+        <li>Option B: Mixtral (Mixture of Experts, scalable capacity)</li>
+      </ul>
+      <div class="answer-grid">
+        <div class="answer-best">
+          <h4>✅ Mixtral — Best Choice</h4>
+          <p>MoE routing activates only the experts needed per query — simple HR questions don't burn the same compute as debugging server logs. Cost-effective at enterprise scale with strong specialized performance.</p>
+        </div>
+        <div class="answer-wrong">
+          <h4>❌ Dense LLaMA — Wrong Fit</h4>
+          <p>Easier to deploy, but processes every query with its full parameter set. At millions of queries per day: wasted compute, higher latency, ballooning costs — hurting scalability.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMON PITFALLS -->
+  <div class="section">
+    <div class="section-label">Pitfall Guide</div>
+    <h2>Common Pitfalls → <span>Safer Moves</span></h2>
+    <table class="pitfall-table">
+      <tr><th>Common Pitfall</th><th>Safer Move</th></tr>
+      <tr>
+        <td>Choosing the largest model available</td>
+        <td>Pick the smallest model that meets your accuracy and latency needs</td>
+      </tr>
+      <tr>
+        <td>Opting for MoE without latency benchmarking</td>
+        <td>Test routing latency in your environment — MoE may add overhead</td>
+      </tr>
+      <tr>
+        <td>Adding multimodality by default</td>
+        <td>Add vision only if your use case demands it and GPU budget allows</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- SELF-CHECK -->
+  <div class="selfcheck-box">
+    <h2>🧠 Self-Check — Apply It to a Real Project</h2>
+    <p>Choosing the right open model isn't about memorizing specs — it's about matching architecture trade-offs to real-world needs. Keep speed, context, and deployment cost in mind.</p>
+
+    <p style="margin-top:1rem">Think of a project you're working on. If nothing comes to mind, use this scenario:</p>
+    <div class="scenario-text">
+      A hospital IT team is selecting a model for an internal assistant that <strong>summarises patient case notes and flags urgent items for review</strong>.
+    </div>
+
+    <p><strong>Ask yourself:</strong></p>
+    <ol>
+      <li style="padding:0.5rem 0">
+        <strong>Would a smaller, faster model (like Mistral) be enough — or would a larger model (like LLaMA) give better results even if it's slower?</strong>
+        <br><span style="color:var(--muted);font-size:0.88rem">Smaller may handle summaries well and reduce infrastructure costs. Larger could capture more nuance in medical language — but at the cost of speed.</span>
+      </li>
+      <li style="padding:0.5rem 0">
+        <strong>How would long input sequences affect your choice of context window size?</strong>
+        <br><span style="color:var(--muted);font-size:0.88rem">Patient records can be lengthy. A limited context window may cut off important details unless you chunk and stitch text carefully.</span>
+      </li>
+      <li style="padding:0.5rem 0">
+        <strong>When does the efficiency of MoE outweigh the complexity of deploying it?</strong>
+        <br><span style="color:var(--muted);font-size:0.88rem">MoE could lower serving costs for large-scale hospital queries — but if deployment resources are limited, the added operational complexity may not be worth it.</span>
+      </li>
+    </ol>
+  </div>
+
+  <div class="nav-bottom">
+    <a href="index.html">← Back to Session 2</a>
+    <a href="slides.html">📊 View Slides</a>
+    <a href="playbook.html">📖 Open Claw Playbook</a>
+    <a href="../session3/index.html">Session 3: Vibe Coding →</a>
+  </div>
+
+</div>
+</body>
+</html>
